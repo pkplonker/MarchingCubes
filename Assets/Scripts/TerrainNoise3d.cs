@@ -80,16 +80,16 @@ public static class NoiseTerrain3D
 			}
 		}
 
-		for (var z = 0; z < dimensions.z; z++)
-		{
-			for (var y = 0; y < dimensions.y; y++)
-			{
-				for (var x = 0; x < dimensions.x; x++)
-				{
-					result[x, y, z] = math.unlerp(minNoiseHeight, maxNoiseHeight, result[x, y, z]);
-				}
-			}
-		}
+		// for (var z = 0; z < dimensions.z; z++)
+		// {
+		// 	for (var y = 0; y < dimensions.y; y++)
+		// 	{
+		// 		for (var x = 0; x < dimensions.x; x++)
+		// 		{
+		// 			result[x, y, z] = math.unlerp(minNoiseHeight, maxNoiseHeight, result[x, y, z]);
+		// 		}
+		// 	}
+		// }
 
 		return result;
 	}

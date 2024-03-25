@@ -25,13 +25,16 @@ public class MarchingCubes : MonoBehaviour
 	private float gizmoRadius = 0.2f;
 
 	[SerializeField]
+	private bool drawDebug = false;
+
+	[SerializeField]
 	private int3 Size = new(50, 50, 50);
 
 	[Range(-1.0f, 1.0f)]
 	[SerializeField]
 	private float IsoLevel = 0.2f;
 
-	[Range(0.0f, 0.5f)]
+	[Range(0.0f, 1.0f)]
 	[SerializeField]
 	private float VertDistance = 1f;
 
@@ -65,21 +68,128 @@ public class MarchingCubes : MonoBehaviour
 
 	private float[] scalerField;
 	private float[,,] noiseMap;
-	private float[] flattenedScalerField;
+	private List<Vector3> vertices = new List<Vector3>();
+	private List<int> triangles = new List<int>();
+	private MeshFilter meshFilter;
+	private MeshRenderer meshRender;
+
+	[Space]
+	[SerializeField]
+	private bool runOnUpdate = true;
+
+	private void OnValidate()
+	{
+		meshFilter = GetComponent<MeshFilter>();
+		meshRender = GetComponent<MeshRenderer>();
+		meshRender.material = Material;
+	}
 
 	private void Start()
 	{
 		CreateNoise();
 	}
 
-	public void CreateNoise()
+	private void Update()
 	{
-		noiseMap = NoiseTerrain3D.GenerateNoiseMap(Size, NoiseSeed, NoiseScale, NoiseOctaves, NoisePersistance,
-			NoiseLacunarity, NoiseOffset);
+		if (!runOnUpdate) return;
+		var pos = transform.position;
+		CreateNoise();
+		March();
 	}
 
-	private void OnDrawGizmosSelected()
+	public void CreateNoise()
 	{
+		var pos = transform.position;
+		noiseMap = NoiseTerrain3D.GenerateNoiseMap(Size + new int3(1,1,1), NoiseSeed, NoiseScale, NoiseOctaves, NoisePersistance,
+			NoiseLacunarity, transform.position/NoiseScale);
+	}
+
+	public void March()
+	{
+		vertices = new List<Vector3>();
+		triangles = new List<int>();
+		for (int x = 0; x < noiseMap.GetLength(0)-1 ; x++)
+		{
+			for (int y = 0; y < noiseMap.GetLength(1)-1 ; y++)
+			{
+				for (int z = 0; z < noiseMap.GetLength(2)-1 ; z++)
+				{
+					float[] corners = new float[8];
+					for (int i = 0; i < 8; i++)
+					{
+						Vector3Int corner = new Vector3Int(x, y, z) + MarchingTable.Corners[i];
+						corners[i] = noiseMap[corner.x, corner.y, corner.z];
+					}
+
+					MarchCube(new Vector3(x, y, z), GetConfigIndex(corners));
+				}
+			}
+		}
+
+		GenerateMesh();
+	}
+
+	private void GenerateMesh()
+	{
+		var mesh = new Mesh();
+		mesh.SetVertices(vertices);
+		mesh.SetTriangles(triangles, 0);
+		mesh.RecalculateNormals();
+		meshFilter.mesh = null;
+		meshFilter.mesh = mesh;
+	}
+
+	private void MarchCube(Vector3 vertPos, int index)
+	{
+		if (index == 0 || index == 255)
+		{
+			return;
+		}
+
+		int edgeIndex = 0;
+
+		for (int tri = 0; tri < 5; tri++)
+		{
+			for (int vert = 0; vert < 3; vert++)
+			{
+				int val = MarchingTable.Triangles[index, edgeIndex];
+				if (val == -1)
+				{
+					return;
+				}
+
+				Vector3 vertex = CalculateVertexPosition(vertPos + MarchingTable.Edges[val, 0],
+					vertPos + MarchingTable.Edges[val, 1]);
+				vertex *= VertDistance;
+				vertices.Add(vertex);
+				triangles.Add(vertices.Count - 1);
+				edgeIndex++;
+			}
+		}
+	}
+
+	private Vector3 CalculateVertexPosition(Vector3 start, Vector3 end)
+	{
+		return (start + end) / 2;
+	}
+
+	private int GetConfigIndex(float[] corners)
+	{
+		int index = 0;
+		for (int i = 0; i < 8; i++)
+		{
+			if (corners[i] > IsoLevel)
+			{
+				index |= 1 << i;
+			}
+		}
+
+		return index;
+	}
+
+	private void OnDrawGizmos()
+	{
+		if (!drawDebug) return;
 		float max = float.MinValue;
 		float min = float.MaxValue;
 
@@ -101,6 +211,7 @@ public class MarchingCubes : MonoBehaviour
 					{
 						min = noise;
 					}
+
 					Gizmos.color = Color.Lerp(Color.black, Color.white, Mathf.InverseLerp(0, 1, noise));
 
 					switch (gizmoMode)
@@ -130,18 +241,6 @@ public class MarchingCubes : MonoBehaviour
 					}
 				}
 			}
-		}
-		//Debug.Log($"{min} : {max}");
-	}
-
-	private void OnDrawGizmos() { }
-
-	public void March()
-	{
-		for (int i = 0; i < flattenedScalerField.Length; i++)
-		{
-			float[] cubeCorners = new float[8];
-			for (int j = 0; j < 8; j++) { }
 		}
 	}
 }
