@@ -13,7 +13,7 @@ public class MarchingCubesEditor : Editor
 		{
 			foreach (var target in targets)
 			{
-				((MarchingCubes) target).Create();
+				((MarchingCubes) target).CreateNoise();
 			}
 		}
 		if (GUILayout.Button("Regenerate Mesh"))

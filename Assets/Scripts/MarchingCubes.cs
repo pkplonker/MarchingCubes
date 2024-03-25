@@ -2,141 +2,146 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Collections;
+using Unity.Jobs;
+using Unity.Mathematics;
 using UnityEngine;
 
-[RequireComponent(typeof(MeshFilter),typeof(MeshRenderer))]
+[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class MarchingCubes : MonoBehaviour
 {
-	[SerializeField]
-	private float threshHold = 0.5f;
-
-	[SerializeField]
-	private bool drawDebug = true;
-	[SerializeField]
-	private PointCloudRenderType type = PointCloudRenderType.All;
-
-	private List<Vector3> vertices = new();
-	private List<int> indicies = new();
-	public enum PointCloudRenderType
+	private enum GizmoMode
 	{
 		All,
-		Positive,
-		Negative
+		Above,
+		Below
 	}
 
+	[Header("Debug")]
 	[SerializeField]
-	private Vector3Int size = new Vector3Int(16, 16, 16);
-
-	[SerializeField]
-	private float stepSize = 1f;
-
-	private float[] pointCloud;
-	private float minimum = float.MaxValue;
-	private float maximum = float.MinValue;
+	private GizmoMode gizmoMode = GizmoMode.All;
 
 	[SerializeField]
-	private float sphereRadius = 0.2f;
-
-	private int arraySize;
-	private Vector3[] positions;
+	private float gizmoRadius = 0.2f;
 
 	[SerializeField]
-	private int seed;
+	private int3 Size = new(50, 50, 50);
+
+	[Range(-1.0f, 1.0f)]
+	[SerializeField]
+	private float IsoLevel = 0.2f;
+
+	[Range(0.0f, 0.5f)]
+	[SerializeField]
+	private float VertDistance = 1f;
 
 	[SerializeField]
-	private int octaves;
+	private Material Material;
+
+	private float[,,] scalarField;
+
+	[Header("Noise")]
+	[Range(0.0f, 1.0f)]
+	[SerializeField]
+	private float NoiseLacunarity;
 
 	[SerializeField]
-	private bool useUpdate = true;
+	private float3 NoiseOffset;
+
+	[SerializeField]
+	private int NoiseSeed;
+
+	[Range(1, 8)]
+	[SerializeField]
+	private int NoiseOctaves;
+
+	[Range(0f, 2f)]
+	[SerializeField]
+	private float NoisePersistance;
+
+	[Range(0f, 1000f)]
+	[SerializeField]
+	private float NoiseScale = 16f;
+
+	private float[] scalerField;
+	private float[,,] noiseMap;
+	private float[] flattenedScalerField;
 
 	private void Start()
 	{
-		Create();
-	}
-
-	public void Create()
-	{
-		arraySize = size.x * size.y * size.z;
-		NoiseGenerator.SetSeed(seed);
-		NoiseGenerator.SetOctaves(octaves);
-		positions = CreatePointCloudPositions(size, transform);
 		CreateNoise();
 	}
 
-	private void CreateNoise()
+	public void CreateNoise()
 	{
-		pointCloud = NoiseGenerator.CreateNoise(positions, out var minMax);
-		minimum = minMax.x;
-		maximum = minMax.y;
+		noiseMap = NoiseTerrain3D.GenerateNoiseMap(Size, NoiseSeed, NoiseScale, NoiseOctaves, NoisePersistance,
+			NoiseLacunarity, NoiseOffset);
 	}
 
-	public void Update()
+	private void OnDrawGizmosSelected()
 	{
-		if (!useUpdate) return;
-		CreateNoise();
-	}
+		float max = float.MinValue;
+		float min = float.MaxValue;
 
-	private Vector3[] CreatePointCloudPositions(Vector3Int size, Transform transform)
-	{
-		positions = new Vector3[size.x * size.y * size.z];
 		var pos = transform.position;
-
-		for (int i = 0; i < size.x; i++)
+		for (int x = 0; x < noiseMap.GetLength(0); x++)
 		{
-			for (int j = 0; j < size.y; j++)
+			for (int y = 0; y < noiseMap.GetLength(1); y++)
 			{
-				for (int k = 0; k < size.z; k++)
+				for (int z = 0; z < noiseMap.GetLength(2); z++)
 				{
-					positions[NoiseGenerator.Position1d(this.size, i, j, k)] = new Vector3(pos.x + (i * stepSize),
-						pos.y + (j * stepSize),
-						pos.z + (k * stepSize));
-				}
-			}
-		}
+					var noise = noiseMap[x, y, z];
 
-		return positions;
-	}
-
-	private void OnDrawGizmos()
-	{
-		if (!drawDebug) return;
-		for (int i = 0; i < size.x; i++)
-		{
-			for (int j = 0; j < size.y; j++)
-			{
-				for (int k = 0; k < size.z; k++)
-				{
-					var index1d = NoiseGenerator.Position1d(size, i, j, k);
-					var val = pointCloud[index1d];
-					var normalizedVal = Mathf.InverseLerp(minimum, maximum, val);
-					Gizmos.color = Color.Lerp(Color.white, Color.black,
-						normalizedVal);
-					var draw = false;
-					switch (type)
+					if (noise > max)
 					{
-						case PointCloudRenderType.All:
-							draw = true;
+						max = noise;
+					}
+
+					if (noise < min)
+					{
+						min = noise;
+					}
+					Gizmos.color = Color.Lerp(Color.black, Color.white, Mathf.InverseLerp(0, 1, noise));
+
+					switch (gizmoMode)
+					{
+						case GizmoMode.All:
+							Gizmos.color = Color.Lerp(Color.black, Color.white, Mathf.InverseLerp(0, 1, noise));
+							Gizmos.DrawSphere(pos + (new Vector3(x, y, z) * VertDistance), gizmoRadius);
 							break;
-						case PointCloudRenderType.Positive:
-							draw = normalizedVal > threshHold;
+						case GizmoMode.Above:
+							if (noise > IsoLevel)
+							{
+								Gizmos.DrawSphere(pos + (new Vector3(x, y, z) * VertDistance),
+									gizmoRadius);
+							}
 
 							break;
-						case PointCloudRenderType.Negative:
-							draw = normalizedVal < threshHold;
+						case GizmoMode.Below:
+							if (noise < IsoLevel)
+							{
+								Gizmos.DrawSphere(pos + (new Vector3(x, y, z) * VertDistance),
+									gizmoRadius);
+							}
+
 							break;
 						default:
 							throw new ArgumentOutOfRangeException();
 					}
-
-					if (draw)
-						Gizmos.DrawSphere(positions[index1d], sphereRadius);
 				}
 			}
 		}
+		//Debug.Log($"{min} : {max}");
 	}
+
+	private void OnDrawGizmos() { }
 
 	public void March()
 	{
-		
+		for (int i = 0; i < flattenedScalerField.Length; i++)
+		{
+			float[] cubeCorners = new float[8];
+			for (int j = 0; j < 8; j++) { }
+		}
 	}
 }
