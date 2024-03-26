@@ -8,7 +8,7 @@ using Unity.Mathematics;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
-[ExecuteInEditMode]
+//[ExecuteInEditMode]
 public class MarchingCubes : MonoBehaviour
 {
 	private enum GizmoMode
@@ -99,9 +99,11 @@ public class MarchingCubes : MonoBehaviour
 
 	public void CreateNoise()
 	{
-		var pos = transform.position;
 		noiseMap = NoiseTerrain3D.GenerateNoiseMap(Size, NoiseSeed, NoiseScale, NoiseOctaves, NoisePersistance,
-			NoiseLacunarity, transform.position/NoiseScale);
+			NoiseLacunarity, transform.position / NoiseScale);
+
+		#region Debug
+
 		var min = float.MaxValue;
 		var max = float.MinValue;
 		for (int x = 0; x < noiseMap.GetLength(0); x++)
@@ -118,17 +120,19 @@ public class MarchingCubes : MonoBehaviour
 		}
 
 		Debug.Log($"{min} : {max}");
+
+		#endregion
 	}
 
 	public void March()
 	{
 		vertices = new List<Vector3>();
 		triangles = new List<int>();
-		for (int x = 0; x < noiseMap.GetLength(0)-1 ; x++)
+		for (int x = 0; x < noiseMap.GetLength(0) - 1; x++)
 		{
-			for (int y = 0; y < noiseMap.GetLength(1)-1 ; y++)
+			for (int y = 0; y < noiseMap.GetLength(1) - 1; y++)
 			{
-				for (int z = 0; z < noiseMap.GetLength(2)-1 ; z++)
+				for (int z = 0; z < noiseMap.GetLength(2) - 1; z++)
 				{
 					float[] corners = new float[8];
 					for (int i = 0; i < 8; i++)

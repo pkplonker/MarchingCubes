@@ -12,17 +12,16 @@ public static class NoiseTerrain3D
 		float lacunarity, Vector3 offset)
 	{
 		dimensions += new Vector3Int(1, 1, 1);
-		float maxNoiseHeight = 0f;
-		float minNoiseHeight = 0f;
+		float noiseExtents = 0f;
 		float amp = 1f;
 
 		for (int i = 0; i < octaves; i++)
 		{
-			maxNoiseHeight += amp;
-			minNoiseHeight -= amp;
+			noiseExtents += amp;
 			amp *= persistance;
 		}
 
+		noiseExtents /= ((float)octaves/2);
 		if (scale <= 0)
 		{
 			scale = 0.0001f;
@@ -66,7 +65,7 @@ public static class NoiseTerrain3D
 					}
 
 					//result[x, y, z] = noiseHeight;
-					result[x, y, z] = Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, noiseHeight);
+					result[x, y, z] = Mathf.InverseLerp(-noiseExtents, noiseExtents, noiseHeight);
 				}
 			}
 		}
