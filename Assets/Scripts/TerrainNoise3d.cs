@@ -1,4 +1,5 @@
-﻿using Unity.Burst;
+﻿using System.Collections.Generic;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
@@ -6,11 +7,22 @@ using UnityEngine;
 
 public static class NoiseTerrain3D
 {
-	[BurstCompile]
-	public static float[,,] GenerateNoiseMap(int3 dimensions, int seed, float scale, int octaves,
+	public static float[,,] GenerateNoiseMap(Vector3Int dimensions, int seed, float scale, int octaves,
 		float persistance,
-		float lacunarity, float3 offset, int innerLoopSize = 32)
+		float lacunarity, Vector3 offset)
 	{
+		dimensions += new Vector3Int(1, 1, 1);
+		float maxNoiseHeight = 0f;
+		float minNoiseHeight = 0f;
+		float amp = 1f;
+
+		for (int i = 0; i < octaves; i++)
+		{
+			maxNoiseHeight += amp;
+			minNoiseHeight -= amp;
+			amp *= persistance;
+		}
+
 		if (scale <= 0)
 		{
 			scale = 0.0001f;
@@ -18,125 +30,47 @@ public static class NoiseTerrain3D
 
 		var random = new System.Random(seed);
 
-		using var jobResult = new NativeArray<float>(dimensions.x * dimensions.y * dimensions.z, Allocator.TempJob);
-		using var octaveOffsets = new NativeArray<float3>(octaves, Allocator.TempJob);
+		float[,,] result = new float[dimensions.x, dimensions.y, dimensions.z];
+		var octaveOffsets = new List<Vector3>(octaves);
 
 		for (var i = 0; i < octaves; i++)
 		{
 			var offsetX = random.Next(-100000, 100000) + offset.x;
 			var offsetY = random.Next(-100000, 100000) + offset.y;
 			var offsetZ = random.Next(-100000, 100000) + offset.z;
-			var nativeOctaveOffsets = octaveOffsets;
-			nativeOctaveOffsets[i] = new float3(offsetX, offsetY, offsetZ);
+			octaveOffsets.Add(new Vector3(offsetX, offsetY, offsetZ));
 		}
 
-		var job = new NoiseJobTerrain3d()
+		for (int x = 0; x < dimensions.x; x++)
 		{
-			Dimensions = dimensions,
-			HalfWidth = (float) dimensions.x / 2,
-			HalfHeight = (float) dimensions.y / 2,
-			HalfDepth = (float) dimensions.z / 2,
-			Lacunarity = lacunarity,
-			Octaves = octaves,
-			OctaveOffsets = octaveOffsets,
-			Persistance = persistance,
-			Result = jobResult,
-			Scale = scale,
-		};
-
-		var handle = job.Schedule(jobResult.Length, innerLoopSize);
-		handle.Complete();
-
-		return SmoothNoiseMap(dimensions, jobResult);
-	}
-
-	[BurstCompile]
-	private static float[,,] SmoothNoiseMap(int3 dimensions, NativeArray<float> jobResult)
-	{
-		var result = new float[dimensions.x, dimensions.y, dimensions.z];
-
-		var maxNoiseHeight = float.MinValue;
-		var minNoiseHeight = float.MaxValue;
-
-		for (var z = 0; z < dimensions.z; z++)
-		{
-			for (var y = 0; y < dimensions.y; y++)
+			for (int y = 0; y < dimensions.y; y++)
 			{
-				for (var x = 0; x < dimensions.x; x++)
+				for (int z = 0; z < dimensions.z; z++)
 				{
-					var noiseHeight = jobResult[z * dimensions.x * dimensions.y + y * dimensions.x + x] + y;
+					var amplitude = 1f;
+					var frequency = 1f;
+					var noiseHeight = 0f;
 
-					if (noiseHeight > maxNoiseHeight)
+					for (var i = 0; i < octaves; i++)
 					{
-						maxNoiseHeight = noiseHeight;
-					}
-					else if (noiseHeight < minNoiseHeight)
-					{
-						minNoiseHeight = noiseHeight;
+						float sampleX = (x ) / scale * frequency + octaveOffsets[i].x * frequency;
+						float sampleY = (y ) / scale * frequency + octaveOffsets[i].y * frequency;
+						float sampleZ = (z ) / scale * frequency + octaveOffsets[i].z * frequency;
+
+						var perlinValue = noise.cnoise(new Vector3(sampleX, sampleY, sampleZ));
+
+						noiseHeight += perlinValue * amplitude;
+
+						amplitude *= persistance;
+						frequency *= lacunarity;
 					}
 
-					result[x, y, z] = noiseHeight;
+					//result[x, y, z] = noiseHeight;
+					result[x, y, z] = Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, noiseHeight);
 				}
 			}
 		}
 
-		// for (var z = 0; z < dimensions.z; z++)
-		// {
-		// 	for (var y = 0; y < dimensions.y; y++)
-		// 	{
-		// 		for (var x = 0; x < dimensions.x; x++)
-		// 		{
-		// 			result[x, y, z] = math.unlerp(minNoiseHeight, maxNoiseHeight, result[x, y, z]);
-		// 		}
-		// 	}
-		// }
-
 		return result;
-	}
-}
-
-[BurstCompile]
-public struct NoiseJobTerrain3d : IJobParallelFor
-{
-	public int3 Dimensions;
-	public float HalfWidth;
-	public float HalfHeight;
-	public float HalfDepth;
-	public float Scale;
-	public int Octaves;
-	public float Persistance;
-	public float Lacunarity;
-
-	[ReadOnly]
-	public NativeArray<float3> OctaveOffsets;
-
-	[WriteOnly]
-	public NativeArray<float> Result;
-
-	public void Execute(int index)
-	{
-		var amplitude = 1f;
-		var frequency = 1f;
-		var noiseHeight = 0f;
-
-		var x = index % Dimensions.x;
-		var y = (index / Dimensions.x) % Dimensions.y;
-		var z = index / (Dimensions.x * Dimensions.y);
-
-		for (var i = 0; i < Octaves; i++)
-		{
-			var sampleX = (x - HalfWidth) / Scale * frequency + OctaveOffsets[i].x;
-			var sampleY = (y - HalfHeight) / Scale * frequency + OctaveOffsets[i].y;
-			var sampleZ = (z - HalfDepth) / Scale * frequency + OctaveOffsets[i].z;
-
-			var perlinValue = noise.cnoise(new float3(sampleX, sampleY, sampleZ)) * 2 - 1;
-
-			noiseHeight += perlinValue * amplitude;
-
-			amplitude *= Persistance;
-			frequency *= Lacunarity;
-		}
-
-		Result[index] = noiseHeight;
 	}
 }

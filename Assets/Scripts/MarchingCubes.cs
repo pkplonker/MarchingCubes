@@ -8,6 +8,7 @@ using Unity.Mathematics;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
+[ExecuteInEditMode]
 public class MarchingCubes : MonoBehaviour
 {
 	private enum GizmoMode
@@ -28,9 +29,9 @@ public class MarchingCubes : MonoBehaviour
 	private bool drawDebug = false;
 
 	[SerializeField]
-	private int3 Size = new(50, 50, 50);
+	private Vector3Int Size = new(50, 50, 50);
 
-	[Range(-1.0f, 1.0f)]
+	//[Range(-1.0f, 1.0f)]
 	[SerializeField]
 	private float IsoLevel = 0.2f;
 
@@ -49,7 +50,7 @@ public class MarchingCubes : MonoBehaviour
 	private float NoiseLacunarity;
 
 	[SerializeField]
-	private float3 NoiseOffset;
+	private Vector3 NoiseOffset;
 
 	[SerializeField]
 	private int NoiseSeed;
@@ -92,7 +93,6 @@ public class MarchingCubes : MonoBehaviour
 	private void Update()
 	{
 		if (!runOnUpdate) return;
-		var pos = transform.position;
 		CreateNoise();
 		March();
 	}
@@ -100,8 +100,24 @@ public class MarchingCubes : MonoBehaviour
 	public void CreateNoise()
 	{
 		var pos = transform.position;
-		noiseMap = NoiseTerrain3D.GenerateNoiseMap(Size + new int3(1,1,1), NoiseSeed, NoiseScale, NoiseOctaves, NoisePersistance,
+		noiseMap = NoiseTerrain3D.GenerateNoiseMap(Size, NoiseSeed, NoiseScale, NoiseOctaves, NoisePersistance,
 			NoiseLacunarity, transform.position/NoiseScale);
+		var min = float.MaxValue;
+		var max = float.MinValue;
+		for (int x = 0; x < noiseMap.GetLength(0); x++)
+		{
+			for (int y = 0; y < noiseMap.GetLength(1); y++)
+			{
+				for (int z = 0; z < noiseMap.GetLength(2); z++)
+				{
+					var noise = noiseMap[x, y, z];
+					if (noise > max) max = noise;
+					if (noise < min) min = noise;
+				}
+			}
+		}
+
+		Debug.Log($"{min} : {max}");
 	}
 
 	public void March()
@@ -217,7 +233,6 @@ public class MarchingCubes : MonoBehaviour
 					switch (gizmoMode)
 					{
 						case GizmoMode.All:
-							Gizmos.color = Color.Lerp(Color.black, Color.white, Mathf.InverseLerp(0, 1, noise));
 							Gizmos.DrawSphere(pos + (new Vector3(x, y, z) * VertDistance), gizmoRadius);
 							break;
 						case GizmoMode.Above:
