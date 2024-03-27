@@ -86,7 +86,7 @@ public class TerrainNoise3DCompute : MonoBehaviour, ITerrainNoise3D
 		int threadGroupsZ = Mathf.CeilToInt((float) dimensions.z / THREAD_GROUP_SIZE_Z);
 		shader.Dispatch(index, 1, 1, 16);
 		resultsBuffer.GetData(data);
-
+		Debug.Log($"Max:{data.Max()}, Min: {data.Min()}, Average: {data.Sum() / data.Length}");
 		return data;
 	}
 
