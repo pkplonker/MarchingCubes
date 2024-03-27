@@ -1,8 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 using Random = System.Random;
 
 public class TerrainNoise3DCompute : MonoBehaviour
@@ -12,11 +15,31 @@ public class TerrainNoise3DCompute : MonoBehaviour
 
 	private ComputeBuffer resultsBuffer;
 	private ComputeBuffer octaveOffsetsBuffer;
+	private static readonly int OCTAVE_OFFSETS = Shader.PropertyToID("octaveOffsets");
+	private static readonly int RESULT = Shader.PropertyToID("Result");
+	private static readonly int PERSISTANCE = Shader.PropertyToID("persistance");
+	private static readonly int LACUNARITY = Shader.PropertyToID("lacunarity");
+	private static readonly int SCALE = Shader.PropertyToID("scale");
+	private static readonly int OCTAVES = Shader.PropertyToID("octaves");
+	private static readonly int NOISE_EXTENTS = Shader.PropertyToID("noiseExtents");
+	private static readonly int SIZE = Shader.PropertyToID("size");
+	private static readonly int WORLD_OFFSET = Shader.PropertyToID("worldOffset");
+	private static readonly int THREAD_GROUP_SIZE_X = 16;
+	private static readonly int THREAD_GROUP_SIZE_Y = 64;
+	private static readonly int THREAD_GROUP_SIZE_Z = 1;
 
 	public void Generate()
 	{
-		var result = GenerateNoiseMap(new Vector3Int(16, 16, 16), 0, 12, 4, 1.8f, 0.7f, new Vector3(0, 0, 0));
-		Debug.Log(result.Max());
+		var iter = 100;
+		var sw = Stopwatch.StartNew();
+		var results = new List<float[]>();
+		for (int i = 0; i < iter; i++)
+		{
+			var r = GenerateNoiseMap(new Vector3Int(16, 16, 16), 0, 12, 4, 1.8f, 0.7f, new Vector3(0, 0, 0));
+			Debug.Log($"Max:{r.Max()}, Min: {r.Min()}, Average: {r.Sum() / r.Length}");
+		}
+
+		Debug.Log($"{sw.ElapsedMilliseconds}ms, average {sw.ElapsedMilliseconds / iter}");
 	}
 
 	public TerrainNoise3DCompute() { }
@@ -35,28 +58,33 @@ public class TerrainNoise3DCompute : MonoBehaviour
 
 		var size = dimensions.x * dimensions.y * dimensions.z;
 		var data = new float[size];
-
-		octaveOffsetsBuffer ??= new(octaves, sizeof(float) * 3);
-		resultsBuffer ??= new(size, sizeof(float));
-		shader.SetBuffer(index, "Result", resultsBuffer);
-		shader.SetBuffer(index, "octaves", octaveOffsetsBuffer);
+		octaveOffsetsBuffer?.Release();
+		octaveOffsetsBuffer = new ComputeBuffer(octaves, sizeof(float) * 3);
+		resultsBuffer?.Release();
+		resultsBuffer = new ComputeBuffer(size, sizeof(float));
+		shader.SetBuffer(index, RESULT, resultsBuffer);
+		shader.SetBuffer(index, OCTAVE_OFFSETS, octaveOffsetsBuffer);
 
 		octaveOffsetsBuffer.SetData(octaveOffsets.ToArray());
 
-		shader.SetFloat("persistance", persistance);
-		shader.SetFloat("lacunarity", lacunarity);
-		shader.SetFloat("scale", scale);
-		shader.SetFloat("noiseExtents", noiseExtents);
-		shader.SetInts("size", new int[3]
+		shader.SetFloat(PERSISTANCE, persistance);
+		shader.SetFloat(LACUNARITY, lacunarity);
+		shader.SetFloat(SCALE, scale);
+		shader.SetFloat(NOISE_EXTENTS, noiseExtents);
+		shader.SetInt(OCTAVES, octaves);
+
+		shader.SetInts(SIZE, new int[3]
 		{
 			dimensions.x, dimensions.y, dimensions.z
 		});
-		shader.SetFloats("worldOffset", new float[3]
+		shader.SetFloats(WORLD_OFFSET, new float[3]
 		{
 			offset.x, offset.y, offset.z
 		});
-
-		shader.Dispatch(index, dimensions.x, dimensions.y * dimensions.z, 1);
+		int threadGroupsX = Mathf.CeilToInt((float) dimensions.x / THREAD_GROUP_SIZE_X);
+		int threadGroupsY = Mathf.CeilToInt((float) dimensions.y / THREAD_GROUP_SIZE_Y);
+		int threadGroupsZ = Mathf.CeilToInt((float) dimensions.z / THREAD_GROUP_SIZE_Z);
+		shader.Dispatch(index, 1, 1, 16);
 		resultsBuffer.GetData(data);
 
 		return data;
