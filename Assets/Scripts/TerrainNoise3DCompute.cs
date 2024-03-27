@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = System.Random;
 
 public class TerrainNoise3DCompute : MonoBehaviour
 {
@@ -25,11 +26,59 @@ public class TerrainNoise3DCompute : MonoBehaviour
 		float lacunarity, Vector3 offset)
 	{
 		var index = shader.FindKernel("CSMain");
-
 		var random = new System.Random(seed);
+		var octaveOffsets = CalculateOctaveOffsets(octaves, offset, random);
 
+		var noiseExtents = CalculateExtents(octaves, persistance);
+
+		noiseExtents /= ((float) octaves / 2);
+
+		var size = dimensions.x * dimensions.y * dimensions.z;
+		var data = new float[size];
+
+		octaveOffsetsBuffer ??= new(octaves, sizeof(float) * 3);
+		resultsBuffer ??= new(size, sizeof(float));
+		shader.SetBuffer(index, "Result", resultsBuffer);
+		shader.SetBuffer(index, "octaves", octaveOffsetsBuffer);
+
+		octaveOffsetsBuffer.SetData(octaveOffsets.ToArray());
+
+		shader.SetFloat("persistance", persistance);
+		shader.SetFloat("lacunarity", lacunarity);
+		shader.SetFloat("scale", scale);
+		shader.SetFloat("noiseExtents", noiseExtents);
+		shader.SetInts("size", new int[3]
+		{
+			dimensions.x, dimensions.y, dimensions.z
+		});
+		shader.SetFloats("worldOffset", new float[3]
+		{
+			offset.x, offset.y, offset.z
+		});
+
+		shader.Dispatch(index, dimensions.x, dimensions.y * dimensions.z, 1);
+		resultsBuffer.GetData(data);
+
+		return data;
+	}
+
+	private static float CalculateExtents(int octaves, float persistance)
+	{
+		float noiseExtents = 0f;
+		float amp = 1f;
+
+		for (int i = 0; i < octaves; i++)
+		{
+			noiseExtents += amp;
+			amp *= persistance;
+		}
+
+		return noiseExtents;
+	}
+
+	private static List<Vector3> CalculateOctaveOffsets(int octaves, Vector3 offset, Random random)
+	{
 		var octaveOffsets = new List<Vector3>(octaves);
-
 		for (var i = 0; i < octaves; i++)
 		{
 			var offsetX = random.Next(-100000, 100000) + offset.x;
@@ -38,28 +87,7 @@ public class TerrainNoise3DCompute : MonoBehaviour
 			octaveOffsets.Add(new Vector3(offsetX, offsetY, offsetZ));
 		}
 
-		octaveOffsetsBuffer ??= new(octaves, sizeof(float) * 3);
-		shader.SetBuffer(index, "octaves", octaveOffsetsBuffer);
-
-		var size = dimensions.x * dimensions.y * dimensions.z;
-		resultsBuffer ??= new(size, sizeof(float));
-		shader.SetFloat("persistance", persistance);
-		shader.SetFloat("lacunarity", lacunarity);
-		shader.SetFloat("scale", scale);
-		shader.SetInts("size", new int[3]
-		{
-			dimensions.x, dimensions.y, dimensions.z
-		});
-
-		var data = new float[size];
-		shader.SetFloats("offset", new float[3]
-		{
-			offset.x, offset.y, offset.z
-		});
-		shader.SetBuffer(index, "Result", resultsBuffer);
-		shader.Dispatch(index, dimensions.x, dimensions.y, dimensions.z);
-		resultsBuffer.GetData(data);
-		return data;
+		return octaveOffsets;
 	}
 
 	public void OnDisable()

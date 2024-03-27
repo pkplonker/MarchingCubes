@@ -64,7 +64,6 @@ public static class NoiseTerrain3D
 						frequency *= lacunarity;
 					}
 
-					//result[x, y, z] = noiseHeight;
 					result[x, y, z] = Mathf.InverseLerp(-noiseExtents, noiseExtents, noiseHeight);
 				}
 			}

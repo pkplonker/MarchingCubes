@@ -6,10 +6,11 @@ int3 size;
 float scale;
 float persistance;
 float lacunarity;
-float3 offset;
+float noiseExtents;
+float3 worldOffset;
 
-[numthreads(16,16,16)]
+[numthreads(16,64,1)]
 void CSMain(uint3 id : SV_DispatchThreadID)
 {
-    Result[(size.x * size.y * id.z) + (size.y * id.y) + id.x] = 17;
+    Result[(size.x * size.y * id.z) + (size.y * id.y) + id.x] = octaves[3].x;
 }
