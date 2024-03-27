@@ -8,7 +8,7 @@ using UnityEngine;
 using Debug = UnityEngine.Debug;
 using Random = System.Random;
 
-public class TerrainNoise3DCompute : MonoBehaviour
+public class TerrainNoise3DCompute : MonoBehaviour, ITerrainNoise3D
 {
 	[SerializeField]
 	private ComputeShader shader;

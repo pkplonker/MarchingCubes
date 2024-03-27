@@ -68,11 +68,12 @@ public class MarchingCubes : MonoBehaviour
 	private float NoiseScale = 16f;
 
 	private float[] scalerField;
-	private float[,,] noiseMap;
+	private float[] noiseMap;
 	private List<Vector3> vertices = new List<Vector3>();
 	private List<int> triangles = new List<int>();
 	private MeshFilter meshFilter;
 	private MeshRenderer meshRender;
+	private ITerrainNoise3D noise;
 
 	[Space]
 	[SerializeField]
@@ -83,6 +84,7 @@ public class MarchingCubes : MonoBehaviour
 		meshFilter = GetComponent<MeshFilter>();
 		meshRender = GetComponent<MeshRenderer>();
 		meshRender.material = Material;
+		noise = GetComponent<ITerrainNoise3D>();
 	}
 
 	private void Start()
@@ -94,51 +96,31 @@ public class MarchingCubes : MonoBehaviour
 	{
 		if (!runOnUpdate) return;
 		CreateNoise();
-		March();
+		if(!drawDebug)
+			March();
 	}
 
 	public void CreateNoise()
 	{
-		noiseMap = NoiseTerrain3D.GenerateNoiseMap(Size, NoiseSeed, NoiseScale, NoiseOctaves, NoisePersistance,
+		noiseMap = noise.GenerateNoiseMap(Size+ new Vector3Int(1,1,1), NoiseSeed, NoiseScale, NoiseOctaves, NoisePersistance,
 			NoiseLacunarity, transform.position / NoiseScale);
-
-		#region Debug
-
-		var min = float.MaxValue;
-		var max = float.MinValue;
-		for (int x = 0; x < noiseMap.GetLength(0); x++)
-		{
-			for (int y = 0; y < noiseMap.GetLength(1); y++)
-			{
-				for (int z = 0; z < noiseMap.GetLength(2); z++)
-				{
-					var noise = noiseMap[x, y, z];
-					if (noise > max) max = noise;
-					if (noise < min) min = noise;
-				}
-			}
-		}
-
-		Debug.Log($"{min} : {max}");
-
-		#endregion
 	}
 
 	public void March()
 	{
 		vertices = new List<Vector3>();
 		triangles = new List<int>();
-		for (int x = 0; x < noiseMap.GetLength(0) - 1; x++)
+		for (int x = 0; x < Size.x; x++)
 		{
-			for (int y = 0; y < noiseMap.GetLength(1) - 1; y++)
+			for (int y = 0; y < Size.y; y++)
 			{
-				for (int z = 0; z < noiseMap.GetLength(2) - 1; z++)
+				for (int z = 0; z < Size.z; z++)
 				{
 					float[] corners = new float[8];
 					for (int i = 0; i < 8; i++)
 					{
 						Vector3Int corner = new Vector3Int(x, y, z) + MarchingTable.Corners[i];
-						corners[i] = noiseMap[corner.x, corner.y, corner.z];
+						corners[i] = noiseMap[Index1D(corner, Size)];
 					}
 
 					MarchCube(new Vector3(x, y, z), GetConfigIndex(corners));
@@ -148,6 +130,9 @@ public class MarchingCubes : MonoBehaviour
 
 		GenerateMesh();
 	}
+
+	private int Index1D(Vector3Int value, Vector3Int size) =>
+		(size.x * size.y * value.z) + (size.y * value.y) + value.x;
 
 	private void GenerateMesh()
 	{
@@ -214,13 +199,13 @@ public class MarchingCubes : MonoBehaviour
 		float min = float.MaxValue;
 
 		var pos = transform.position;
-		for (int x = 0; x < noiseMap.GetLength(0); x++)
+		for (int x = 0; x < Size.x; x++)
 		{
-			for (int y = 0; y < noiseMap.GetLength(1); y++)
+			for (int y = 0; y < Size.y; y++)
 			{
-				for (int z = 0; z < noiseMap.GetLength(2); z++)
+				for (int z = 0; z < Size.z; z++)
 				{
-					var noise = noiseMap[x, y, z];
+					var noise = noiseMap[Index1D(new Vector3Int(x,y,z), Size)];
 
 					if (noise > max)
 					{
