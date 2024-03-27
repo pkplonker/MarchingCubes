@@ -1,0 +1,15 @@
+#pragma kernel CSMain
+
+RWStructuredBuffer<float> Result;
+RWStructuredBuffer<float3> octaves;
+int3 size;
+float scale;
+float persistance;
+float lacunarity;
+float3 offset;
+
+[numthreads(16,16,16)]
+void CSMain(uint3 id : SV_DispatchThreadID)
+{
+    Result[(size.x * size.y * id.z) + (size.y * id.y) + id.x] = 17;
+}
