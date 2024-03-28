@@ -1,0 +1,9 @@
+#pragma kernel CSMain
+
+RWStructuredBuffer<float> Result;
+
+[numthreads(8,8,8)]
+void CSMain(uint3 id : SV_DispatchThreadID)
+{
+    
+}

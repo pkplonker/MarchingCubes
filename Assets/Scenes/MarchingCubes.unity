@@ -3805,8 +3805,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gizmoMode: 0
   gizmoRadius: 0.05
-  drawDebug: 1
-  Size: {x: 15, y: 15, z: 15}
+  drawDebug: 0
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
