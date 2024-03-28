@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c4ca93ba-5ae1-47e7-b91c-475b15f123cf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Editor/TerrainNoise3dComputeEditor.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Editor/TerrainNoise3dComputeEditor.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MarchingCubes/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MarchingCubes/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/MarchingCubes.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/MarchingCubes.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/3DNoise.compute" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/3DNoise.compute" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/TerrainNoise3DCompute.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/TerrainNoise3DCompute.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -143,26 +141,52 @@
           <line>52</line>
           <properties documentPath="S:\Users\pkplo\OneDrive\Documents\UnityProjects\MarchingCubes\Assets\Scripts\TerrainNoise3DCompute.cs" initialLine="46" containingFunctionPresentation="Method 'GenerateNoiseMap'">
             <startOffsets>
-              <option value="1539" />
+              <option value="1556" />
             </startOffsets>
             <endOffsets>
-              <option value="1551" />
+              <option value="1568" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="17" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Assets/Scripts/TerrainNoise3DCompute.cs</url>
-          <line>26</line>
-          <properties documentPath="S:\Users\pkplo\OneDrive\Documents\UnityProjects\MarchingCubes\Assets\Scripts\TerrainNoise3DCompute.cs" initialLine="26" containingFunctionPresentation="Method 'GenerateNoiseMap'">
+          <url>file://$PROJECT_DIR$/Assets/Scripts/MarchingCubes.cs</url>
+          <line>112</line>
+          <properties documentPath="S:\Users\pkplo\OneDrive\Documents\UnityProjects\MarchingCubes\Assets\Scripts\MarchingCubes.cs" initialLine="111" containingFunctionPresentation="Method 'March'">
             <startOffsets>
-              <option value="653" />
+              <option value="2200" />
             </startOffsets>
             <endOffsets>
-              <option value="690" />
+              <option value="2232" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="18" />
+          <option name="timeStamp" value="31" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Scripts/TerrainNoise3DCompute.cs</url>
+          <line>83</line>
+          <properties documentPath="S:\Users\pkplo\OneDrive\Documents\UnityProjects\MarchingCubes\Assets\Scripts\TerrainNoise3DCompute.cs" initialLine="86" containingFunctionPresentation="Method 'GenerateNoiseMap'">
+            <startOffsets>
+              <option value="2980" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2980" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="32" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Scripts/TerrainNoise3DCompute.cs</url>
+          <line>86</line>
+          <properties documentPath="S:\Users\pkplo\OneDrive\Documents\UnityProjects\MarchingCubes\Assets\Scripts\TerrainNoise3DCompute.cs" initialLine="86" containingFunctionPresentation="Method 'GenerateNoiseMap'">
+            <startOffsets>
+              <option value="3160" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3190" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="33" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

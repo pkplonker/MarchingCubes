@@ -81,10 +81,10 @@ public class TerrainNoise3DCompute : MonoBehaviour, ITerrainNoise3D
 		{
 			offset.x, offset.y, offset.z
 		});
-		int threadGroupsX = Mathf.CeilToInt((float) dimensions.x / THREAD_GROUP_SIZE_X);
-		int threadGroupsY = Mathf.CeilToInt((float) dimensions.y / THREAD_GROUP_SIZE_Y);
-		int threadGroupsZ = Mathf.CeilToInt((float) dimensions.z / THREAD_GROUP_SIZE_Z);
-		shader.Dispatch(index, 1, 1, 16);
+		int threadGroupsX = Mathf.CeilToInt(dimensions.x / 8.0f);
+		int threadGroupsY = Mathf.CeilToInt(dimensions.y / 8.0f);
+		int threadGroupsZ = Mathf.CeilToInt(dimensions.z / 8.0f);
+		shader.Dispatch(index, 2,2,2);
 		resultsBuffer.GetData(data);
 		Debug.Log($"Max:{data.Max()}, Min: {data.Min()}, Average: {data.Sum() / data.Length}");
 		return data;

@@ -28,8 +28,9 @@ public class MarchingCubes : MonoBehaviour
 	[SerializeField]
 	private bool drawDebug = false;
 
-	[SerializeField]
-	private Vector3Int Size = new(50, 50, 50);
+	private Vector3Int paddedSize => Size + new Vector3Int(1,1,1);
+
+	public Vector3Int Size;
 
 	//[Range(-1.0f, 1.0f)]
 	[SerializeField]
@@ -96,7 +97,7 @@ public class MarchingCubes : MonoBehaviour
 	{
 		if (!runOnUpdate) return;
 		CreateNoise();
-		if(!drawDebug)
+		if (!drawDebug)
 			March();
 	}
 
@@ -104,6 +105,28 @@ public class MarchingCubes : MonoBehaviour
 	{
 		noiseMap = noise.GenerateNoiseMap(Size+ new Vector3Int(1,1,1), NoiseSeed, NoiseScale, NoiseOctaves, NoisePersistance,
 			NoiseLacunarity, transform.position / NoiseScale);
+		// test to confirm iteration is correct
+		//noiseMap = CreateNoiseMap(16);
+	}
+
+	public float[] CreateNoiseMap(int size)
+	{
+		int totalSize = size * size * size;
+		float[] noiseMap = new float[totalSize];
+
+		for (int x = 0; x < size; x++)
+		{
+			for (int y = 0; y < size; y++)
+			{
+				for (int z = 0; z < size; z++)
+				{
+					bool isEdge = x == 0 || x == size - 1 || y == 0 || y == size - 1 || z == 0 || z == size - 1;
+					noiseMap[x + size * (y + size * z)] = isEdge ? 1.0f : 0.0f;
+				}
+			}
+		}
+
+		return noiseMap;
 	}
 
 	public void March()
@@ -120,7 +143,7 @@ public class MarchingCubes : MonoBehaviour
 					for (int i = 0; i < 8; i++)
 					{
 						Vector3Int corner = new Vector3Int(x, y, z) + MarchingTable.Corners[i];
-						corners[i] = noiseMap[Index1D(corner, Size)];
+						corners[i] = noiseMap[Index1D(corner, paddedSize)];
 					}
 
 					MarchCube(new Vector3(x, y, z), GetConfigIndex(corners));
@@ -130,9 +153,6 @@ public class MarchingCubes : MonoBehaviour
 
 		GenerateMesh();
 	}
-
-	private int Index1D(Vector3Int value, Vector3Int size) =>
-		(size.x * size.y * value.z) + (size.y * value.y) + value.x;
 
 	private void GenerateMesh()
 	{
@@ -192,30 +212,21 @@ public class MarchingCubes : MonoBehaviour
 		return index;
 	}
 
+	private int Index1D(Vector3Int value, Vector3Int size) =>
+		value.x + value.y * size.x + value.z * size.x * size.y;
+
 	private void OnDrawGizmos()
 	{
 		if (!drawDebug) return;
-		float max = float.MinValue;
-		float min = float.MaxValue;
 
 		var pos = transform.position;
-		for (int x = 0; x < Size.x; x++)
+		for (int x = 0; x < paddedSize.x; x++)
 		{
-			for (int y = 0; y < Size.y; y++)
+			for (int y = 0; y < paddedSize.y; y++)
 			{
-				for (int z = 0; z < Size.z; z++)
+				for (int z = 0; z < paddedSize.z; z++)
 				{
-					var noise = noiseMap[Index1D(new Vector3Int(x,y,z), Size)];
-
-					if (noise > max)
-					{
-						max = noise;
-					}
-
-					if (noise < min)
-					{
-						min = noise;
-					}
+					var noise = noiseMap[Index1D(new Vector3Int(x, y, z), paddedSize)];
 
 					Gizmos.color = Color.Lerp(Color.black, Color.white, Mathf.InverseLerp(0, 1, noise));
 
