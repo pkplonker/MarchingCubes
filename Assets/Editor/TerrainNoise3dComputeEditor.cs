@@ -10,9 +10,6 @@ public class TerrainNoise3dComputeEditor : Editor
 		base.OnInspectorGUI();
 		var shader = (TerrainNoise3DCompute) target;
 
-		if (GUILayout.Button("Regenerate Noise"))
-		{
-			shader.Generate();
-		}
+		
 	}
 }
