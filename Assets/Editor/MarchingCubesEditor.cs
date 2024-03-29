@@ -20,7 +20,13 @@ public class MarchingCubesEditor : Editor
 				((MarchingCubes) target).CreateNoise();
 			}
 		}
-
+		if (GUILayout.Button("Regenerate Debug Noise"))
+		{
+			foreach (var target in targets)
+			{
+				((MarchingCubes) target).CreateDebugNoise();
+			}
+		}
 		if (GUILayout.Button("Regenerate Mesh"))
 		{
 			foreach (var target in targets)

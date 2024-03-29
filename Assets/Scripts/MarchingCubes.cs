@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 //[ExecuteInEditMode]
@@ -28,7 +30,7 @@ public class MarchingCubes : MonoBehaviour
 	[SerializeField]
 	private bool drawDebug = false;
 
-	private Vector3Int paddedSize => Size + new Vector3Int(1,1,1);
+	private Vector3Int paddedSize => Size + new Vector3Int(1, 1, 1);
 
 	public Vector3Int Size;
 
@@ -70,16 +72,22 @@ public class MarchingCubes : MonoBehaviour
 
 	private float[] scalerField;
 	private float[] noiseMap;
-	private List<Vector3> vertices = new List<Vector3>();
-	private List<int> triangles = new List<int>();
+	private Vector3[] vertices = Array.Empty<Vector3>();
+	private int[] indices = Array.Empty<int>();
 	private MeshFilter meshFilter;
 	private MeshRenderer meshRender;
-	private ITerrainNoise3D noise;
 
 	[Space]
 	[SerializeField]
 	private bool runOnUpdate = true;
 
+	[SerializeField]
+	private ComputeShader marchingCubesShader;
+
+	private ComputeBuffer triangleBuffer;
+	private ComputeBuffer inputPositionsBuffer;
+	private ComputeBuffer triCountBuffer;
+	private ITerrainNoise3D noise;
 	private void OnValidate()
 	{
 		meshFilter = GetComponent<MeshFilter>();
@@ -90,6 +98,8 @@ public class MarchingCubes : MonoBehaviour
 
 	private void Start()
 	{
+		triCountBuffer = new ComputeBuffer(1, sizeof(int), ComputeBufferType.Raw);
+
 		CreateNoise();
 	}
 
@@ -101,12 +111,26 @@ public class MarchingCubes : MonoBehaviour
 			March();
 	}
 
+	public void OnDisable()
+	{
+		triangleBuffer?.Release();
+		triangleBuffer = null;
+		inputPositionsBuffer?.Release();
+		inputPositionsBuffer = null;
+		triCountBuffer?.Release();
+		triCountBuffer = null;
+	}
+
 	public void CreateNoise()
 	{
-		noiseMap = noise.GenerateNoiseMap(Size+ new Vector3Int(1,1,1), NoiseSeed, NoiseScale, NoiseOctaves, NoisePersistance,
+		noiseMap = noise.GenerateNoiseMap(Size + new Vector3Int(1, 1, 1), NoiseSeed, NoiseScale, NoiseOctaves,
+			NoisePersistance,
 			NoiseLacunarity, transform.position / NoiseScale);
-		// test to confirm iteration is correct
-		//noiseMap = CreateNoiseMap(16);
+	
+	}
+	public void CreateDebugNoise()
+	{
+		noiseMap = CreateNoiseMap(32);
 	}
 
 	public float[] CreateNoiseMap(int size)
@@ -131,85 +155,86 @@ public class MarchingCubes : MonoBehaviour
 
 	public void March()
 	{
-		vertices = new List<Vector3>();
-		triangles = new List<int>();
-		for (int x = 0; x < Size.x; x++)
+		var sw = Stopwatch.StartNew();
+		var index = marchingCubesShader.FindKernel("CSMain");
+		marchingCubesShader.SetFloat("isoLevel", IsoLevel);
+		marchingCubesShader.SetInts("size", new int[3]
 		{
-			for (int y = 0; y < Size.y; y++)
-			{
-				for (int z = 0; z < Size.z; z++)
-				{
-					float[] corners = new float[8];
-					for (int i = 0; i < 8; i++)
-					{
-						Vector3Int corner = new Vector3Int(x, y, z) + MarchingTable.Corners[i];
-						corners[i] = noiseMap[Index1D(corner, paddedSize)];
-					}
+			paddedSize.x, paddedSize.y, paddedSize.z
+		});
 
-					MarchCube(new Vector3(x, y, z), GetConfigIndex(corners));
-				}
+		var length = paddedSize.x * paddedSize.y * paddedSize.z;
+
+		triangleBuffer?.Release();
+		triangleBuffer = new ComputeBuffer(length * 5, sizeof (float) * 3 * 3, ComputeBufferType.Append);
+		triangleBuffer.SetCounterValue(0);
+		marchingCubesShader.SetBuffer(index, "triangles", triangleBuffer);
+
+		inputPositionsBuffer?.Release();
+		inputPositionsBuffer =
+			new ComputeBuffer(length, sizeof(float) * 4, ComputeBufferType.Default, ComputeBufferMode.Immutable);
+		marchingCubesShader.SetBuffer(index, "inputPositions", inputPositionsBuffer);
+
+		var inputData = new float4[length];
+		for (var i = 0; i < length; i++)
+		{
+			var p = Index3D(i, paddedSize);
+			inputData[i] = (new float4(p.x, p.y, p.z, noiseMap[i]));
+		}
+
+		inputPositionsBuffer.SetData(inputData);
+		marchingCubesShader.Dispatch(index, 4,4,4);
+		ComputeBuffer.CopyCount(triangleBuffer, triCountBuffer, 0);
+		int[] triCountArray = new int[1];
+		triCountBuffer.GetData(triCountArray);
+		int numTris = triCountArray[0];
+
+		var results = new Triangle[numTris];
+		triangleBuffer.GetData(results, 0, 0, numTris);
+		GenerateMesh(results, numTris);
+		Debug.Log($"{sw.ElapsedMilliseconds}ms");
+	}
+
+	struct Triangle
+	{
+		public Vector3 a;
+		public Vector3 b;
+		public Vector3 c;
+
+		private Vector3[] Vertices => new[] { a, b, c };
+
+		public Vector3 this[int i] => Vertices[i];
+	}
+
+	private void GenerateMesh(Triangle[] results, int numTris)
+	{
+		vertices = new Vector3[numTris * 3];
+		indices = new int[numTris * 3];
+		Mesh mesh = new Mesh();
+		
+
+		for (int i = 0; i < numTris; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				indices[i * 3 + j] = i * 3 + j;
+				vertices[i * 3 + j] = results[i][j];
 			}
 		}
 
-		GenerateMesh();
-	}
-
-	private void GenerateMesh()
-	{
-		var mesh = new Mesh();
 		mesh.SetVertices(vertices);
-		mesh.SetTriangles(triangles, 0);
+		mesh.SetTriangles(indices, 0);
 		mesh.RecalculateNormals();
-		meshFilter.mesh = null;
 		meshFilter.mesh = mesh;
 	}
 
-	private void MarchCube(Vector3 vertPos, int index)
+	private Vector3Int Index3D(int index, Vector3Int size)
 	{
-		if (index == 0 || index == 255)
-		{
-			return;
-		}
-
-		int edgeIndex = 0;
-
-		for (int tri = 0; tri < 5; tri++)
-		{
-			for (int vert = 0; vert < 3; vert++)
-			{
-				int val = MarchingTable.Triangles[index, edgeIndex];
-				if (val == -1)
-				{
-					return;
-				}
-
-				Vector3 vertex = CalculateVertexPosition(vertPos + MarchingTable.Edges[val, 0],
-					vertPos + MarchingTable.Edges[val, 1]);
-				vertex *= VertDistance;
-				vertices.Add(vertex);
-				triangles.Add(vertices.Count - 1);
-				edgeIndex++;
-			}
-		}
-	}
-
-	private Vector3 CalculateVertexPosition(Vector3 start, Vector3 end)
-	{
-		return (start + end) / 2;
-	}
-
-	private int GetConfigIndex(float[] corners)
-	{
-		int index = 0;
-		for (int i = 0; i < 8; i++)
-		{
-			if (corners[i] > IsoLevel)
-			{
-				index |= 1 << i;
-			}
-		}
-
-		return index;
+		int z = index / (size.x * size.y);
+		index -= (z * size.x * size.y);
+		int y = index / size.x;
+		int x = index % size.x;
+		return new Vector3Int(x, y, z);
 	}
 
 	private int Index1D(Vector3Int value, Vector3Int size) =>

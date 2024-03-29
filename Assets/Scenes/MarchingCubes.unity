@@ -142,7 +142,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &52598043
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -221,7 +221,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -232,6 +232,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &52598047
 Transform:
   m_ObjectHideFlags: 0
@@ -266,7 +267,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &53189603
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -345,7 +346,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -356,6 +357,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &53189607
 Transform:
   m_ObjectHideFlags: 0
@@ -435,7 +437,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &89962399
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -514,7 +516,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -525,6 +527,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &89962403
 Transform:
   m_ObjectHideFlags: 0
@@ -559,7 +562,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &96472284
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -638,7 +641,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -649,6 +652,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &96472288
 Transform:
   m_ObjectHideFlags: 0
@@ -683,7 +687,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &110761767
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -762,7 +766,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -773,6 +777,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &110761771
 Transform:
   m_ObjectHideFlags: 0
@@ -807,7 +812,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &153107792
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -886,7 +891,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -897,6 +902,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &153107796
 Transform:
   m_ObjectHideFlags: 0
@@ -931,7 +937,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &285378536
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1010,7 +1016,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -1021,6 +1027,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &285378540
 Transform:
   m_ObjectHideFlags: 0
@@ -1121,8 +1128,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
-  m_LocalRotation: {x: 0.17419873, y: 0.5660202, z: -0.1238455, w: 0.7962024}
-  m_LocalPosition: {x: -9.783253, y: 18.967304, z: -40.66384}
+  m_LocalRotation: {x: -0.17630208, y: 0.67955524, z: -0.17342559, w: -0.6906851}
+  m_LocalPosition: {x: 62.071163, y: 36.892906, z: 11.258862}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1192,7 +1199,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &336778286
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1271,7 +1278,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -1282,6 +1289,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &336778290
 Transform:
   m_ObjectHideFlags: 0
@@ -1434,7 +1442,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &485129836
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1513,7 +1521,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -1524,6 +1532,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &485129840
 Transform:
   m_ObjectHideFlags: 0
@@ -1558,7 +1567,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &581587372
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1637,7 +1646,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -1648,6 +1657,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &581587376
 Transform:
   m_ObjectHideFlags: 0
@@ -1682,7 +1692,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &629305758
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1761,7 +1771,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -1772,6 +1782,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &629305762
 Transform:
   m_ObjectHideFlags: 0
@@ -1806,7 +1817,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &806418725
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1885,7 +1896,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -1896,6 +1907,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &806418729
 Transform:
   m_ObjectHideFlags: 0
@@ -1930,7 +1942,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &995144844
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2009,7 +2021,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -2020,6 +2032,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &995144848
 Transform:
   m_ObjectHideFlags: 0
@@ -2054,7 +2067,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1045314172
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2133,7 +2146,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -2144,6 +2157,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &1045314176
 Transform:
   m_ObjectHideFlags: 0
@@ -2178,7 +2192,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1153131148
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2257,7 +2271,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -2268,6 +2282,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &1153131152
 Transform:
   m_ObjectHideFlags: 0
@@ -2302,7 +2317,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1242604345
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2381,7 +2396,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -2392,6 +2407,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &1242604349
 Transform:
   m_ObjectHideFlags: 0
@@ -2426,7 +2442,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1250324433
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2505,7 +2521,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -2516,6 +2532,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &1250324437
 Transform:
   m_ObjectHideFlags: 0
@@ -2550,7 +2567,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1257387443
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2629,7 +2646,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -2640,6 +2657,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &1257387447
 Transform:
   m_ObjectHideFlags: 0
@@ -2674,7 +2692,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1286085407
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2753,7 +2771,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -2764,6 +2782,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &1286085411
 Transform:
   m_ObjectHideFlags: 0
@@ -2798,7 +2817,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1291445279
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2877,7 +2896,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -2888,6 +2907,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &1291445283
 Transform:
   m_ObjectHideFlags: 0
@@ -2922,7 +2942,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1302889835
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3001,7 +3021,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -3012,6 +3032,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &1302889839
 Transform:
   m_ObjectHideFlags: 0
@@ -3046,7 +3067,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1310268699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3125,7 +3146,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -3136,6 +3157,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &1310268703
 Transform:
   m_ObjectHideFlags: 0
@@ -3170,7 +3192,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1539178660
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3249,7 +3271,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -3260,6 +3282,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &1539178664
 Transform:
   m_ObjectHideFlags: 0
@@ -3294,7 +3317,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1539629081
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3373,7 +3396,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -3384,6 +3407,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &1539629085
 Transform:
   m_ObjectHideFlags: 0
@@ -3418,7 +3442,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1573631274
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3497,7 +3521,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -3508,6 +3532,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &1573631278
 Transform:
   m_ObjectHideFlags: 0
@@ -3542,7 +3567,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1678531845
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3621,7 +3646,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -3632,6 +3657,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &1678531849
 Transform:
   m_ObjectHideFlags: 0
@@ -3666,7 +3692,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1695479007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3745,7 +3771,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -3756,6 +3782,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &1695479011
 Transform:
   m_ObjectHideFlags: 0
@@ -3817,6 +3844,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &1785687708
 Transform:
   m_ObjectHideFlags: 0
@@ -3914,7 +3942,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1831185711
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3993,7 +4021,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -4004,6 +4032,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &1831185715
 Transform:
   m_ObjectHideFlags: 0
@@ -4038,7 +4067,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1859739114
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4117,7 +4146,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -4128,6 +4157,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &1859739118
 Transform:
   m_ObjectHideFlags: 0
@@ -4162,7 +4192,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1994067244
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4241,7 +4271,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -4252,6 +4282,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &1994067248
 Transform:
   m_ObjectHideFlags: 0
@@ -4286,7 +4317,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2044299759
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4365,7 +4396,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -4376,6 +4407,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &2044299763
 Transform:
   m_ObjectHideFlags: 0
@@ -4410,7 +4442,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2058911015
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4489,7 +4521,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -4500,6 +4532,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &2058911019
 Transform:
   m_ObjectHideFlags: 0
@@ -4534,7 +4567,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2132480203
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4613,7 +4646,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -4624,6 +4657,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &2132480207
 Transform:
   m_ObjectHideFlags: 0
@@ -4658,7 +4692,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2136036688
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4737,7 +4771,7 @@ MonoBehaviour:
   gizmoMode: 0
   gizmoRadius: 0.05
   drawDebug: 0
-  Size: {x: 15, y: 15, z: 15}
+  Size: {x: 31, y: 31, z: 31}
   IsoLevel: 0.5
   VertDistance: 1
   Material: {fileID: 2100000, guid: ddfa966bd0a8ece4ba652f7eb0e02f5f, type: 2}
@@ -4748,6 +4782,7 @@ MonoBehaviour:
   NoisePersistance: 1.8
   NoiseScale: 12
   runOnUpdate: 0
+  marchingCubesShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
 --- !u!4 &2136036692
 Transform:
   m_ObjectHideFlags: 0
