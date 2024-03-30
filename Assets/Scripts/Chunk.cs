@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -84,10 +85,13 @@ public class Chunk : MonoBehaviour
 
 		mesh.SetVertices(vertices);
 		mesh.SetTriangles(indices, 0);
-		mesh.RecalculateNormals();
 		meshFilter.mesh = mesh;
+		var id = mesh.GetInstanceID();
+		mesh.RecalculateNormals();
+
+		Physics.BakeMesh(id, false);
+
 		meshCollider.sharedMesh = mesh;
-		meshCollider.cookingOptions = MeshColliderCookingOptions.UseFastMidphase;
 	}
 
 	public bool Modify(RaycastHit hitInfo, float radius)
@@ -108,15 +112,14 @@ public class Chunk : MonoBehaviour
 					{
 						int index = x + y * paddedSize.x + z * paddedSize.x * paddedSize.y;
 						noiseMap[index] = 0;
-						Debug.Log("Modified point");
 					}
 				}
 			}
 		}
-		
 
 		marchingCubes.UpdatePointCloud(noiseMap);
 		GenerateMesh(marchingCubes.March());
+
 		return true;
 	}
 }

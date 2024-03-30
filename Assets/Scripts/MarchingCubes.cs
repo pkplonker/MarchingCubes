@@ -16,10 +16,6 @@ public class MarchingCubes
 	private MeshRenderer meshRender;
 
 	private ComputeShader shader;
-
-	private ComputeBuffer triangleBuffer;
-	private ComputeBuffer inputPositionsBuffer;
-	private ComputeBuffer triCountBuffer;
 	private ITerrainNoise3D noiseGenerator;
 
 	private static readonly int ISO_LEVEL = Shader.PropertyToID("isoLevel");
@@ -34,10 +30,8 @@ public class MarchingCubes
 	{
 		Debug.Log(noiseMap.Max());
 		Debug.Log(noiseMap.Min());
-		ClearBuffers(); // Req for editor work
 		this.chunkSize = chunkSize;
 		this.shader = shader;
-		triCountBuffer = new ComputeBuffer(1, sizeof(int), ComputeBufferType.Raw);
 		this.noiseMap = noiseMap;
 		this.isoLevel = isoLevel;
 		shader.SetFloat(ISO_LEVEL, isoLevel);
@@ -46,23 +40,23 @@ public class MarchingCubes
 		EnsureBuffersInitialized(length);
 	}
 
-	public void OnDisable()
-	{
-		ClearBuffers();
-	}
 
-	private void ClearBuffers()
-	{
-		triangleBuffer?.Release();
-		triangleBuffer = null;
-		inputPositionsBuffer?.Release();
-		inputPositionsBuffer = null;
-		triCountBuffer?.Release();
-		triCountBuffer = null;
-	}
+
 
 	public TriangleData March()
 	{
+		var triangleBuffer = new ComputeBuffer(length * 5, sizeof(float) * 3 * 3, ComputeBufferType.Append);
+
+		triangleBuffer.SetCounterValue(0);
+		shader.SetBuffer(kernel, TRIANGLES, triangleBuffer);
+
+		var inputPositionsBuffer = new ComputeBuffer(length, sizeof(float) * 4, ComputeBufferType.Default,
+			ComputeBufferMode.Immutable);
+		UpdateInputData(inputPositionsBuffer);
+
+		shader.SetBuffer(kernel, INPUT_POSITIONS, inputPositionsBuffer);
+		var triCountBuffer = new ComputeBuffer(1, sizeof(int), ComputeBufferType.Raw);
+
 		shader.SetFloat(ISO_LEVEL, isoLevel);
 
 		//var sw = Stopwatch.StartNew();
@@ -74,40 +68,22 @@ public class MarchingCubes
 		int numTris = GetTriangleCount(triCountBuffer);
 		Triangle[] results = new Triangle[numTris];
 		triangleBuffer.GetData(results, 0, 0, numTris);
-
+		
+		triCountBuffer.Release();
+		triangleBuffer.Release();
+		inputPositionsBuffer.Release();
 		//Debug.Log($"{sw.ElapsedMilliseconds}ms");
 		return new TriangleData(results, numTris);
 	}
 
-	private void EnsureBuffersInitialized(int length)
-	{
-		if (triangleBuffer == null || triangleBuffer.count != length * 5)
-		{
-			triangleBuffer?.Release();
-			triangleBuffer = new ComputeBuffer(length * 5, sizeof(float) * 3 * 3, ComputeBufferType.Append);
-		}
-
-		triangleBuffer.SetCounterValue(0);
-		shader.SetBuffer(kernel, TRIANGLES, triangleBuffer);
-
-		if (inputPositionsBuffer == null || inputPositionsBuffer.count != length)
-		{
-			inputPositionsBuffer?.Release();
-			inputPositionsBuffer = new ComputeBuffer(length, sizeof(float) * 4, ComputeBufferType.Default,
-				ComputeBufferMode.Immutable);
-			UpdateInputData();
-		}
-
-		shader.SetBuffer(kernel, INPUT_POSITIONS, inputPositionsBuffer);
-	}
+	private void EnsureBuffersInitialized(int length) { }
 
 	public void UpdatePointCloud(float[] pointCloud)
 	{
 		this.noiseMap = pointCloud;
-		UpdateInputData();
 	}
 
-	private void UpdateInputData()
+	private void UpdateInputData(ComputeBuffer inputPositionsBuffer)
 	{
 		float4[] inputData = new float4[length];
 		for (var i = 0; i < length; i++)

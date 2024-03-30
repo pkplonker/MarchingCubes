@@ -29,9 +29,6 @@ public class Digger : MonoBehaviour
 		var chunk = hit.collider.gameObject.GetComponent<Chunk>();
 		if (chunk == null) return;
 
-		if (chunk.Modify(hit, radius))
-		{
-			Debug.Log("Hit!");
-		}
+		chunk.Modify(hit, radius);
 	}
 }
