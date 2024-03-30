@@ -17,11 +17,14 @@ public class TerrainNoise3DCompute : MonoBehaviour, ITerrainNoise3D
 	private static readonly int PERSISTANCE = Shader.PropertyToID("persistance");
 	private static readonly int LACUNARITY = Shader.PropertyToID("lacunarity");
 	private static readonly int SCALE = Shader.PropertyToID("scale");
+	private static readonly int NOISE_EXTENTS = Shader.PropertyToID("noiseExtents");
+
 	private static readonly int OCTAVES = Shader.PropertyToID("octaves");
 	private static readonly int SIZE = Shader.PropertyToID("size");
 	private static readonly int WORLD_OFFSET = Shader.PropertyToID("worldOffset");
 	private int kernelIndex;
 	private Random random;
+	private float noiseExtents;
 
 	private void Awake()
 	{
@@ -49,7 +52,9 @@ public class TerrainNoise3DCompute : MonoBehaviour, ITerrainNoise3D
 		random = new System.Random(seed);
 
 		var octaveOffsets = CalculateOctaveOffsets(octaves, offset, random);
+		noiseExtents = CalculateExtents(octaves, persistance);
 
+		noiseExtents /= ((float) octaves / 2);
 		var size = dimensions.x * dimensions.y * dimensions.z;
 		var data = new float[size];
 
@@ -62,7 +67,19 @@ public class TerrainNoise3DCompute : MonoBehaviour, ITerrainNoise3D
 		resultsBuffer.GetData(data);
 		return data;
 	}
+	private static float CalculateExtents(int octaves, float persistance)
+	{
+		float noiseExtents = 0f;
+		float amp = 1f;
 
+		for (int i = 0; i < octaves; i++)
+		{
+			noiseExtents += amp;
+			amp *= persistance;
+		}
+
+		return noiseExtents;
+	}
 	private void EnsureBuffersInitialized(int octaves, int size)
 	{
 		if (octaveOffsetsBuffer == null || octaveOffsetsBuffer.count != octaves)
@@ -83,6 +100,7 @@ public class TerrainNoise3DCompute : MonoBehaviour, ITerrainNoise3D
 	{
 		shader.SetBuffer(kernelIndex, RESULT, resultsBuffer);
 		shader.SetBuffer(kernelIndex, OCTAVE_OFFSETS, octaveOffsetsBuffer);
+		shader.SetFloat(NOISE_EXTENTS, noiseExtents);
 
 		shader.SetFloat(PERSISTANCE, persistance);
 		shader.SetFloat(LACUNARITY, lacunarity);

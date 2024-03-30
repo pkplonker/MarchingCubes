@@ -298,7 +298,7 @@ void CSMain(uint3 id : SV_DispatchThreadID)
         float sampleZ = (id.z) / scale * frequency + octaveOffsets[i].z * frequency;
 
         //float perlinValue = 17.0f;
-        float perlinValue = snoise(float3(sampleX, sampleY, sampleZ));
+        float perlinValue = cnoise(float3(sampleX, sampleY, sampleZ));
 
         noiseHeight += perlinValue * amplitude;
 
@@ -306,5 +306,5 @@ void CSMain(uint3 id : SV_DispatchThreadID)
         frequency *= lacunarity;
     }
 
-    Result[(size.x * size.y * id.z) + (size.y * id.y) + id.x] = InverseLerp(-noiseExtents, noiseExtents, noiseHeight);
+    Result[(size.x * size.y * id.z) + (size.y * id.y) + id.x] = noiseHeight; InverseLerp(-noiseExtents, noiseExtents, noiseHeight);
 }

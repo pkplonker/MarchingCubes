@@ -3,7 +3,7 @@ using System.Drawing;
 using Unity.VisualScripting;
 using UnityEngine;
 
-[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
+[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider))]
 public class Chunk : MonoBehaviour
 {
 	[SerializeField]
@@ -14,6 +14,7 @@ public class Chunk : MonoBehaviour
 
 	private MeshFilter meshFilter;
 	private MeshRenderer meshRender;
+	private MeshCollider meshCollider;
 
 	[SerializeField]
 	private ITerrainNoise3D noiseGenerator;
@@ -55,6 +56,7 @@ public class Chunk : MonoBehaviour
 		meshRender = GetComponent<MeshRenderer>();
 		meshRender.material = ChunkMaterial;
 		noiseGenerator = GetComponent<ITerrainNoise3D>();
+		meshCollider = GetComponent<MeshCollider>();
 	}
 
 	private void OnDisable()
@@ -84,6 +86,38 @@ public class Chunk : MonoBehaviour
 		mesh.SetTriangles(indices, 0);
 		mesh.RecalculateNormals();
 		meshFilter.mesh = mesh;
+		meshCollider.sharedMesh = mesh;
+		meshCollider.cookingOptions = MeshColliderCookingOptions.UseFastMidphase;
+	}
+
+	public bool Modify(RaycastHit hitInfo, float radius)
+	{
+		Vector3 hitPoint = transform.InverseTransformPoint(hitInfo.point);
+		float sqrRadius = radius * radius;
+		var paddedSize = size + new Vector3Int(1, 1, 1);
+		for (int x = 0; x < paddedSize.x; x++)
+		{
+			for (int y = 0; y < paddedSize.y; y++)
+			{
+				for (int z = 0; z < paddedSize.z; z++)
+				{
+					Vector3 voxelCenter = new Vector3(x + 0.5f, y + 0.5f, z + 0.5f);
+					float sqrDistance = (voxelCenter - hitPoint).sqrMagnitude;
+
+					if (sqrDistance < sqrRadius)
+					{
+						int index = x + y * paddedSize.x + z * paddedSize.x * paddedSize.y;
+						noiseMap[index] = 0;
+						Debug.Log("Modified point");
+					}
+				}
+			}
+		}
+		
+
+		marchingCubes.UpdatePointCloud(noiseMap);
+		GenerateMesh(marchingCubes.March());
+		return true;
 	}
 }
 

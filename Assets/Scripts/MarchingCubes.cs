@@ -1,4 +1,6 @@
+using System;
 using System.Diagnostics;
+using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
@@ -24,16 +26,20 @@ public class MarchingCubes
 	private static readonly int SIZE = Shader.PropertyToID("size");
 	private static readonly int TRIANGLES = Shader.PropertyToID("triangles");
 	private static readonly int INPUT_POSITIONS = Shader.PropertyToID("inputPositions");
+	private float isoLevel;
 	private int length => PaddedSize.x * PaddedSize.y * PaddedSize.z;
 	private int kernel => shader.FindKernel("CSMain");
 
 	public MarchingCubes(ComputeShader shader, float[] noiseMap, float isoLevel, Vector3Int chunkSize)
 	{
+		Debug.Log(noiseMap.Max());
+		Debug.Log(noiseMap.Min());
 		ClearBuffers(); // Req for editor work
 		this.chunkSize = chunkSize;
 		this.shader = shader;
 		triCountBuffer = new ComputeBuffer(1, sizeof(int), ComputeBufferType.Raw);
 		this.noiseMap = noiseMap;
+		this.isoLevel = isoLevel;
 		shader.SetFloat(ISO_LEVEL, isoLevel);
 		shader.SetInts(SIZE, new int[3] {PaddedSize.x, PaddedSize.y, PaddedSize.z});
 
@@ -57,6 +63,8 @@ public class MarchingCubes
 
 	public TriangleData March()
 	{
+		shader.SetFloat(ISO_LEVEL, isoLevel);
+
 		//var sw = Stopwatch.StartNew();
 		EnsureBuffersInitialized(length);
 
