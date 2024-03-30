@@ -4,13 +4,13 @@ using System.Diagnostics;
 using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Rendering;
 using Debug = UnityEngine.Debug;
 
 public class MarchingCubes
 {
 	private Vector3Int chunkSize;
 	private Vector3Int paddedSize;
-
 
 	private MeshFilter meshFilter;
 	private MeshRenderer meshRender;
@@ -30,9 +30,9 @@ public class MarchingCubes
 	public MarchingCubes(ComputeShader shader, float[] noiseMap, float isoLevel, Vector3Int chunkSize)
 	{
 		this.chunkSize = chunkSize;
-		paddedSize = this.chunkSize + new Vector3Int(1,1,1);
+		paddedSize = this.chunkSize + new Vector3Int(1, 1, 1);
 		length = paddedSize.x * paddedSize.y * paddedSize.z;
-		
+
 		this.shader = shader;
 		this.isoLevel = isoLevel;
 		shader.SetFloat(ISO_LEVEL, isoLevel);
@@ -40,32 +40,66 @@ public class MarchingCubes
 		CreateInputDataFromPointCloud(noiseMap);
 	}
 
-	public TriangleData March()
+	public void March(Action<TriangleData> callback)
 	{
 		var triangleBuffer = new ComputeBuffer(length * 5, sizeof(float) * 3 * 3, ComputeBufferType.Append);
+		var inputPositionsBuffer = new ComputeBuffer(length, sizeof(float) * 4, ComputeBufferType.Default,
+			ComputeBufferMode.Immutable);
+		var triCountBuffer = new ComputeBuffer(1, sizeof(int), ComputeBufferType.Raw);
 
 		triangleBuffer.SetCounterValue(0);
 		shader.SetBuffer(kernel, TRIANGLES, triangleBuffer);
-
-		var inputPositionsBuffer = new ComputeBuffer(length, sizeof(float) * 4, ComputeBufferType.Default,
-			ComputeBufferMode.Immutable);
 		inputPositionsBuffer.SetData(inputData);
 		shader.SetBuffer(kernel, INPUT_POSITIONS, inputPositionsBuffer);
-		var triCountBuffer = new ComputeBuffer(1, sizeof(int), ComputeBufferType.Raw);
-
 		shader.SetFloat(ISO_LEVEL, isoLevel);
 
 		shader.Dispatch(kernel, 4, 4, 4);
 		ComputeBuffer.CopyCount(triangleBuffer, triCountBuffer, 0);
 
-		int numTris = GetTriangleCount(triCountBuffer);
-		Triangle[] results = new Triangle[numTris];
-		triangleBuffer.GetData(results, 0, 0, numTris);
-
-		triCountBuffer.Release();
-		triangleBuffer.Release();
 		inputPositionsBuffer.Release();
-		return new TriangleData(results, numTris);
+
+		AsyncGPUReadback.Request(triCountBuffer, triCountRequest =>
+		{
+			void Release()
+			{
+				triangleBuffer.Release();
+				triCountBuffer.Release();
+				inputPositionsBuffer?.Release();
+			}
+
+			var error = false;
+			if (triCountRequest.hasError)
+			{
+				Debug.LogError("GPU readback error detected on triCountBuffer.");
+				error = true;
+			}
+
+			if (!error)
+			{
+				int numTris = triCountRequest.GetData<int>()[0];
+
+				AsyncGPUReadback.Request(triangleBuffer, triangleRequest =>
+				{
+					if (triangleRequest.hasError)
+					{
+						Debug.LogError("GPU readback error detected on triangleBuffer.");
+
+						error = true;
+					}
+					else
+					{
+						var triangleData = triangleRequest.GetData<Triangle>();
+
+						Triangle[] results = new Triangle[numTris];
+
+						Array.Copy(triangleData.ToArray(), results, numTris);
+
+						callback(new TriangleData(results, numTris));
+					}
+				});
+			}
+			Release();
+		});
 	}
 
 	public void UpdatePointCloud(List<NoiseMapChange> noiseMapChanges)
@@ -95,7 +129,6 @@ public class MarchingCubes
 				}
 			}
 		}
-
 	}
 
 	private int GetTriangleCount(ComputeBuffer countBuffer)

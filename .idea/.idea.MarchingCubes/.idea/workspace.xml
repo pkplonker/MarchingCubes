@@ -5,8 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c4ca93ba-5ae1-47e7-b91c-475b15f123cf" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MarchingCubes/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MarchingCubes/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Art/Materials/MapMaterial.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Materials/MapMaterial.mat" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Chunk.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Chunk.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/MarchingCubes.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/MarchingCubes.cs" afterDir="false" />
     </list>
@@ -26,6 +24,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ac87b54e58ee4be198261fd5c8030d5293ee00/66/54e9704d/InspectorElement.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c2d036c16ca64e0eb93703a3b13e733a171c00/05/725053a6/AsyncGPUReadback.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c2d036c16ca64e0eb93703a3b13e733a171c00/07/7425088e/Gizmos.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c2d036c16ca64e0eb93703a3b13e733a171c00/2d/446b70cc/Vector3Int.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c2d036c16ca64e0eb93703a3b13e733a171c00/37/99b27d66/ComputeBuffer.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c2d036c16ca64e0eb93703a3b13e733a171c00/f9/b21b5d6e/ComputeShader.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Editor/MarchingCubesEditor.cs" root0="FORCE_HIGHLIGHTING" />
@@ -116,7 +115,7 @@
       <workItem from="1711475169782" duration="10718000" />
       <workItem from="1711721980705" duration="7575000" />
       <workItem from="1711797567579" duration="5184000" />
-      <workItem from="1711819508776" duration="2421000" />
+      <workItem from="1711819508776" duration="4113000" />
     </task>
     <servers />
   </component>
@@ -144,29 +143,29 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Assets/Scripts/Chunk.cs</url>
-          <line>92</line>
+          <line>93</line>
           <properties documentPath="S:\Users\pkplo\OneDrive\Documents\UnityProjects\MarchingCubes\Assets\Scripts\Chunk.cs" initialLine="94" containingFunctionPresentation="Method 'Modify'">
             <startOffsets>
-              <option value="2292" />
+              <option value="2324" />
             </startOffsets>
             <endOffsets>
-              <option value="2319" />
+              <option value="2351" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="27" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Assets/Scripts/MarchingCubes.cs</url>
-          <line>32</line>
-          <properties documentPath="S:\Users\pkplo\OneDrive\Documents\UnityProjects\MarchingCubes\Assets\Scripts\MarchingCubes.cs" initialLine="32" containingFunctionPresentation="Constructor 'MarchingCubes'">
+          <line>83</line>
+          <properties documentPath="S:\Users\pkplo\OneDrive\Documents\UnityProjects\MarchingCubes\Assets\Scripts\MarchingCubes.cs" initialLine="83" containingFunctionPresentation="Lambda expression inside Method 'March'">
             <startOffsets>
-              <option value="952" />
+              <option value="2690" />
             </startOffsets>
             <endOffsets>
-              <option value="979" />
+              <option value="2742" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="33" />
+          <option name="timeStamp" value="36" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

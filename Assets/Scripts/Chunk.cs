@@ -49,7 +49,7 @@ public class Chunk : MonoBehaviour
 
 	public void BuildMesh()
 	{
-		GenerateMesh(marchingCubes.March());
+		marchingCubes.March(GenerateMesh);
 	}
 
 	private void OnEnable()
@@ -132,7 +132,8 @@ public class Chunk : MonoBehaviour
 		}
 
 		marchingCubes.UpdatePointCloud(noiseMapChanges);
-		GenerateMesh(marchingCubes.March());
+		marchingCubes.March(GenerateMesh);
+		
 
 		return true;
 	}
