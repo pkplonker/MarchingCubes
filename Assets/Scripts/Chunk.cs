@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
@@ -99,11 +99,19 @@ public class Chunk : MonoBehaviour
 		Vector3 hitPoint = transform.InverseTransformPoint(hitInfo.point);
 		float sqrRadius = radius * radius;
 		var paddedSize = size + new Vector3Int(1, 1, 1);
-		for (int x = 0; x < paddedSize.x; x++)
+
+		int minX = Mathf.Max(0, (int) (hitPoint.x - radius));
+		int maxX = Mathf.Min(paddedSize.x, (int) (hitPoint.x + radius) + 1);
+		int minY = Mathf.Max(0, (int) (hitPoint.y - radius));
+		int maxY = Mathf.Min(paddedSize.y, (int) (hitPoint.y + radius) + 1);
+		int minZ = Mathf.Max(0, (int) (hitPoint.z - radius));
+		int maxZ = Mathf.Min(paddedSize.z, (int) (hitPoint.z + radius) + 1);
+
+		for (int x = minX; x < maxX; x++)
 		{
-			for (int y = 0; y < paddedSize.y; y++)
+			for (int y = minY; y < maxY; y++)
 			{
-				for (int z = 0; z < paddedSize.z; z++)
+				for (int z = minZ; z < maxZ; z++)
 				{
 					Vector3 voxelCenter = new Vector3(x + 0.5f, y + 0.5f, z + 0.5f);
 					float sqrDistance = (voxelCenter - hitPoint).sqrMagnitude;
@@ -130,9 +138,19 @@ public struct Triangle
 	public Vector3 B;
 	public Vector3 C;
 
-	private Vector3[] Vertices => new[] {A, B, C};
-
-	public Vector3 this[int i] => Vertices[i];
+	public Vector3 this[int i]
+	{
+		get
+		{
+			return i switch
+			{
+				0 => A,
+				1 => B,
+				2 => C,
+				_ => throw new ArgumentOutOfRangeException(nameof(i), "Index must be in the range 0-2.")
+			};
+		}
+	}
 }
 
 public struct TriangleData
