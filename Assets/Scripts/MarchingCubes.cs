@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Unity.Mathematics;
@@ -10,7 +11,6 @@ public class MarchingCubes
 	private Vector3Int chunkSize;
 	private Vector3Int paddedSize;
 
-	private float[] noiseMap;
 
 	private MeshFilter meshFilter;
 	private MeshRenderer meshRender;
@@ -24,7 +24,6 @@ public class MarchingCubes
 	private static readonly int INPUT_POSITIONS = Shader.PropertyToID("inputPositions");
 	private float isoLevel;
 	private float4[] inputData;
-	private bool dirty;
 	private int length;
 	private int kernel => shader.FindKernel("CSMain");
 
@@ -35,12 +34,10 @@ public class MarchingCubes
 		length = paddedSize.x * paddedSize.y * paddedSize.z;
 		
 		this.shader = shader;
-		this.noiseMap = noiseMap;
 		this.isoLevel = isoLevel;
 		shader.SetFloat(ISO_LEVEL, isoLevel);
 		shader.SetInts(SIZE, new int[3] {paddedSize.x, paddedSize.y, paddedSize.z});
-		UpdateInputData();
-		dirty = true;
+		CreateInputDataFromPointCloud(noiseMap);
 	}
 
 	public TriangleData March()
@@ -52,7 +49,6 @@ public class MarchingCubes
 
 		var inputPositionsBuffer = new ComputeBuffer(length, sizeof(float) * 4, ComputeBufferType.Default,
 			ComputeBufferMode.Immutable);
-		if (dirty) UpdateInputData();
 		inputPositionsBuffer.SetData(inputData);
 		shader.SetBuffer(kernel, INPUT_POSITIONS, inputPositionsBuffer);
 		var triCountBuffer = new ComputeBuffer(1, sizeof(int), ComputeBufferType.Raw);
@@ -72,13 +68,15 @@ public class MarchingCubes
 		return new TriangleData(results, numTris);
 	}
 
-	public void UpdatePointCloud(float[] pointCloud)
+	public void UpdatePointCloud(List<NoiseMapChange> noiseMapChanges)
 	{
-		this.noiseMap = pointCloud;
-		dirty = true;
+		foreach (var change in noiseMapChanges)
+		{
+			inputData[change.Index].w = change.Value;
+		}
 	}
 
-	private void UpdateInputData()
+	private void CreateInputDataFromPointCloud(float[] noiseMap)
 	{
 		if (inputData == null || inputData.Length != length)
 		{
@@ -98,7 +96,6 @@ public class MarchingCubes
 			}
 		}
 
-		dirty = false;
 	}
 
 	private int GetTriangleCount(ComputeBuffer countBuffer)

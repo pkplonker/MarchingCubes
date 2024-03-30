@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
@@ -106,7 +107,7 @@ public class Chunk : MonoBehaviour
 		int maxY = Mathf.Min(paddedSize.y, (int) (hitPoint.y + radius) + 1);
 		int minZ = Mathf.Max(0, (int) (hitPoint.z - radius));
 		int maxZ = Mathf.Min(paddedSize.z, (int) (hitPoint.z + radius) + 1);
-
+		var noiseMapChanges = new List<NoiseMapChange>((int) radius * 4);
 		for (int x = minX; x < maxX; x++)
 		{
 			for (int y = minY; y < maxY; y++)
@@ -120,16 +121,27 @@ public class Chunk : MonoBehaviour
 					{
 						int index = x + y * paddedSize.x + z * paddedSize.x * paddedSize.y;
 						noiseMap[index] = 0;
+						noiseMapChanges.Add(new NoiseMapChange
+						{
+							Index = index,
+							Value = 0,
+						});
 					}
 				}
 			}
 		}
 
-		marchingCubes.UpdatePointCloud(noiseMap);
+		marchingCubes.UpdatePointCloud(noiseMapChanges);
 		GenerateMesh(marchingCubes.March());
 
 		return true;
 	}
+}
+
+public struct NoiseMapChange
+{
+	public int Value { get; set; }
+	public int Index { get; set; }
 }
 
 public struct Triangle
