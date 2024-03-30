@@ -5,20 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c4ca93ba-5ae1-47e7-b91c-475b15f123cf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Chunk.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Chunk.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ChunkManager.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ChunkManager.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/DummyNoise.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/DummyNoise.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Noise.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Noise.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MarchingCubes/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MarchingCubes/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Editor/MarchingCubesEditor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Editor/MarchingCubesEditor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Editor/TerrainNoise3dComputeEditor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Editor/TerrainNoise3dComputeEditor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/MarchingCubes.compute" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/MarchingCubes.compute" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/MarchingCubes.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/MarchingCubes.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ITerrainNoise3D.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ITerrainNoise3D.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Editor/ChunkManagerEditor.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Editor/ChunkManagerEditor.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Timer.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Timer.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Chunk.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Chunk.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ChunkManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ChunkManager.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/MarchingCubes.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/MarchingCubes.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/TerrainNoise3DCompute.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/TerrainNoise3DCompute.cs" afterDir="false" />
     </list>
@@ -31,7 +23,6 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/605bf8b31fcb444b85176da963870aa746ac00/8d/f32f274b/Task.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/605bf8b31fcb444b85176da963870aa746ac00/aa/029c1c68/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ac87b54e58ee4be198261fd5c8030d5293ee00/66/54e9704d/InspectorElement.cs" root0="SKIP_HIGHLIGHTING" />
@@ -40,14 +31,9 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c2d036c16ca64e0eb93703a3b13e733a171c00/f9/b21b5d6e/ComputeShader.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Editor/MarchingCubesEditor.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/TerrainNoise3DCompute.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://S:/Users/pkplo/OneDrive/Documents/UnityProjects/MarchingCubes/Assets/Scripts/TerrainNoise3d.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://S:/Users/pkplo/OneDrive/Documents/UnityProjects/MarchingCubes/Assets/Scripts/TerrainNoise3d.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://S:/Users/pkplo/OneDrive/Documents/UnityProjects/MarchingCubes/Assets/Scripts/TerrainNoise3d.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://S:/Users/pkplo/OneDrive/Documents/UnityProjects/MarchingCubes/Assets/Scripts/TerrainNoise3d.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://S:/Users/pkplo/OneDrive/Documents/UnityProjects/MarchingCubes/Assets/Scripts/TerrainNoise3d.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://S:/Users/pkplo/OneDrive/Documents/UnityProjects/MarchingCubes/Assets/Scripts/TerrainNoise3d.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://S:/Users/pkplo/OneDrive/Documents/UnityProjects/MarchingCubes/Assets/Scripts/TerrainNoise3d.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://S:/Users/pkplo/OneDrive/Documents/UnityProjects/MarchingCubes/Assets/Scripts/TerrainNoise3d.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.burst@1.8.4/Tests/Editor/BurstStringSearchTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.ugui@1.0.0/Tests/Runtime/Canvas/CanvasScalerWithChildTextObjectDoesNotCrash.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.ugui@1.0.0/Tests/Runtime/Util/GraphicTestHelper.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 5
@@ -106,10 +92,10 @@
       </option>
       <method v="2" />
     </configuration>
-    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="26636">
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="10120">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
-      <option name="pid" value="26636" />
+      <option name="pid" value="10120" />
       <option name="projectPathOnTarget" />
       <option name="selectedOptions">
         <list />
@@ -128,6 +114,7 @@
       <workItem from="1711301343719" duration="16319000" />
       <workItem from="1711475169782" duration="10718000" />
       <workItem from="1711721980705" duration="7575000" />
+      <workItem from="1711797567579" duration="757000" />
     </task>
     <servers />
   </component>
@@ -171,13 +158,67 @@
           <line>40</line>
           <properties documentPath="S:\Users\pkplo\OneDrive\Documents\UnityProjects\MarchingCubes\Assets\Scripts\ChunkManager.cs" initialLine="40" containingFunctionPresentation="Method 'Start'">
             <startOffsets>
-              <option value="1149" />
+              <option value="1274" />
             </startOffsets>
             <endOffsets>
-              <option value="1282" />
+              <option value="1302" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="12" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Scripts/Timer.cs</url>
+          <line>12</line>
+          <properties documentPath="S:\Users\pkplo\OneDrive\Documents\UnityProjects\MarchingCubes\Assets\Scripts\Timer.cs" initialLine="12" containingFunctionPresentation="Constructor 'Timer'">
+            <startOffsets>
+              <option value="258" />
+            </startOffsets>
+            <endOffsets>
+              <option value="291" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Scripts/Timer.cs</url>
+          <line>17</line>
+          <properties documentPath="S:\Users\pkplo\OneDrive\Documents\UnityProjects\MarchingCubes\Assets\Scripts\Timer.cs" initialLine="17" containingFunctionPresentation="Method 'Dispose'">
+            <startOffsets>
+              <option value="324" />
+            </startOffsets>
+            <endOffsets>
+              <option value="372" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Scripts/ChunkManager.cs</url>
+          <line>72</line>
+          <properties documentPath="S:\Users\pkplo\OneDrive\Documents\UnityProjects\MarchingCubes\Assets\Scripts\ChunkManager.cs" initialLine="72" containingFunctionPresentation="Method 'GenerateChunks'">
+            <startOffsets>
+              <option value="1525" />
+              <option value="1557" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1633" />
+              <option value="1631" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Scripts/ChunkManager.cs</url>
+          <line>74</line>
+          <properties documentPath="S:\Users\pkplo\OneDrive\Documents\UnityProjects\MarchingCubes\Assets\Scripts\ChunkManager.cs" initialLine="74" containingFunctionPresentation="Method 'GenerateChunks'">
+            <startOffsets>
+              <option value="1637" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1680" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="16" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

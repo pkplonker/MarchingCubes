@@ -34,12 +34,18 @@ public class Chunk : MonoBehaviour
 		Generate();
 	}
 
-	private void Generate()
+	public void Generate()
 	{
 		noiseMap = this.noiseGenerator.GenerateNoiseMap(size + new Vector3Int(1, 1, 1), noiseData.NoiseSeed,
 			noiseData.NoiseScale, noiseData.NoiseOctaves, noiseData.NoisePersistance, noiseData.NoiseLacunarity,
 			transform.position / noiseData.NoiseScale);
 		marchingCubes = new MarchingCubes(MarchingCubeShader, noiseMap, noiseData.IsoLevel, size);
+
+		BuildMesh();
+	}
+
+	public void BuildMesh()
+	{
 		GenerateMesh(marchingCubes.March());
 	}
 
@@ -49,6 +55,14 @@ public class Chunk : MonoBehaviour
 		meshRender = GetComponent<MeshRenderer>();
 		meshRender.material = ChunkMaterial;
 		noiseGenerator = GetComponent<ITerrainNoise3D>();
+	}
+
+	private void OnDisable()
+	{
+		if (meshFilter != null)
+		{
+			meshFilter.mesh = null;
+		}
 	}
 
 	private void GenerateMesh(TriangleData triangleData)

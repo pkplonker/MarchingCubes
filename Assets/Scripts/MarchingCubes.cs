@@ -29,6 +29,7 @@ public class MarchingCubes
 
 	public MarchingCubes(ComputeShader shader, float[] noiseMap, float isoLevel, Vector3Int chunkSize)
 	{
+		ClearBuffers(); // Req for editor work
 		this.chunkSize = chunkSize;
 		this.shader = shader;
 		triCountBuffer = new ComputeBuffer(1, sizeof(int), ComputeBufferType.Raw);
@@ -41,6 +42,11 @@ public class MarchingCubes
 
 	public void OnDisable()
 	{
+		ClearBuffers();
+	}
+
+	private void ClearBuffers()
+	{
 		triangleBuffer?.Release();
 		triangleBuffer = null;
 		inputPositionsBuffer?.Release();
@@ -51,7 +57,8 @@ public class MarchingCubes
 
 	public TriangleData March()
 	{
-		var sw = Stopwatch.StartNew();
+		//var sw = Stopwatch.StartNew();
+		EnsureBuffersInitialized(length);
 
 		shader.Dispatch(kernel, 4, 4, 4);
 		ComputeBuffer.CopyCount(triangleBuffer, triCountBuffer, 0);
@@ -60,7 +67,7 @@ public class MarchingCubes
 		Triangle[] results = new Triangle[numTris];
 		triangleBuffer.GetData(results, 0, 0, numTris);
 
-		Debug.Log($"{sw.ElapsedMilliseconds}ms");
+		//Debug.Log($"{sw.ElapsedMilliseconds}ms");
 		return new TriangleData(results, numTris);
 	}
 
