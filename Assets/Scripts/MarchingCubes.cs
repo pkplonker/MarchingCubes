@@ -3,11 +3,10 @@ using Unity.Mathematics;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class MarchingCubes
 {
-	private Vector3Int size;
-	private Vector3Int PaddedSize => size + new Vector3Int(1, 1, 1);
+	private Vector3Int chunkSize;
+	private Vector3Int PaddedSize => chunkSize + new Vector3Int(1, 1, 1);
 
 	private float[] noiseMap;
 
@@ -25,15 +24,19 @@ public class MarchingCubes
 	private static readonly int SIZE = Shader.PropertyToID("size");
 	private static readonly int TRIANGLES = Shader.PropertyToID("triangles");
 	private static readonly int INPUT_POSITIONS = Shader.PropertyToID("inputPositions");
-	private readonly float isoLevel;
+	private int length => PaddedSize.x * PaddedSize.y * PaddedSize.z;
+	private int kernel => shader.FindKernel("CSMain");
 
-	public MarchingCubes(ComputeShader shader, float[] noiseMap, float isoLevel, Vector3Int size)
+	public MarchingCubes(ComputeShader shader, float[] noiseMap, float isoLevel, Vector3Int chunkSize)
 	{
-		this.size = size;
+		this.chunkSize = chunkSize;
 		this.shader = shader;
 		triCountBuffer = new ComputeBuffer(1, sizeof(int), ComputeBufferType.Raw);
 		this.noiseMap = noiseMap;
-		this.isoLevel = isoLevel;
+		shader.SetFloat(ISO_LEVEL, isoLevel);
+		shader.SetInts(SIZE, new int[3] {PaddedSize.x, PaddedSize.y, PaddedSize.z});
+
+		EnsureBuffersInitialized(length);
 	}
 
 	public void OnDisable()
@@ -49,43 +52,63 @@ public class MarchingCubes
 	public TriangleData March()
 	{
 		var sw = Stopwatch.StartNew();
-		var index = shader.FindKernel("CSMain");
-		shader.SetFloat(ISO_LEVEL, isoLevel);
-		shader.SetInts(SIZE, new int[3]
+
+		shader.Dispatch(kernel, 4, 4, 4);
+		ComputeBuffer.CopyCount(triangleBuffer, triCountBuffer, 0);
+
+		int numTris = GetTriangleCount(triCountBuffer);
+		Triangle[] results = new Triangle[numTris];
+		triangleBuffer.GetData(results, 0, 0, numTris);
+
+		Debug.Log($"{sw.ElapsedMilliseconds}ms");
+		return new TriangleData(results, numTris);
+	}
+
+	private void EnsureBuffersInitialized(int length)
+	{
+		if (triangleBuffer == null || triangleBuffer.count != length * 5)
 		{
-			PaddedSize.x, PaddedSize.y, PaddedSize.z
-		});
+			triangleBuffer?.Release();
+			triangleBuffer = new ComputeBuffer(length * 5, sizeof(float) * 3 * 3, ComputeBufferType.Append);
+		}
 
-		var length = PaddedSize.x * PaddedSize.y * PaddedSize.z;
-
-		triangleBuffer?.Release();
-		triangleBuffer = new ComputeBuffer(length * 5, sizeof(float) * 3 * 3, ComputeBufferType.Append);
 		triangleBuffer.SetCounterValue(0);
-		shader.SetBuffer(index, TRIANGLES, triangleBuffer);
+		shader.SetBuffer(kernel, TRIANGLES, triangleBuffer);
 
-		inputPositionsBuffer?.Release();
-		inputPositionsBuffer =
-			new ComputeBuffer(length, sizeof(float) * 4, ComputeBufferType.Default, ComputeBufferMode.Immutable);
-		shader.SetBuffer(index, INPUT_POSITIONS, inputPositionsBuffer);
+		if (inputPositionsBuffer == null || inputPositionsBuffer.count != length)
+		{
+			inputPositionsBuffer?.Release();
+			inputPositionsBuffer = new ComputeBuffer(length, sizeof(float) * 4, ComputeBufferType.Default,
+				ComputeBufferMode.Immutable);
+			UpdateInputData();
+		}
 
-		var inputData = new float4[length];
+		shader.SetBuffer(kernel, INPUT_POSITIONS, inputPositionsBuffer);
+	}
+
+	public void UpdatePointCloud(float[] pointCloud)
+	{
+		this.noiseMap = pointCloud;
+		UpdateInputData();
+	}
+
+	private void UpdateInputData()
+	{
+		float4[] inputData = new float4[length];
 		for (var i = 0; i < length; i++)
 		{
 			var p = Index3D(i, PaddedSize);
-			inputData[i] = (new float4(p.x, p.y, p.z, noiseMap[i]));
+			inputData[i] = new float4(p.x, p.y, p.z, noiseMap[i]);
 		}
 
 		inputPositionsBuffer.SetData(inputData);
-		shader.Dispatch(index, 4, 4, 4);
-		ComputeBuffer.CopyCount(triangleBuffer, triCountBuffer, 0);
-		int[] triCountArray = new int[1];
-		triCountBuffer.GetData(triCountArray);
-		int numTris = triCountArray[0];
+	}
 
-		var results = new Triangle[numTris];
-		triangleBuffer.GetData(results, 0, 0, numTris);
-		Debug.Log($"{sw.ElapsedMilliseconds}ms");
-		return new TriangleData(results, numTris);
+	private int GetTriangleCount(ComputeBuffer countBuffer)
+	{
+		int[] triCountArray = new int[1];
+		countBuffer.GetData(triCountArray);
+		return triCountArray[0];
 	}
 
 	private Vector3Int Index3D(int index, Vector3Int size)
