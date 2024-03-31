@@ -21,6 +21,14 @@ public class Digger : MonoBehaviour
 		{
 			Modify();
 		}
+
+		if (Input.GetKey(KeyCode.Space))
+		{
+			if (Input.GetMouseButton(0))
+			{
+				Modify();
+			}
+		}
 	}
 
 	private void Modify()
@@ -28,7 +36,6 @@ public class Digger : MonoBehaviour
 		if (!Physics.Raycast(camera.ScreenPointToRay(Input.mousePosition), out var hit, maxDigDistance)) return;
 		var chunk = hit.collider.gameObject.GetComponent<Chunk>();
 		if (chunk == null) return;
-
 		chunk.Modify(hit, radius);
 	}
 }

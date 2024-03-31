@@ -102,17 +102,19 @@ public class Chunk : MonoBehaviour
 
 	public bool Modify(RaycastHit hitInfo, float radius)
 	{
-		Vector3 hitPoint = transform.InverseTransformPoint(hitInfo.point);
-		float sqrRadius = radius * radius;
-		var paddedSize = size + new Vector3Int(1, 1, 1);
+		Vector3 hitPoint = transform.InverseTransformPoint(hitInfo.point) * factor;
+		float sqrRadius = (radius * factor) * (radius * factor);
+		var paddedSize = (size * factor) + new Vector3Int(1, 1, 1);
 
-		int minX = Mathf.Max(0, (int) (hitPoint.x - radius));
-		int maxX = Mathf.Min(paddedSize.x, (int) (hitPoint.x + radius) + 1);
-		int minY = Mathf.Max(0, (int) (hitPoint.y - radius));
-		int maxY = Mathf.Min(paddedSize.y, (int) (hitPoint.y + radius) + 1);
-		int minZ = Mathf.Max(0, (int) (hitPoint.z - radius));
-		int maxZ = Mathf.Min(paddedSize.z, (int) (hitPoint.z + radius) + 1);
-		var noiseMapChanges = new List<NoiseMapChange>((int) radius * 4);
+		int minX = Mathf.Max(0, Mathf.FloorToInt(hitPoint.x - radius * factor));
+		int maxX = Mathf.Min(paddedSize.x, Mathf.CeilToInt(hitPoint.x + radius * factor));
+		int minY = Mathf.Max(0, Mathf.FloorToInt(hitPoint.y - radius * factor));
+		int maxY = Mathf.Min(paddedSize.y, Mathf.CeilToInt(hitPoint.y + radius * factor));
+		int minZ = Mathf.Max(0, Mathf.FloorToInt(hitPoint.z - radius * factor));
+		int maxZ = Mathf.Min(paddedSize.z, Mathf.CeilToInt(hitPoint.z + radius * factor));
+
+		var noiseMapChanges = new List<NoiseMapChange>();
+
 		for (int x = minX; x < maxX; x++)
 		{
 			for (int y = minY; y < maxY; y++)
@@ -136,9 +138,11 @@ public class Chunk : MonoBehaviour
 			}
 		}
 
-		marchingCubes.UpdatePointCloud(noiseMapChanges);
-		marchingCubes.March(GenerateMesh);
-		
+		if (noiseMapChanges.Count > 0)
+		{
+			marchingCubes.UpdatePointCloud(noiseMapChanges);
+			marchingCubes.March(GenerateMesh);
+		}
 
 		return true;
 	}
