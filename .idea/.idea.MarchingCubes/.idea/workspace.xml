@@ -5,8 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c4ca93ba-5ae1-47e7-b91c-475b15f123cf" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/Assets/3DNoise.compute" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/3DNoise.compute" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/MarchingCubes.compute" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/MarchingCubes.compute" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/MarchingCubes.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/MarchingCubes.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Chunk.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Chunk.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/MarchingCubes.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/MarchingCubes.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/TerrainNoise3DCompute.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/TerrainNoise3DCompute.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,10 +96,10 @@
       </option>
       <method v="2" />
     </configuration>
-    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="7744">
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="29936">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
-      <option name="pid" value="7744" />
+      <option name="pid" value="29936" />
       <option name="projectPathOnTarget" />
       <option name="selectedOptions">
         <list />
@@ -143,31 +147,49 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Assets/Scripts/Chunk.cs</url>
-          <line>93</line>
+          <line>94</line>
           <properties documentPath="S:\Users\pkplo\OneDrive\Documents\UnityProjects\MarchingCubes\Assets\Scripts\Chunk.cs" initialLine="94" containingFunctionPresentation="Method 'Modify'">
             <startOffsets>
-              <option value="2324" />
+              <option value="2358" />
             </startOffsets>
             <endOffsets>
-              <option value="2351" />
+              <option value="2385" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="27" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Assets/Scripts/MarchingCubes.cs</url>
-          <line>83</line>
+          <line>91</line>
           <properties documentPath="S:\Users\pkplo\OneDrive\Documents\UnityProjects\MarchingCubes\Assets\Scripts\MarchingCubes.cs" initialLine="83" containingFunctionPresentation="Lambda expression inside Method 'March'">
             <startOffsets>
-              <option value="2690" />
+              <option value="3021" />
             </startOffsets>
             <endOffsets>
-              <option value="2742" />
+              <option value="3073" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="36" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Scripts/TerrainNoise3DCompute.cs</url>
+          <line>75</line>
+          <properties documentPath="S:\Users\pkplo\OneDrive\Documents\UnityProjects\MarchingCubes\Assets\Scripts\TerrainNoise3DCompute.cs" initialLine="75" containingFunctionPresentation="Method 'GenerateNoiseMap'">
+            <startOffsets>
+              <option value="2659" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2671" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="40" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="Type#TriangleData" memberName="triangles" />
+      </pinned-members>
+    </pin-to-top-manager>
   </component>
 </project>

@@ -26,6 +26,10 @@ public class TerrainNoise3DCompute : MonoBehaviour, ITerrainNoise3D
 	private Random random;
 	private float noiseExtents;
 
+	private const int THREAD_SIZE_X = 8;
+	private const int THREAD_SIZE_Y = 8;
+	private const int THREAD_SIZE_Z = 8;
+
 	private void Awake()
 	{
 		kernelIndex = shader.FindKernel("CSMain");
@@ -63,10 +67,15 @@ public class TerrainNoise3DCompute : MonoBehaviour, ITerrainNoise3D
 		octaveOffsetsBuffer.SetData(octaveOffsets.ToArray());
 		SetShaderParameters(dimensions, scale, octaves, persistance, lacunarity, offset);
 
-		shader.Dispatch(kernelIndex, 4, 4, 4);
+		var sizeX = Mathf.CeilToInt((float) dimensions.x / THREAD_SIZE_X);
+		var sizeY = Mathf.CeilToInt((float) dimensions.y / THREAD_SIZE_Y);
+		var sizeZ = Mathf.CeilToInt((float) dimensions.z / THREAD_SIZE_Z);
+
+		shader.Dispatch(kernelIndex, sizeX, sizeY, sizeZ);
 		resultsBuffer.GetData(data);
 		return data;
 	}
+
 	private static float CalculateExtents(int octaves, float persistance)
 	{
 		float noiseExtents = 0f;
@@ -80,6 +89,7 @@ public class TerrainNoise3DCompute : MonoBehaviour, ITerrainNoise3D
 
 		return noiseExtents;
 	}
+
 	private void EnsureBuffersInitialized(int octaves, int size)
 	{
 		if (octaveOffsetsBuffer == null || octaveOffsetsBuffer.count != octaves)

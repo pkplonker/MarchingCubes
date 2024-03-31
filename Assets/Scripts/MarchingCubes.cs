@@ -26,6 +26,10 @@ public class MarchingCubes
 	private float4[] inputData;
 	private int length;
 	private int kernel => shader.FindKernel("CSMain");
+	
+	private const int THREAD_SIZE_X = 8;
+	private const int THREAD_SIZE_Y = 8;
+	private const int THREAD_SIZE_Z = 8;
 
 	public MarchingCubes(ComputeShader shader, float[] noiseMap, float isoLevel, Vector3Int chunkSize)
 	{
@@ -53,7 +57,11 @@ public class MarchingCubes
 		shader.SetBuffer(kernel, INPUT_POSITIONS, inputPositionsBuffer);
 		shader.SetFloat(ISO_LEVEL, isoLevel);
 
-		shader.Dispatch(kernel, 4, 4, 4);
+		var sizeX = Mathf.CeilToInt((float)paddedSize.x / THREAD_SIZE_X);
+		var sizeY = Mathf.CeilToInt((float)paddedSize.y / THREAD_SIZE_Y);
+		var sizeZ = Mathf.CeilToInt((float)paddedSize.z / THREAD_SIZE_Z);
+
+		shader.Dispatch(kernel, sizeX,sizeY,sizeZ);
 		ComputeBuffer.CopyCount(triangleBuffer, triCountBuffer, 0);
 
 		inputPositionsBuffer.Release();

@@ -71,6 +71,7 @@ public class Chunk : MonoBehaviour
 
 	private void GenerateMesh(TriangleData triangleData)
 	{
+		if (meshFilter == null) return;
 		vertices = new Vector3[triangleData.count * 3];
 		indices = new int[triangleData.count * 3];
 		var mesh = new Mesh();

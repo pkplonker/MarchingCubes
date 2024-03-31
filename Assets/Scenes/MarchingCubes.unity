@@ -153,12 +153,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86f3e6da74bb4761b8bc0b7f2a45045d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ChunkSize: {x: 31, y: 31, z: 31}
-  MapSize: {x: 31, y: 31, z: 31}
+  ChunkSize: {x: 32, y: 32, z: 32}
+  MapSize: {x: 192, y: 32, z: 192}
   chunkPrefab: {fileID: 4306579607726012621, guid: 0468af4d4650927479c6d478df9b90d1,
     type: 3}
   noiseData:
-    IsoLevel: 0.7
+    IsoLevel: 0.2
     VertDistance: 1
     NoiseLacunarity: 0.7
     NoiseSeed: 0
