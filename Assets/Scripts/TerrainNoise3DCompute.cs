@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
 using Debug = UnityEngine.Debug;
 using Random = System.Random;
 
@@ -59,8 +60,18 @@ public class TerrainNoise3DCompute : MonoBehaviour, ITerrainNoise3D
 		var sizeZ = Mathf.CeilToInt((float) dimensions.z / THREAD_SIZE_Z);
 
 		shader.Dispatch(kernelIndex, sizeX, sizeY, sizeZ);
+		AsyncGPUReadback.Request(resultsBuffer, request =>
+		{
+			if (request.hasError)
+			{
+				Debug.LogError("GPU readback error detected on triCountBuffer.");
+				resultsBuffer.Release();
+				return;
+			}
+
+			callback?.Invoke(request.GetData<float>().ToArray());
+		});
 		resultsBuffer.GetData(data);
-		callback?.Invoke(data);
 	}
 
 	private static float CalculateExtents(int octaves, float persistance)
@@ -92,7 +103,7 @@ public class TerrainNoise3DCompute : MonoBehaviour, ITerrainNoise3D
 		}
 	}
 
-	private void SetShaderParameters(Vector3Int dimensions,Noise noiseData, Vector3 offset)
+	private void SetShaderParameters(Vector3Int dimensions, Noise noiseData, Vector3 offset)
 	{
 		shader.SetBuffer(kernelIndex, RESULT, resultsBuffer);
 		shader.SetBuffer(kernelIndex, OCTAVE_OFFSETS, octaveOffsetsBuffer);

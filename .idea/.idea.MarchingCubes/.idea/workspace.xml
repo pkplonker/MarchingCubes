@@ -5,16 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c4ca93ba-5ae1-47e7-b91c-475b15f123cf" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MarchingCubes/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MarchingCubes/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Editor/ChunkManagerEditor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Editor/ChunkManagerEditor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Editor/MarchingCubesEditor.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Editor/MarchingCubesEditor.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/MarchingCubes.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/MarchingCubes.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Chunk.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Chunk.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ChunkManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ChunkManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Digger.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Digger.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ITerrainNoise3D.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ITerrainNoise3D.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Noise.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Noise.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/MarchingCubes.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/MarchingCubes.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/TerrainNoise3DCompute.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/TerrainNoise3DCompute.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -30,13 +21,16 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/3f936d8f1c4c48e083fc500d08667b591fe00/fc/ab8c72bc/Physics.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/605bf8b31fcb444b85176da963870aa746ac00/8d/f32f274b/Task.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/605bf8b31fcb444b85176da963870aa746ac00/aa/029c1c68/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/735c071c072642ad8d077fa38c650a28173400/6d/53f79060/IMGUIContainer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/735c071c072642ad8d077fa38c650a28173400/97/da0d9d70/RenderChain.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ac87b54e58ee4be198261fd5c8030d5293ee00/66/54e9704d/InspectorElement.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c2d036c16ca64e0eb93703a3b13e733a171c00/05/725053a6/AsyncGPUReadback.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c2d036c16ca64e0eb93703a3b13e733a171c00/07/7425088e/Gizmos.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c2d036c16ca64e0eb93703a3b13e733a171c00/2d/446b70cc/Vector3Int.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c2d036c16ca64e0eb93703a3b13e733a171c00/37/99b27d66/ComputeBuffer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c2d036c16ca64e0eb93703a3b13e733a171c00/3e/1c3694af/NativeArray`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c2d036c16ca64e0eb93703a3b13e733a171c00/c1/ee4982fd/AsyncGPUReadbackRequest.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c2d036c16ca64e0eb93703a3b13e733a171c00/f9/b21b5d6e/ComputeShader.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Editor/MarchingCubesEditor.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Digger.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Fly.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/TerrainNoise3DCompute.cs" root0="FORCE_HIGHLIGHTING" />
@@ -52,28 +46,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Attach to Unity Editor.Attach to Unity Editor.executor&quot;: &quot;Debug&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;XThreadsFramesViewSplitterKey&quot;: &quot;0.4985646&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Attach to Unity Editor.Attach to Unity Editor.executor": "Debug",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "XThreadsFramesViewSplitterKey": "0.4985646",
+    "git-widget-placeholder": "optimisations",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;rider.external.source.directories&quot;: [
-      &quot;S:\\Users\\pkplo\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\DecompilerCache&quot;,
-      &quot;S:\\Users\\pkplo\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\SourcesCache&quot;,
-      &quot;S:\\Users\\pkplo\\AppData\\Local\\Symbols\\src&quot;
+  "keyToStringList": {
+    "rider.external.source.directories": [
+      "S:\\Users\\pkplo\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\DecompilerCache",
+      "S:\\Users\\pkplo\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\SourcesCache",
+      "S:\\Users\\pkplo\\AppData\\Local\\Symbols\\src"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
     <configuration name="Start Unity" type="RunUnityExe" factoryName="Unity Executable">
       <option name="EXE_PATH" value="S:\Program Files\Unity\Hub\Editor\2022.3.2f1\Editor\Unity.exe" />
@@ -101,10 +95,10 @@
       </option>
       <method v="2" />
     </configuration>
-    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="28432">
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="26744">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
-      <option name="pid" value="28432" />
+      <option name="pid" value="26744" />
       <option name="projectPathOnTarget" />
       <option name="selectedOptions">
         <list />
@@ -148,6 +142,23 @@
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Scripts/MarchingCubes.cs</url>
+          <line>89</line>
+          <properties documentPath="S:\Users\pkplo\OneDrive\Documents\UnityProjects\MarchingCubes\Assets\Scripts\MarchingCubes.cs" initialLine="89" containingFunctionPresentation="Lambda expression inside Method 'March'">
+            <startOffsets>
+              <option value="3022" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3080" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="55" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="Type#TriangleData" memberName="triangles" />

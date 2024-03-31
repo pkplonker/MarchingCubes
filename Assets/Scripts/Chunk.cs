@@ -42,7 +42,7 @@ public class Chunk : MonoBehaviour
 	{
 		factor = Mathf.CeilToInt(1 / noiseData.VertDistance);
 		var factoredSize = (size * factor) + new Vector3Int(1, 1, 1);
-		this.noiseGenerator.GenerateNoiseMap(factoredSize, noiseData,
+		noiseGenerator.GenerateNoiseMap(factoredSize, noiseData,
 			transform.position / (noiseData.Scale * noiseData.VertDistance),
 			(data =>
 			{
@@ -74,11 +74,11 @@ public class Chunk : MonoBehaviour
 		}
 	}
 
-	private void GenerateMesh(TriangleData triangleData)
+	private void GenerateMesh(Triangle[] triangles, int count)
 	{
 		if (meshFilter == null) return;
 
-		int triangleCount = triangleData.count;
+		int triangleCount = count;
 		int vertexCount = triangleCount * 3;
 		var mesh = new Mesh();
 		if (vertices.Length != vertexCount)
@@ -90,15 +90,15 @@ public class Chunk : MonoBehaviour
 		int vertexIndex = 0;
 		for (int i = 0; i < triangleCount; i++)
 		{
-			vertices[vertexIndex] = triangleData.triangles[i].A;
+			vertices[vertexIndex] = triangles[i].A;
 			indices[vertexIndex] = vertexIndex;
 			vertexIndex++;
 
-			vertices[vertexIndex] = triangleData.triangles[i].B;
+			vertices[vertexIndex] = triangles[i].B;
 			indices[vertexIndex] = vertexIndex;
 			vertexIndex++;
 
-			vertices[vertexIndex] = triangleData.triangles[i].C;
+			vertices[vertexIndex] = triangles[i].C;
 			indices[vertexIndex] = vertexIndex;
 			vertexIndex++;
 		}
@@ -172,16 +172,4 @@ public struct Triangle
 	public Vector3 A;
 	public Vector3 B;
 	public Vector3 C;
-}
-
-public struct TriangleData
-{
-	public readonly Triangle[] triangles;
-	public readonly int count;
-
-	public TriangleData(Triangle[] results, int count)
-	{
-		this.triangles = results;
-		this.count = count;
-	}
 }

@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -26,6 +24,7 @@ public class MarchingCubes
 	private float4[] inputData;
 	private int length;
 	private readonly int factor;
+	private readonly Triangle[] triangleArray;
 	private int kernel => shader.FindKernel("CSMain");
 
 	private const int THREAD_SIZE_X = 8;
@@ -38,7 +37,7 @@ public class MarchingCubes
 		this.chunkSize = chunkSize;
 		paddedSize = (this.chunkSize * this.factor) + new Vector3Int(1, 1, 1);
 		length = paddedSize.x * paddedSize.y * paddedSize.z;
-
+		triangleArray = new Triangle[length];
 		this.shader = shader;
 		this.isoLevel = isoLevel;
 		shader.SetFloat(ISO_LEVEL, isoLevel);
@@ -46,7 +45,7 @@ public class MarchingCubes
 		CreateInputDataFromPointCloud(noiseMap);
 	}
 
-	public void March(Action<TriangleData> callback)
+	public void March(Action<Triangle[], int> callback)
 	{
 		var triangleBuffer = new ComputeBuffer(length * 5, sizeof(float) * 3 * 3, ComputeBufferType.Append);
 		var inputPositionsBuffer = new ComputeBuffer(length, sizeof(float) * 4, ComputeBufferType.Default,
@@ -88,15 +87,8 @@ public class MarchingCubes
 					return;
 				}
 
-				var triangleData = triangleRequest.GetData<Triangle>();
-
-				Triangle[] results = new Triangle[numTris];
-				for (int i = 0; i < numTris; i++)
-				{
-					results[i] = triangleData[i];
-				}
-
-				callback(new TriangleData(results, numTris));
+				triangleRequest.GetData<Triangle>().CopyData(triangleArray, numTris);
+				callback(triangleArray, numTris);
 			});
 		});
 
@@ -107,6 +99,8 @@ public class MarchingCubes
 			inputPositionsBuffer.Release();
 		}
 	}
+
+	
 
 	public void UpdatePointCloud(List<NoiseMapChange> noiseMapChanges)
 	{
