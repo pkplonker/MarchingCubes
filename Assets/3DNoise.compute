@@ -296,7 +296,8 @@ float cnoise(float3 P)
     return 2.2 * n_xyz;
 }
 
-[numthreads(8,8,8)]
+#define THREAD 8
+[numthreads(THREAD,THREAD,THREAD)]
 void CSMain(uint3 id : SV_DispatchThreadID)
 {
     if (id.x >= (uint)size.x || id.y >= (uint)size.y || id.z >= (uint)size.z)

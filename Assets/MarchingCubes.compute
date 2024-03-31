@@ -350,8 +350,8 @@ float3 Interpolate(float4 v1, float4 v2)
 // }
 
 
-
-[numthreads(8,8,8)]
+#define THREAD 8
+[numthreads(THREAD,THREAD,THREAD)]
 void CSMain(uint3 id : SV_DispatchThreadID)
 {
     if (id.x >= (uint)size.x - 1 || id.y >= (uint)size.y - 1 || id.z >= (uint)size.z - 1)
