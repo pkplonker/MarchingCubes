@@ -27,7 +27,7 @@ public class MarchingCubes
 	private int length;
 	private readonly int factor;
 	private int kernel => shader.FindKernel("CSMain");
-	
+
 	private const int THREAD_SIZE_X = 8;
 	private const int THREAD_SIZE_Y = 8;
 	private const int THREAD_SIZE_Z = 8;
@@ -36,7 +36,7 @@ public class MarchingCubes
 	{
 		this.factor = factor;
 		this.chunkSize = chunkSize;
-		paddedSize = (this.chunkSize*this.factor) + new Vector3Int(1, 1, 1);
+		paddedSize = (this.chunkSize * this.factor) + new Vector3Int(1, 1, 1);
 		length = paddedSize.x * paddedSize.y * paddedSize.z;
 
 		this.shader = shader;
@@ -59,57 +59,53 @@ public class MarchingCubes
 		shader.SetBuffer(kernel, INPUT_POSITIONS, inputPositionsBuffer);
 		shader.SetFloat(ISO_LEVEL, isoLevel);
 
-		var sizeX = Mathf.CeilToInt((float)paddedSize.x / THREAD_SIZE_X);
-		var sizeY = Mathf.CeilToInt((float)paddedSize.y / THREAD_SIZE_Y);
-		var sizeZ = Mathf.CeilToInt((float)paddedSize.z / THREAD_SIZE_Z);
+		var sizeX = Mathf.CeilToInt((float) paddedSize.x / THREAD_SIZE_X);
+		var sizeY = Mathf.CeilToInt((float) paddedSize.y / THREAD_SIZE_Y);
+		var sizeZ = Mathf.CeilToInt((float) paddedSize.z / THREAD_SIZE_Z);
 
-		shader.Dispatch(kernel, sizeX,sizeY,sizeZ);
+		shader.Dispatch(kernel, sizeX, sizeY, sizeZ);
 		ComputeBuffer.CopyCount(triangleBuffer, triCountBuffer, 0);
 
 		inputPositionsBuffer.Release();
 
 		AsyncGPUReadback.Request(triCountBuffer, triCountRequest =>
 		{
-			void Release()
-			{
-				triangleBuffer.Release();
-				triCountBuffer.Release();
-				inputPositionsBuffer?.Release();
-			}
-
-			var error = false;
 			if (triCountRequest.hasError)
 			{
 				Debug.LogError("GPU readback error detected on triCountBuffer.");
-				error = true;
+				ReleaseBuffers();
+				return;
 			}
 
-			if (!error)
+			int numTris = triCountRequest.GetData<int>()[0];
+
+			AsyncGPUReadback.Request(triangleBuffer, triangleRequest =>
 			{
-				int numTris = triCountRequest.GetData<int>()[0];
-
-				AsyncGPUReadback.Request(triangleBuffer, triangleRequest =>
+				if (triangleRequest.hasError)
 				{
-					if (triangleRequest.hasError)
-					{
-						Debug.LogError("GPU readback error detected on triangleBuffer.");
+					Debug.LogError("GPU readback error detected on triangleBuffer.");
+					ReleaseBuffers();
+					return;
+				}
 
-						error = true;
-					}
-					else
-					{
-						var triangleData = triangleRequest.GetData<Triangle>();
+				var triangleData = triangleRequest.GetData<Triangle>();
 
-						Triangle[] results = new Triangle[numTris];
+				Triangle[] results = new Triangle[numTris];
+				for (int i = 0; i < numTris; i++)
+				{
+					results[i] = triangleData[i];
+				}
 
-						Array.Copy(triangleData.ToArray(), results, numTris);
-
-						callback(new TriangleData(results, numTris));
-					}
-				});
-			}
-			Release();
+				callback(new TriangleData(results, numTris));
+			});
 		});
+
+		void ReleaseBuffers()
+		{
+			triangleBuffer.Release();
+			triCountBuffer.Release();
+			inputPositionsBuffer.Release();
+		}
 	}
 
 	public void UpdatePointCloud(List<NoiseMapChange> noiseMapChanges)
@@ -134,7 +130,7 @@ public class MarchingCubes
 			{
 				for (float x = 0; x < paddedSize.x; x++)
 				{
-					inputData[index] = new float4(x/factor, y/factor, z/factor, noiseMap[index]);
+					inputData[index] = new float4(x / factor, y / factor, z / factor, noiseMap[index]);
 					index++;
 				}
 			}

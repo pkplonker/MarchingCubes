@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -22,7 +23,6 @@ public class Chunk : MonoBehaviour
 	[SerializeField]
 	private ITerrainNoise3D noiseGenerator;
 
-	private float[] noiseMap;
 	private Noise noiseData;
 	private Vector3[] vertices = Array.Empty<Vector3>();
 	private int[] indices = Array.Empty<int>();
@@ -35,20 +35,21 @@ public class Chunk : MonoBehaviour
 		this.noiseData = noiseData;
 		this.noiseGenerator = noiseGenerator;
 		this.size = size;
-
 		Generate();
 	}
 
-	public void Generate()
+	private void Generate()
 	{
 		factor = Mathf.CeilToInt(1 / noiseData.VertDistance);
 		var factoredSize = (size * factor) + new Vector3Int(1, 1, 1);
-		noiseMap = this.noiseGenerator.GenerateNoiseMap(factoredSize, noiseData.NoiseSeed,
-			noiseData.NoiseScale, noiseData.NoiseOctaves, noiseData.NoisePersistance, noiseData.NoiseLacunarity,
-			transform.position / (noiseData.NoiseScale*noiseData.VertDistance));
-		marchingCubes = new MarchingCubes(MarchingCubeShader, noiseMap, noiseData.IsoLevel, size,factor );
-
-		BuildMesh();
+		this.noiseGenerator.GenerateNoiseMap(factoredSize, noiseData,
+			transform.position / (noiseData.Scale * noiseData.VertDistance),
+			(data =>
+			{
+				marchingCubes = new MarchingCubes(MarchingCubeShader, data, noiseData.IsoLevel, size, factor);
+				BuildMesh();
+			}));
+		;
 	}
 
 	public void BuildMesh()
@@ -76,28 +77,41 @@ public class Chunk : MonoBehaviour
 	private void GenerateMesh(TriangleData triangleData)
 	{
 		if (meshFilter == null) return;
-		vertices = new Vector3[triangleData.count * 3];
-		indices = new int[triangleData.count * 3];
+
+		int triangleCount = triangleData.count;
+		int vertexCount = triangleCount * 3;
 		var mesh = new Mesh();
-		mesh.indexFormat = IndexFormat.UInt32;
-		for (var i = 0; i < triangleData.count; i++)
+		if (vertices.Length != vertexCount)
 		{
-			for (var j = 0; j < 3; j++)
-			{
-				indices[i * 3 + j] = i * 3 + j;
-				vertices[i * 3 + j] = triangleData.triangles[i][j];
-			}
+			vertices = new Vector3[vertexCount];
+			indices = new int[vertexCount];
+		}
+
+		int vertexIndex = 0;
+		for (int i = 0; i < triangleCount; i++)
+		{
+			vertices[vertexIndex] = triangleData.triangles[i].A;
+			indices[vertexIndex] = vertexIndex;
+			vertexIndex++;
+
+			vertices[vertexIndex] = triangleData.triangles[i].B;
+			indices[vertexIndex] = vertexIndex;
+			vertexIndex++;
+
+			vertices[vertexIndex] = triangleData.triangles[i].C;
+			indices[vertexIndex] = vertexIndex;
+			vertexIndex++;
 		}
 
 		mesh.SetVertices(vertices);
 		mesh.SetTriangles(indices, 0);
 		meshFilter.mesh = mesh;
+
 		var id = mesh.GetInstanceID();
 		mesh.RecalculateNormals();
-
-		Physics.BakeMesh(id, false);
-
-		meshCollider.sharedMesh = mesh;
+		var t = Task.Run(() => Physics.BakeMesh(id, false)).ContinueWith(_ => meshCollider.sharedMesh = mesh,
+			new CancellationToken(),
+			TaskContinuationOptions.None, MainThreadDispatcher.Instance.Sceduler);
 	}
 
 	public bool Modify(RaycastHit hitInfo, float radius)
@@ -127,7 +141,6 @@ public class Chunk : MonoBehaviour
 					if (sqrDistance < sqrRadius)
 					{
 						int index = x + y * paddedSize.x + z * paddedSize.x * paddedSize.y;
-						noiseMap[index] = 0;
 						noiseMapChanges.Add(new NoiseMapChange
 						{
 							Index = index,
@@ -159,20 +172,6 @@ public struct Triangle
 	public Vector3 A;
 	public Vector3 B;
 	public Vector3 C;
-
-	public Vector3 this[int i]
-	{
-		get
-		{
-			return i switch
-			{
-				0 => A,
-				1 => B,
-				2 => C,
-				_ => throw new ArgumentOutOfRangeException(nameof(i), "Index must be in the range 0-2.")
-			};
-		}
-	}
 }
 
 public struct TriangleData

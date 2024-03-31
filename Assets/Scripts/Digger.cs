@@ -13,7 +13,7 @@ public class Digger : MonoBehaviour
 	private float maxDigDistance;
 
 	[SerializeField]
-	private Camera camera;
+	private Camera rayCamera;
 
 	void Update()
 	{
@@ -33,7 +33,7 @@ public class Digger : MonoBehaviour
 
 	private void Modify()
 	{
-		if (!Physics.Raycast(camera.ScreenPointToRay(Input.mousePosition), out var hit, maxDigDistance)) return;
+		if (!Physics.Raycast(rayCamera.ScreenPointToRay(Input.mousePosition), out var hit, maxDigDistance)) return;
 		var chunk = hit.collider.gameObject.GetComponent<Chunk>();
 		if (chunk == null) return;
 		chunk.Modify(hit, radius);

@@ -154,17 +154,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ChunkSize: {x: 8, y: 8, z: 8}
-  MapSize: {x: 192, y: 8, z: 192}
+  MapSize: {x: 40, y: 8, z: 40}
   chunkPrefab: {fileID: 4306579607726012621, guid: 0468af4d4650927479c6d478df9b90d1,
     type: 3}
   noiseData:
     IsoLevel: 0.2
     VertDistance: 0.2
-    NoiseLacunarity: 0.7
-    NoiseSeed: 0
-    NoiseOctaves: 4
-    NoisePersistance: 1.7
-    NoiseScale: 12
+    Lacunarity: 0.7
+    Seed: 0
+    Octaves: 4
+    Persistance: 1.7
+    Scale: 12
 --- !u!4 &139282746
 Transform:
   m_ObjectHideFlags: 0
@@ -361,7 +361,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   radius: 0.35
   maxDigDistance: 500
-  camera: {fileID: 330585545}
+  rayCamera: {fileID: 330585545}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0

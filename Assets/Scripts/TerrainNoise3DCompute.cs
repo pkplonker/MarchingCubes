@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 using Random = System.Random;
@@ -36,23 +38,21 @@ public class TerrainNoise3DCompute : MonoBehaviour, ITerrainNoise3D
 		random = new System.Random();
 	}
 
-	public float[] GenerateNoiseMap(Vector3Int dimensions, int seed, float scale, int octaves,
-		float persistance,
-		float lacunarity, Vector3 offset)
+	public void GenerateNoiseMap(Vector3Int dimensions, Noise noiseData, Vector3 offset, Action<float[]> callback)
 	{
-		random = new System.Random(seed);
+		random = new System.Random(noiseData.Seed);
 
-		var octaveOffsets = CalculateOctaveOffsets(octaves, offset, random);
-		noiseExtents = CalculateExtents(octaves, persistance);
+		var octaveOffsets = CalculateOctaveOffsets(noiseData.Octaves, offset, random);
+		noiseExtents = CalculateExtents(noiseData.Octaves, noiseData.Persistance);
 
-		noiseExtents /= ((float) octaves / 2);
+		noiseExtents /= ((float) noiseData.Octaves / 2);
 		var size = dimensions.x * dimensions.y * dimensions.z;
 		var data = new float[size];
 
-		EnsureBuffersInitialized(octaves, size);
+		EnsureBuffersInitialized(noiseData.Octaves, size);
 
 		octaveOffsetsBuffer.SetData(octaveOffsets.ToArray());
-		SetShaderParameters(dimensions, scale, octaves, persistance, lacunarity, offset);
+		SetShaderParameters(dimensions, noiseData, offset);
 
 		var sizeX = Mathf.CeilToInt((float) dimensions.x / THREAD_SIZE_X);
 		var sizeY = Mathf.CeilToInt((float) dimensions.y / THREAD_SIZE_Y);
@@ -60,7 +60,7 @@ public class TerrainNoise3DCompute : MonoBehaviour, ITerrainNoise3D
 
 		shader.Dispatch(kernelIndex, sizeX, sizeY, sizeZ);
 		resultsBuffer.GetData(data);
-		return data;
+		callback?.Invoke(data);
 	}
 
 	private static float CalculateExtents(int octaves, float persistance)
@@ -92,19 +92,18 @@ public class TerrainNoise3DCompute : MonoBehaviour, ITerrainNoise3D
 		}
 	}
 
-	private void SetShaderParameters(Vector3Int dimensions, float scale, int octaves, float persistance,
-		float lacunarity, Vector3 offset)
+	private void SetShaderParameters(Vector3Int dimensions,Noise noiseData, Vector3 offset)
 	{
 		shader.SetBuffer(kernelIndex, RESULT, resultsBuffer);
 		shader.SetBuffer(kernelIndex, OCTAVE_OFFSETS, octaveOffsetsBuffer);
 		shader.SetFloat(NOISE_EXTENTS, noiseExtents);
 
-		shader.SetFloat(PERSISTANCE, persistance);
-		shader.SetFloat(LACUNARITY, lacunarity);
-		shader.SetFloat(SCALE, scale);
-		shader.SetInt(OCTAVES, octaves);
-		shader.SetInts(SIZE, new int[3] {dimensions.x, dimensions.y, dimensions.z});
-		shader.SetFloats(WORLD_OFFSET, new float[3] {offset.x, offset.y, offset.z});
+		shader.SetFloat(PERSISTANCE, noiseData.Persistance);
+		shader.SetFloat(LACUNARITY, noiseData.Lacunarity);
+		shader.SetFloat(SCALE, noiseData.Scale);
+		shader.SetInt(OCTAVES, noiseData.Octaves);
+		shader.SetInts(SIZE, dimensions.x, dimensions.y, dimensions.z);
+		shader.SetFloats(WORLD_OFFSET, offset.x, offset.y, offset.z);
 	}
 
 	private static List<Vector3> CalculateOctaveOffsets(int octaves, Vector3 offset, Random random)

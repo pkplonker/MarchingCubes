@@ -11,10 +11,7 @@ public class MarchinChunkManagerEditor : Editor
 	{
 		base.OnInspectorGUI();
 		var manager = (ChunkManager) target;
-		if (GUILayout.Button("Regen"))
-		{
-			manager.RegenerateChunks();
-		}
+	
 		if (GUILayout.Button("Generate"))
 		{
 			manager.ClearChunks();
