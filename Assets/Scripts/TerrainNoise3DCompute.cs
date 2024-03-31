@@ -36,19 +36,6 @@ public class TerrainNoise3DCompute : MonoBehaviour, ITerrainNoise3D
 		random = new System.Random();
 	}
 
-	public void TestGenerate()
-	{
-		var iter = 100;
-		var sw = Stopwatch.StartNew();
-		for (int i = 0; i < iter; i++)
-		{
-			var r = GenerateNoiseMap(new Vector3Int(16, 16, 16), 0, 12, 4, 1.8f, 0.7f, new Vector3(0, 0, 0));
-			Debug.Log($"Max:{r.Max()}, Min: {r.Min()}, Average: {r.Sum() / r.Length}");
-		}
-
-		Debug.Log($"{sw.ElapsedMilliseconds}ms, average {sw.ElapsedMilliseconds / iter}");
-	}
-
 	public float[] GenerateNoiseMap(Vector3Int dimensions, int seed, float scale, int octaves,
 		float persistance,
 		float lacunarity, Vector3 offset)

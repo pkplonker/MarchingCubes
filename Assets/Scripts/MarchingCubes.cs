@@ -25,16 +25,18 @@ public class MarchingCubes
 	private float isoLevel;
 	private float4[] inputData;
 	private int length;
+	private readonly int factor;
 	private int kernel => shader.FindKernel("CSMain");
 	
 	private const int THREAD_SIZE_X = 8;
 	private const int THREAD_SIZE_Y = 8;
 	private const int THREAD_SIZE_Z = 8;
 
-	public MarchingCubes(ComputeShader shader, float[] noiseMap, float isoLevel, Vector3Int chunkSize)
+	public MarchingCubes(ComputeShader shader, float[] noiseMap, float isoLevel, Vector3Int chunkSize, int factor)
 	{
+		this.factor = factor;
 		this.chunkSize = chunkSize;
-		paddedSize = this.chunkSize + new Vector3Int(1, 1, 1);
+		paddedSize = (this.chunkSize*this.factor) + new Vector3Int(1, 1, 1);
 		length = paddedSize.x * paddedSize.y * paddedSize.z;
 
 		this.shader = shader;
@@ -126,13 +128,13 @@ public class MarchingCubes
 		}
 
 		int index = 0;
-		for (int z = 0; z < paddedSize.z; z++)
+		for (float z = 0; z < paddedSize.z; z++)
 		{
-			for (int y = 0; y < paddedSize.y; y++)
+			for (float y = 0; y < paddedSize.y; y++)
 			{
-				for (int x = 0; x < paddedSize.x; x++)
+				for (float x = 0; x < paddedSize.x; x++)
 				{
-					inputData[index] = new float4(x, y, z, noiseMap[index]);
+					inputData[index] = new float4(x/factor, y/factor, z/factor, noiseMap[index]);
 					index++;
 				}
 			}

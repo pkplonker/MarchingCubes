@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider))]
 public class Chunk : MonoBehaviour
@@ -27,6 +28,7 @@ public class Chunk : MonoBehaviour
 	private int[] indices = Array.Empty<int>();
 	private Vector3Int size;
 	private MarchingCubes marchingCubes;
+	private int factor;
 
 	public void Init(ITerrainNoise3D noiseGenerator, Vector3Int size, Noise noiseData)
 	{
@@ -39,10 +41,12 @@ public class Chunk : MonoBehaviour
 
 	public void Generate()
 	{
-		noiseMap = this.noiseGenerator.GenerateNoiseMap(size + new Vector3Int(1, 1, 1), noiseData.NoiseSeed,
+		factor = Mathf.CeilToInt(1 / noiseData.VertDistance);
+		var factoredSize = (size * factor) + new Vector3Int(1, 1, 1);
+		noiseMap = this.noiseGenerator.GenerateNoiseMap(factoredSize, noiseData.NoiseSeed,
 			noiseData.NoiseScale, noiseData.NoiseOctaves, noiseData.NoisePersistance, noiseData.NoiseLacunarity,
-			transform.position / noiseData.NoiseScale);
-		marchingCubes = new MarchingCubes(MarchingCubeShader, noiseMap, noiseData.IsoLevel, size);
+			transform.position / (noiseData.NoiseScale*noiseData.VertDistance));
+		marchingCubes = new MarchingCubes(MarchingCubeShader, noiseMap, noiseData.IsoLevel, size,factor );
 
 		BuildMesh();
 	}
@@ -75,7 +79,7 @@ public class Chunk : MonoBehaviour
 		vertices = new Vector3[triangleData.count * 3];
 		indices = new int[triangleData.count * 3];
 		var mesh = new Mesh();
-
+		mesh.indexFormat = IndexFormat.UInt32;
 		for (var i = 0; i < triangleData.count; i++)
 		{
 			for (var j = 0; j < 3; j++)
