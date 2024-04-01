@@ -69,9 +69,13 @@ public class TerrainNoise3DCompute : MonoBehaviour, ITerrainNoise3D
 				return;
 			}
 
-			callback?.Invoke(request.GetData<float>().ToArray());
+			resultsBuffer?.Release();
+			resultsBuffer = null;
+			octaveOffsetsBuffer?.Release();
+			octaveOffsetsBuffer = null;
+			request.GetData<float>().CopyData(data, size);
+			callback?.Invoke(data);
 		});
-		resultsBuffer.GetData(data);
 	}
 
 	private static float CalculateExtents(int octaves, float persistance)

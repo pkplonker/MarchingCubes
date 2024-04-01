@@ -153,13 +153,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86f3e6da74bb4761b8bc0b7f2a45045d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ChunkSize: {x: 8, y: 8, z: 8}
-  MapSize: {x: 40, y: 8, z: 40}
+  ChunkSize: {x: 32, y: 32, z: 32}
+  MapSize: {x: 160, y: 32, z: 32}
   chunkPrefab: {fileID: 4306579607726012621, guid: 0468af4d4650927479c6d478df9b90d1,
     type: 3}
   noiseData:
     IsoLevel: 0.2
-    VertDistance: 0.2
+    VertDistance: 1
     Lacunarity: 0.7
     Seed: 0
     Octaves: 4
@@ -359,7 +359,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fb423e14f9870341a3382273fcbc2fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 0.35
+  radius: 1.5
   maxDigDistance: 500
   rayCamera: {fileID: 330585545}
 --- !u!1 &410087039

@@ -93,15 +93,19 @@ public class MarchingCubes
 				}
 
 				triangleRequest.GetData<Triangle>().CopyData(triangleArray, numTris);
+				ReleaseBuffers();
 				callback(triangleArray, numTris);
 			});
 		});
 
 		void ReleaseBuffers()
 		{
-			triangleBuffer.Release();
-			triCountBuffer.Release();
-			inputPositionsBuffer.Release();
+			triangleBuffer?.Release();
+			triCountBuffer?.Release();
+			inputPositionsBuffer?.Release();
+			triCountBuffer = null;
+			triangleBuffer = null;
+			inputPositionsBuffer = null;
 		}
 	}
 
@@ -167,12 +171,5 @@ public class MarchingCubes
 		nativeInputData.Dispose();
 
 		callback?.Invoke();
-	}
-
-	private int GetTriangleCount(ComputeBuffer countBuffer)
-	{
-		int[] triCountArray = new int[1];
-		countBuffer.GetData(triCountArray);
-		return triCountArray[0];
 	}
 }
