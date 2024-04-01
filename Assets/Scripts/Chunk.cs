@@ -46,13 +46,13 @@ public class Chunk : MonoBehaviour
 			transform.position / (noiseData.Scale * noiseData.VertDistance),
 			(data =>
 			{
-				marchingCubes = new MarchingCubes(MarchingCubeShader, data, noiseData.IsoLevel, size, factor);
-				BuildMesh();
+				marchingCubes = new MarchingCubes(MarchingCubeShader, data, noiseData.IsoLevel, size, factor,BuildMesh);
+				
 			}));
 		;
 	}
 
-	public void BuildMesh()
+	private void BuildMesh()
 	{
 		marchingCubes.March(GenerateMesh);
 	}

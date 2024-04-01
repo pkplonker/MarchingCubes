@@ -1,5 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst;
+using Unity.Collections;
+using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -31,7 +35,8 @@ public class MarchingCubes
 	private const int THREAD_SIZE_Y = 8;
 	private const int THREAD_SIZE_Z = 8;
 
-	public MarchingCubes(ComputeShader shader, float[] noiseMap, float isoLevel, Vector3Int chunkSize, int factor)
+	public MarchingCubes(ComputeShader shader, float[] noiseMap, float isoLevel, Vector3Int chunkSize, int factor,
+		Action buildMeshCallback)
 	{
 		this.factor = factor;
 		this.chunkSize = chunkSize;
@@ -42,7 +47,7 @@ public class MarchingCubes
 		this.isoLevel = isoLevel;
 		shader.SetFloat(ISO_LEVEL, isoLevel);
 		shader.SetInts(SIZE, new int[3] {paddedSize.x, paddedSize.y, paddedSize.z});
-		CreateInputDataFromPointCloud(noiseMap);
+		CreateInputDataFromPointCloud(noiseMap, buildMeshCallback);
 	}
 
 	public void March(Action<Triangle[], int> callback)
@@ -100,8 +105,6 @@ public class MarchingCubes
 		}
 	}
 
-	
-
 	public void UpdatePointCloud(List<NoiseMapChange> noiseMapChanges)
 	{
 		foreach (var change in noiseMapChanges)
@@ -110,25 +113,60 @@ public class MarchingCubes
 		}
 	}
 
-	private void CreateInputDataFromPointCloud(float[] noiseMap)
+	[BurstCompile]
+	public struct PointCloudJob : IJobParallelFor
 	{
-		if (inputData == null || inputData.Length != length)
-		{
-			inputData = new float4[length];
-		}
+		[ReadOnly]
+		public NativeArray<float> noiseMap;
 
-		int index = 0;
-		for (float z = 0; z < paddedSize.z; z++)
+		[WriteOnly]
+		public NativeArray<float4> inputData;
+
+		public float invFactor;
+		public int3 paddedSize;
+
+		public void Execute(int index)
 		{
-			for (float y = 0; y < paddedSize.y; y++)
-			{
-				for (float x = 0; x < paddedSize.x; x++)
-				{
-					inputData[index] = new float4(x / factor, y / factor, z / factor, noiseMap[index]);
-					index++;
-				}
-			}
+			int x = index % paddedSize.x;
+			int y = (index / paddedSize.x) % paddedSize.y;
+			int z = index / (paddedSize.x * paddedSize.y);
+
+			inputData[index] = new float4(x * invFactor, y * invFactor, z * invFactor, noiseMap[index]);
 		}
+	}
+
+	private void CreateInputDataFromPointCloud(float[] noiseMap, Action buildMeshCallback)
+	{
+		NativeArray<float4> nativeInputData;
+		inputData = new float4[length];
+
+		nativeInputData = new NativeArray<float4>(length, Allocator.TempJob);
+
+		var job = new PointCloudJob
+		{
+			noiseMap = new NativeArray<float>(noiseMap, Allocator.TempJob),
+			inputData = nativeInputData,
+			invFactor = 1.0f / factor,
+			paddedSize = new int3(paddedSize.x, paddedSize.y, paddedSize.z)
+		};
+
+		JobHandle handle = job.Schedule(length, 64);
+		MainThreadDispatcher.Instance.StartCoroutineOnMain(
+			WaitForJobCompletion(handle, nativeInputData, buildMeshCallback)
+		);
+	}
+
+	private IEnumerator WaitForJobCompletion(JobHandle handle, NativeArray<float4> nativeInputData,
+		Action callback)
+	{
+		yield return new WaitUntil(() => handle.IsCompleted);
+
+		handle.Complete();
+		nativeInputData.CopyData(inputData, inputData.Length);
+
+		nativeInputData.Dispose();
+
+		callback?.Invoke();
 	}
 
 	private int GetTriangleCount(ComputeBuffer countBuffer)

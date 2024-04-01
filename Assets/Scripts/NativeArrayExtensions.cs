@@ -3,7 +3,7 @@ using Unity.Collections.LowLevel.Unsafe;
 
 public static class NativeArrayExtensions
 {
-	public static unsafe void CopyData<T>(this NativeArray<Triangle> src, T[] dst, int count) where T : unmanaged
+	public static unsafe void CopyData<T>(this NativeArray<T> src, T[] dst, int count) where T : unmanaged
 	{
 		void* srcPtr = src.GetUnsafePtr();
 		fixed (T* dstPtr = dst)
