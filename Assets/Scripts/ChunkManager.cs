@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Unity.Mathematics;
 using UnityEngine;
@@ -22,6 +23,8 @@ public class ChunkManager : MonoBehaviour
 
 	[SerializeField]
 	private Noise noiseData;
+
+	private int factor;
 
 	private void OnEnable()
 	{
@@ -47,13 +50,15 @@ public class ChunkManager : MonoBehaviour
 			}
 		}
 	}
-	
+
 	public void GenerateChunks()
 	{
 		var axis = new Vector3Int(Mathf.CeilToInt(MapSize.x / (float) ChunkSize.x),
 			Mathf.CeilToInt(MapSize.y / (float) ChunkSize.z), Mathf.CeilToInt(MapSize.z / (float) ChunkSize.z));
 
-		using var t = new Timer(time => Debug.Log($"Generate All took {time/(axis.x * axis.y * axis.z) }ms average"));
+		using var t = new Timer(time => Debug.Log($"Generate All took {time / (axis.x * axis.y * axis.z)}ms average"));
+
+		factor = Mathf.CeilToInt(1 / noiseData.VertDistance);
 
 		Chunks = new Chunk[axis.x, axis.y, axis.z];
 		for (int x = 0; x < axis.x; x++)
@@ -68,7 +73,7 @@ public class ChunkManager : MonoBehaviour
 					chunkGO.transform.SetParent(transform);
 					var chunk = chunkGO.GetComponent<Chunk>();
 					Chunks[x, y, z] = chunk;
-					chunk.Init(noiseGenerator, ChunkSize, noiseData);
+					chunk.Init(new Vector3Int(x, y, z), this, noiseGenerator, ChunkSize, noiseData);
 				}
 			}
 		}
@@ -81,5 +86,40 @@ public class ChunkManager : MonoBehaviour
 		go.transform.position = new Vector3(ChunkSize.x * x, ChunkSize.y * y, ChunkSize.z * z);
 		go.GetComponent<MeshRenderer>().material.color = new Color(UnityEngine.Random.value,
 			UnityEngine.Random.value, UnityEngine.Random.value);
+	}
+
+	public bool Modify(Chunk chunk, RaycastHit hitInfo, float radius)
+	{
+		Vector3 hitPoint = chunk.transform.InverseTransformPoint(hitInfo.point) * factor;
+		float sqrRadius = (radius * factor) * (radius * factor);
+		var paddedSize = (ChunkSize * factor) + new Vector3Int(1, 1, 1);
+
+		int minX = Mathf.Max(0, Mathf.FloorToInt(hitPoint.x - radius * factor));
+		int maxX = Mathf.Min(paddedSize.x, Mathf.CeilToInt(hitPoint.x + radius * factor));
+		int minY = Mathf.Max(0, Mathf.FloorToInt(hitPoint.y - radius * factor));
+		int maxY = Mathf.Min(paddedSize.y, Mathf.CeilToInt(hitPoint.y + radius * factor));
+		int minZ = Mathf.Max(0, Mathf.FloorToInt(hitPoint.z - radius * factor));
+		int maxZ = Mathf.Min(paddedSize.z, Mathf.CeilToInt(hitPoint.z + radius * factor));
+
+		var noiseMapChanges = new List<NoiseMapChange>();
+
+		for (int x = minX; x < maxX; x++)
+		{
+			for (int y = minY; y < maxY; y++)
+			{
+				for (int z = minZ; z < maxZ; z++)
+				{
+					noiseMapChanges.Add(new NoiseMapChange
+					{
+						Index = x + y * paddedSize.x + z * paddedSize.x * paddedSize.y,
+						Value = 0,
+					});
+				}
+			}
+		}
+
+		chunk.Modify(noiseMapChanges);
+
+		return true;
 	}
 }

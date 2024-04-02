@@ -154,7 +154,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ChunkSize: {x: 32, y: 32, z: 32}
-  MapSize: {x: 160, y: 32, z: 32}
+  MapSize: {x: 320, y: 32, z: 320}
   chunkPrefab: {fileID: 4306579607726012621, guid: 0468af4d4650927479c6d478df9b90d1,
     type: 3}
   noiseData:

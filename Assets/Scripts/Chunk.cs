@@ -29,12 +29,17 @@ public class Chunk : MonoBehaviour
 	private Vector3Int size;
 	private MarchingCubes marchingCubes;
 	private int factor;
+	private ChunkManager chunkManager;
+	public Vector3Int ChunkCoord { get; private set; }
 
-	public void Init(ITerrainNoise3D noiseGenerator, Vector3Int size, Noise noiseData)
+	public void Init(Vector3Int chunkCoord, ChunkManager chunkManager, ITerrainNoise3D noiseGenerator, Vector3Int size,
+		Noise noiseData)
 	{
+		this.ChunkCoord = chunkCoord;
 		this.noiseData = noiseData;
 		this.noiseGenerator = noiseGenerator;
 		this.size = size;
+		this.chunkManager = chunkManager;
 		Generate();
 	}
 
@@ -116,6 +121,7 @@ public class Chunk : MonoBehaviour
 
 	public bool Modify(RaycastHit hitInfo, float radius)
 	{
+		return chunkManager.Modify(this, hitInfo, radius);
 		Vector3 hitPoint = transform.InverseTransformPoint(hitInfo.point) * factor;
 		float sqrRadius = (radius * factor) * (radius * factor);
 		var paddedSize = (size * factor) + new Vector3Int(1, 1, 1);
@@ -158,6 +164,15 @@ public class Chunk : MonoBehaviour
 		}
 
 		return true;
+	}
+
+	public void Modify(List<NoiseMapChange> changes)
+	{
+		if (changes.Count > 0)
+		{
+			marchingCubes.UpdatePointCloud(changes);
+			marchingCubes.March(GenerateMesh);
+		}
 	}
 }
 
