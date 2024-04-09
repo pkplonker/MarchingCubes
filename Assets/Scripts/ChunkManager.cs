@@ -117,12 +117,6 @@ public class ChunkManager : MonoBehaviour
 						continue;
 					}
 
-					//match neighbour
-					if (x == paddedSize.x || y == paddedSize.y || z == paddedSize.z)
-					{
-						//continue;
-					}
-
 					// Overflow to neighbour
 					if (x < 0 || y < 0 || z < 0)
 					{
@@ -130,20 +124,42 @@ public class ChunkManager : MonoBehaviour
 					}
 
 					//match neighbour
+					if (x == paddedSize.x - 1 || y == paddedSize.y - 1 || z == paddedSize.z - 1)
+					{
+						var chunkOffset = new Vector3Int(x == paddedSize.x - 1 ? 1 : 0, y == paddedSize.y - 1 ? 1 : 0,
+							z == paddedSize.z - 1 ? 1 : 0);
+						var chunkIndex = chunk.ChunkCoord + chunkOffset;
+						if (chunkIndex.x >= 0 && chunkIndex.y >= 0 && chunkIndex.z >= 0 &&
+						    chunkIndex.x < Chunks.GetLength(0) && chunkIndex.y < Chunks.GetLength(1) &&
+						    chunkIndex.z < Chunks.GetLength(2))
+						{
+							var neighbourChunk = Chunks[chunkIndex.x, chunkIndex.y, chunkIndex.z];
+							var newX = paddedSize.x - 1 == x ? 0 : x;
+							var newY = paddedSize.y - 1 == y ? 0 : y;
+							var newZ = paddedSize.z - 1 == z ? 0 : z;
+							if (!modifications.ContainsKey(neighbourChunk))
+							{
+								modifications.Add(neighbourChunk, new List<NoiseMapChange>());
+							}
+
+							CreateModification(neighbourChunk, modifications, newX, newY, newZ, paddedSize);
+						}
+					}
+
+					//match neighbour
 					if (x == 0 || y == 0 || z == 0)
 					{
 						var chunkOffset = new Vector3Int(x == 0 ? -1 : 0, y == 0 ? -1 : 0, z == 0 ? -1 : 0);
 						var chunkIndex = chunk.ChunkCoord + chunkOffset;
-						if (chunkIndex.x >= 0 && chunkIndex.y >= 0 && chunkIndex.z >= 0)
+						if (chunkIndex.x >= 0 && chunkIndex.y >= 0 && chunkIndex.z >= 0 &&
+						    chunkIndex.x < Chunks.GetLength(0) && chunkIndex.y < Chunks.GetLength(1) &&
+						    chunkIndex.z < Chunks.GetLength(2))
 						{
 							var neighbourChunk = Chunks[chunkIndex.x, chunkIndex.y, chunkIndex.z];
-							int newX = 0;
-							int newY = 0;
-							int newZ = 0;
-							if (x == 0) newX = paddedSize.x - 1;
-							if (y == 0) newY = paddedSize.x - 1;
-							if (z == 0) newZ = paddedSize.x - 1;
-							if (!modifications.TryGetValue(neighbourChunk, out var _))
+							var newX = x == 0 ? paddedSize.x - 1 : x;
+							var newY = y == 0 ? paddedSize.y - 1 : y;
+							var newZ = z == 0 ? paddedSize.z - 1 : z;
+							if (!modifications.ContainsKey(neighbourChunk))
 							{
 								modifications.Add(neighbourChunk, new List<NoiseMapChange>());
 							}

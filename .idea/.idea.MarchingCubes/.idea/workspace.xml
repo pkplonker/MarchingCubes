@@ -4,15 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c4ca93ba-5ae1-47e7-b91c-475b15f123cf" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MarchingCubes/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MarchingCubes/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Chunk.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Chunk.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/MarchingCubesMat.mat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/MarchingCubesMat.mat.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/MarchingCubes.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/MarchingCubes.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Chunk.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Chunk.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ChunkManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ChunkManager.cs" afterDir="false" />
-    </list>
+    <list default="true" id="c4ca93ba-5ae1-47e7-b91c-475b15f123cf" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -150,7 +142,7 @@
       <workItem from="1711797567579" duration="5184000" />
       <workItem from="1711819508776" duration="4113000" />
       <workItem from="1711964201576" duration="2230000" />
-      <workItem from="1712610306368" duration="2908000" />
+      <workItem from="1712610306368" duration="3672000" />
     </task>
     <servers />
   </component>
@@ -178,16 +170,16 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Assets/Scripts/ChunkManager.cs</url>
-          <line>172</line>
-          <properties documentPath="S:\Users\pkplo\OneDrive\Documents\UnityProjects\MarchingCubes\Assets\Scripts\ChunkManager.cs" initialLine="172" containingFunctionPresentation="Method 'CreateModification'">
+          <line>170</line>
+          <properties documentPath="S:\Users\pkplo\OneDrive\Documents\UnityProjects\MarchingCubes\Assets\Scripts\ChunkManager.cs" initialLine="170" containingFunctionPresentation="Method 'CreateModification'">
             <startOffsets>
-              <option value="4936" />
+              <option value="4848" />
             </startOffsets>
             <endOffsets>
-              <option value="4958" />
+              <option value="4927" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="101" />
+          <option name="timeStamp" value="102" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
