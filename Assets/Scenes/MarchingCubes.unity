@@ -359,7 +359,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fb423e14f9870341a3382273fcbc2fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 1.5
+  radius: 1
   maxDigDistance: 500
   rayCamera: {fileID: 330585545}
 --- !u!1 &410087039

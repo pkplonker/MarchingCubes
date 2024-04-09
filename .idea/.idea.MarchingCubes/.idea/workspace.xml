@@ -6,6 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="c4ca93ba-5ae1-47e7-b91c-475b15f123cf" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MarchingCubes/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MarchingCubes/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Chunk.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Chunk.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/MarchingCubesMat.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/MarchingCubesMat.mat.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/MarchingCubes.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/MarchingCubes.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Chunk.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Chunk.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/ChunkManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ChunkManager.cs" afterDir="false" />
@@ -34,6 +37,21 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c2d036c16ca64e0eb93703a3b13e733a171c00/3e/1c3694af/NativeArray`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c2d036c16ca64e0eb93703a3b13e733a171c00/c1/ee4982fd/AsyncGPUReadbackRequest.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c2d036c16ca64e0eb93703a3b13e733a171c00/f9/b21b5d6e/ComputeShader.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c2d036c16ca64e0eb93703a3b13e733a171c00/fd/60f2ff78/Random.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://S:/Users/pkplo/OneDrive/Documents/UnityProjects/MarchingCubes/Assets/Scripts/ChunkManager.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://S:/Users/pkplo/OneDrive/Documents/UnityProjects/MarchingCubes/Assets/Scripts/ChunkManager.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://S:/Users/pkplo/OneDrive/Documents/UnityProjects/MarchingCubes/Assets/Scripts/ChunkManager.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://S:/Users/pkplo/OneDrive/Documents/UnityProjects/MarchingCubes/Assets/Scripts/ChunkManager.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://S:/Users/pkplo/OneDrive/Documents/UnityProjects/MarchingCubes/Assets/Scripts/ChunkManager.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://S:/Users/pkplo/OneDrive/Documents/UnityProjects/MarchingCubes/Assets/Scripts/ChunkManager.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://S:/Users/pkplo/OneDrive/Documents/UnityProjects/MarchingCubes/Assets/Scripts/ChunkManager.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://S:/Users/pkplo/OneDrive/Documents/UnityProjects/MarchingCubes/Assets/Scripts/ChunkManager.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://S:/Users/pkplo/OneDrive/Documents/UnityProjects/MarchingCubes/Assets/Scripts/ChunkManager.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://S:/Users/pkplo/OneDrive/Documents/UnityProjects/MarchingCubes/Assets/Scripts/ChunkManager.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://S:/Users/pkplo/OneDrive/Documents/UnityProjects/MarchingCubes/Assets/Scripts/ChunkManager.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://S:/Users/pkplo/OneDrive/Documents/UnityProjects/MarchingCubes/Assets/Scripts/ChunkManager.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://S:/Users/pkplo/OneDrive/Documents/UnityProjects/MarchingCubes/Assets/Scripts/ChunkManager.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://S:/Users/pkplo/OneDrive/Documents/UnityProjects/MarchingCubes/Assets/Scripts/ChunkManager.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Digger.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Fly.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/TerrainNoise3DCompute.cs" root0="FORCE_HIGHLIGHTING" />
@@ -61,6 +79,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "Errors",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -106,10 +125,10 @@
       </option>
       <method v="2" />
     </configuration>
-    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="22276">
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="45368">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
-      <option name="pid" value="22276" />
+      <option name="pid" value="45368" />
       <option name="projectPathOnTarget" />
       <option name="selectedOptions">
         <list />
@@ -131,6 +150,7 @@
       <workItem from="1711797567579" duration="5184000" />
       <workItem from="1711819508776" duration="4113000" />
       <workItem from="1711964201576" duration="2230000" />
+      <workItem from="1712610306368" duration="2908000" />
     </task>
     <servers />
   </component>
@@ -154,6 +174,23 @@
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Scripts/ChunkManager.cs</url>
+          <line>172</line>
+          <properties documentPath="S:\Users\pkplo\OneDrive\Documents\UnityProjects\MarchingCubes\Assets\Scripts\ChunkManager.cs" initialLine="172" containingFunctionPresentation="Method 'CreateModification'">
+            <startOffsets>
+              <option value="4936" />
+            </startOffsets>
+            <endOffsets>
+              <option value="4958" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="101" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="Type#TriangleData" memberName="triangles" />

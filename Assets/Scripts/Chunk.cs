@@ -14,10 +14,9 @@ public class Chunk : MonoBehaviour
 	private ComputeShader MarchingCubeShader;
 
 	[SerializeField]
-	private Material ChunkMaterial;
-
 	private MeshFilter meshFilter;
-	private MeshRenderer meshRender;
+
+	[SerializeField]
 	private MeshCollider meshCollider;
 
 	[SerializeField]
@@ -51,10 +50,9 @@ public class Chunk : MonoBehaviour
 			transform.position / (noiseData.Scale * noiseData.VertDistance),
 			(data =>
 			{
-				marchingCubes = new MarchingCubes(MarchingCubeShader, data, noiseData.IsoLevel, size, factor,BuildMesh);
-				
+				marchingCubes = new MarchingCubes(MarchingCubeShader, data, noiseData.IsoLevel, size, factor,
+					BuildMesh);
 			}));
-		;
 	}
 
 	private void BuildMesh()
@@ -64,11 +62,7 @@ public class Chunk : MonoBehaviour
 
 	private void OnEnable()
 	{
-		meshFilter = GetComponent<MeshFilter>();
-		meshRender = GetComponent<MeshRenderer>();
-		meshRender.material = ChunkMaterial;
 		noiseGenerator = GetComponent<ITerrainNoise3D>();
-		meshCollider = GetComponent<MeshCollider>();
 	}
 
 	private void OnDisable()
@@ -119,52 +113,7 @@ public class Chunk : MonoBehaviour
 			TaskContinuationOptions.None, MainThreadDispatcher.Instance.Sceduler);
 	}
 
-	public bool Modify(RaycastHit hitInfo, float radius)
-	{
-		return chunkManager.Modify(this, hitInfo, radius);
-		Vector3 hitPoint = transform.InverseTransformPoint(hitInfo.point) * factor;
-		float sqrRadius = (radius * factor) * (radius * factor);
-		var paddedSize = (size * factor) + new Vector3Int(1, 1, 1);
-
-		int minX = Mathf.Max(0, Mathf.FloorToInt(hitPoint.x - radius * factor));
-		int maxX = Mathf.Min(paddedSize.x, Mathf.CeilToInt(hitPoint.x + radius * factor));
-		int minY = Mathf.Max(0, Mathf.FloorToInt(hitPoint.y - radius * factor));
-		int maxY = Mathf.Min(paddedSize.y, Mathf.CeilToInt(hitPoint.y + radius * factor));
-		int minZ = Mathf.Max(0, Mathf.FloorToInt(hitPoint.z - radius * factor));
-		int maxZ = Mathf.Min(paddedSize.z, Mathf.CeilToInt(hitPoint.z + radius * factor));
-
-		var noiseMapChanges = new List<NoiseMapChange>();
-
-		for (int x = minX; x < maxX; x++)
-		{
-			for (int y = minY; y < maxY; y++)
-			{
-				for (int z = minZ; z < maxZ; z++)
-				{
-					Vector3 voxelCenter = new Vector3(x + 0.5f, y + 0.5f, z + 0.5f);
-					float sqrDistance = (voxelCenter - hitPoint).sqrMagnitude;
-
-					if (sqrDistance < sqrRadius)
-					{
-						int index = x + y * paddedSize.x + z * paddedSize.x * paddedSize.y;
-						noiseMapChanges.Add(new NoiseMapChange
-						{
-							Index = index,
-							Value = 0,
-						});
-					}
-				}
-			}
-		}
-
-		if (noiseMapChanges.Count > 0)
-		{
-			marchingCubes.UpdatePointCloud(noiseMapChanges);
-			marchingCubes.March(GenerateMesh);
-		}
-
-		return true;
-	}
+	public bool Modify(RaycastHit hitInfo, float radius) => chunkManager.Modify(this, hitInfo, radius);
 
 	public void Modify(List<NoiseMapChange> changes)
 	{
@@ -178,8 +127,14 @@ public class Chunk : MonoBehaviour
 
 public struct NoiseMapChange
 {
-	public int Value { get; set; }
+	public float Value { get; set; }
 	public int Index { get; set; }
+
+	public NoiseMapChange(int index, float value)
+	{
+		this.Index = index;
+		this.Value = value;
+	}
 }
 
 public struct Triangle

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using Unity.Mathematics;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
+using Random = Unity.Mathematics.Random;
 
 public class ChunkManager : MonoBehaviour
 {
@@ -74,6 +75,8 @@ public class ChunkManager : MonoBehaviour
 					var chunk = chunkGO.GetComponent<Chunk>();
 					Chunks[x, y, z] = chunk;
 					chunk.Init(new Vector3Int(x, y, z), this, noiseGenerator, ChunkSize, noiseData);
+					chunk.GetComponent<MeshRenderer>().material.color = new Color(UnityEngine.Random.Range(0f, 1f),
+						UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f));
 				}
 			}
 		}
@@ -91,35 +94,94 @@ public class ChunkManager : MonoBehaviour
 	public bool Modify(Chunk chunk, RaycastHit hitInfo, float radius)
 	{
 		Vector3 hitPoint = chunk.transform.InverseTransformPoint(hitInfo.point) * factor;
-		float sqrRadius = (radius * factor) * (radius * factor);
 		var paddedSize = (ChunkSize * factor) + new Vector3Int(1, 1, 1);
 
-		int minX = Mathf.Max(0, Mathf.FloorToInt(hitPoint.x - radius * factor));
-		int maxX = Mathf.Min(paddedSize.x, Mathf.CeilToInt(hitPoint.x + radius * factor));
-		int minY = Mathf.Max(0, Mathf.FloorToInt(hitPoint.y - radius * factor));
-		int maxY = Mathf.Min(paddedSize.y, Mathf.CeilToInt(hitPoint.y + radius * factor));
-		int minZ = Mathf.Max(0, Mathf.FloorToInt(hitPoint.z - radius * factor));
-		int maxZ = Mathf.Min(paddedSize.z, Mathf.CeilToInt(hitPoint.z + radius * factor));
+		int minX = Mathf.FloorToInt(hitPoint.x - radius * factor);
+		int maxX = Mathf.CeilToInt(hitPoint.x + radius * factor);
+		int minY = Mathf.FloorToInt(hitPoint.y - radius * factor);
+		int maxY = Mathf.CeilToInt(hitPoint.y + radius * factor);
+		int minZ = Mathf.FloorToInt(hitPoint.z - radius * factor);
+		int maxZ = Mathf.CeilToInt(hitPoint.z + radius * factor);
 
-		var noiseMapChanges = new List<NoiseMapChange>();
-
+		var modifications = new Dictionary<Chunk, List<NoiseMapChange>>();
+		modifications[chunk] = new List<NoiseMapChange>();
 		for (int x = minX; x < maxX; x++)
 		{
 			for (int y = minY; y < maxY; y++)
 			{
 				for (int z = minZ; z < maxZ; z++)
 				{
-					noiseMapChanges.Add(new NoiseMapChange
+					// Overflow to neighbour
+					if (x >= paddedSize.x || y >= paddedSize.y || z >= paddedSize.z)
 					{
-						Index = x + y * paddedSize.x + z * paddedSize.x * paddedSize.y,
-						Value = 0,
-					});
+						continue;
+					}
+
+					//match neighbour
+					if (x == paddedSize.x || y == paddedSize.y || z == paddedSize.z)
+					{
+						//continue;
+					}
+
+					// Overflow to neighbour
+					if (x < 0 || y < 0 || z < 0)
+					{
+						continue;
+					}
+
+					//match neighbour
+					if (x == 0 || y == 0 || z == 0)
+					{
+						var chunkOffset = new Vector3Int(x == 0 ? -1 : 0, y == 0 ? -1 : 0, z == 0 ? -1 : 0);
+						var chunkIndex = chunk.ChunkCoord + chunkOffset;
+						if (chunkIndex.x >= 0 && chunkIndex.y >= 0 && chunkIndex.z >= 0)
+						{
+							var neighbourChunk = Chunks[chunkIndex.x, chunkIndex.y, chunkIndex.z];
+							int newX = 0;
+							int newY = 0;
+							int newZ = 0;
+							if (x == 0) newX = paddedSize.x - 1;
+							if (y == 0) newY = paddedSize.x - 1;
+							if (z == 0) newZ = paddedSize.x - 1;
+							if (!modifications.TryGetValue(neighbourChunk, out var _))
+							{
+								modifications.Add(neighbourChunk, new List<NoiseMapChange>());
+							}
+
+							CreateModification(neighbourChunk, modifications, newX, newY, newZ, paddedSize);
+						}
+					}
+
+					CreateModification(chunk, modifications, x, y, z, paddedSize);
 				}
 			}
 		}
 
-		chunk.Modify(noiseMapChanges);
+		foreach (var mod in modifications)
+		{
+			mod.Key.Modify(mod.Value);
+		}
 
 		return true;
 	}
+
+	private void CreateModification(Chunk chunk, Dictionary<Chunk, List<NoiseMapChange>> modifications, int x, int y,
+		int z, Vector3Int paddedSize)
+	{
+		if (GetIndex(x, y, z, paddedSize) > paddedSize.x * paddedSize.y * paddedSize.z)
+		{
+			Debug.LogError("err");
+		}
+
+		modifications[chunk].Add(new NoiseMapChange
+		{
+			Index = GetIndex(x, y, z, paddedSize),
+			Value = GetDigValue(),
+		});
+	}
+
+	private static int GetIndex(int x, int y, int z, Vector3Int paddedSize) =>
+		x + y * paddedSize.x + z * paddedSize.x * paddedSize.y;
+
+	private float GetDigValue() => 0;
 }
