@@ -123,50 +123,7 @@ public class ChunkManager : MonoBehaviour
 						continue;
 					}
 
-					//match neighbour
-					if (x == paddedSize.x - 1 || y == paddedSize.y - 1 || z == paddedSize.z - 1)
-					{
-						var chunkOffset = new Vector3Int(x == paddedSize.x - 1 ? 1 : 0, y == paddedSize.y - 1 ? 1 : 0,
-							z == paddedSize.z - 1 ? 1 : 0);
-						var chunkIndex = chunk.ChunkCoord + chunkOffset;
-						if (chunkIndex.x >= 0 && chunkIndex.y >= 0 && chunkIndex.z >= 0 &&
-						    chunkIndex.x < Chunks.GetLength(0) && chunkIndex.y < Chunks.GetLength(1) &&
-						    chunkIndex.z < Chunks.GetLength(2))
-						{
-							var neighbourChunk = Chunks[chunkIndex.x, chunkIndex.y, chunkIndex.z];
-							var newX = paddedSize.x - 1 == x ? 0 : x;
-							var newY = paddedSize.y - 1 == y ? 0 : y;
-							var newZ = paddedSize.z - 1 == z ? 0 : z;
-							if (!modifications.ContainsKey(neighbourChunk))
-							{
-								modifications.Add(neighbourChunk, new List<NoiseMapChange>());
-							}
-
-							CreateModification(neighbourChunk, modifications, newX, newY, newZ, paddedSize);
-						}
-					}
-
-					//match neighbour
-					if (x == 0 || y == 0 || z == 0)
-					{
-						var chunkOffset = new Vector3Int(x == 0 ? -1 : 0, y == 0 ? -1 : 0, z == 0 ? -1 : 0);
-						var chunkIndex = chunk.ChunkCoord + chunkOffset;
-						if (chunkIndex.x >= 0 && chunkIndex.y >= 0 && chunkIndex.z >= 0 &&
-						    chunkIndex.x < Chunks.GetLength(0) && chunkIndex.y < Chunks.GetLength(1) &&
-						    chunkIndex.z < Chunks.GetLength(2))
-						{
-							var neighbourChunk = Chunks[chunkIndex.x, chunkIndex.y, chunkIndex.z];
-							var newX = x == 0 ? paddedSize.x - 1 : x;
-							var newY = y == 0 ? paddedSize.y - 1 : y;
-							var newZ = z == 0 ? paddedSize.z - 1 : z;
-							if (!modifications.ContainsKey(neighbourChunk))
-							{
-								modifications.Add(neighbourChunk, new List<NoiseMapChange>());
-							}
-
-							CreateModification(neighbourChunk, modifications, newX, newY, newZ, paddedSize);
-						}
-					}
+					ProcessNeighbors(x, y, z, paddedSize, chunk, modifications);
 
 					CreateModification(chunk, modifications, x, y, z, paddedSize);
 				}
@@ -181,9 +138,65 @@ public class ChunkManager : MonoBehaviour
 		return true;
 	}
 
-	private void CreateModification(Chunk chunk, Dictionary<Chunk, List<NoiseMapChange>> modifications, int x, int y,
-		int z, Vector3Int paddedSize)
+	private void ProcessNeighbors(int x, int y, int z, Vector3Int paddedSize, Chunk chunk,
+		Dictionary<Chunk, List<NoiseMapChange>> modifications)
 	{
+		for (int dx = -1; dx <= 1; dx++)
+		{
+			for (int dy = -1; dy <= 1; dy++)
+			{
+				for (int dz = -1; dz <= 1; dz++)
+				{
+					if (dx == 0 && dy == 0 && dz == 0) continue;
+
+					if (IsEdgeOrCorner(x, y, z, dx, dy, dz, paddedSize))
+					{
+						ProcessNeighborChunk(x, y, z, dx, dy, dz, paddedSize, chunk, modifications);
+					}
+				}
+			}
+		}
+	}
+
+	private bool IsEdgeOrCorner(int x, int y, int z, int dx, int dy, int dz, Vector3Int paddedSize)
+	{
+		return (x == 0 && dx == -1) || (x == paddedSize.x - 1 && dx == 1) ||
+		       (y == 0 && dy == -1) || (y == paddedSize.y - 1 && dy == 1) ||
+		       (z == 0 && dz == -1) || (z == paddedSize.z - 1 && dz == 1);
+	}
+
+	private void ProcessNeighborChunk(int x, int y, int z, int dx, int dy, int dz, Vector3Int paddedSize, Chunk chunk,
+		Dictionary<Chunk, List<NoiseMapChange>> modifications)
+	{
+		var chunkOffset = new Vector3Int(dx, dy, dz);
+		var chunkIndex = chunk.ChunkCoord + chunkOffset;
+
+		if (IsValidChunkIndex(chunkIndex, Chunks))
+		{
+			var neighbourChunk = Chunks[chunkIndex.x, chunkIndex.y, chunkIndex.z];
+			var newX = (dx != 0) ? (dx == -1 ? paddedSize.x - 1 : 0) : x;
+			var newY = (dy != 0) ? (dy == -1 ? paddedSize.y - 1 : 0) : y;
+			var newZ = (dz != 0) ? (dz == -1 ? paddedSize.z - 1 : 0) : z;
+
+			CreateModification(neighbourChunk, modifications, newX, newY, newZ, paddedSize);
+		}
+	}
+
+	private bool IsValidChunkIndex(Vector3Int chunkIndex, Chunk[,,] chunks)
+	{
+		return chunkIndex.x >= 0 && chunkIndex.y >= 0 && chunkIndex.z >= 0 &&
+		       chunkIndex.x < chunks.GetLength(0) && chunkIndex.y < chunks.GetLength(1) &&
+		       chunkIndex.z < chunks.GetLength(2);
+	}
+
+	private void CreateModification(Chunk chunk, Dictionary<Chunk, List<NoiseMapChange>> modifications, int x,
+		int y, int z, Vector3Int paddedSize)
+	{
+		if (!modifications.ContainsKey(chunk))
+		{
+			modifications.Add(chunk, new List<NoiseMapChange>());
+		}
+
 		if (GetIndex(x, y, z, paddedSize) > paddedSize.x * paddedSize.y * paddedSize.z)
 		{
 			Debug.LogError("err");
