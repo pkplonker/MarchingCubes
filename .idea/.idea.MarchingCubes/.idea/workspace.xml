@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c4ca93ba-5ae1-47e7-b91c-475b15f123cf" name="Changes" comment="" />
+    <list default="true" id="c4ca93ba-5ae1-47e7-b91c-475b15f123cf" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ChunkManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ChunkManager.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -142,7 +144,7 @@
       <workItem from="1711797567579" duration="5184000" />
       <workItem from="1711819508776" duration="4113000" />
       <workItem from="1711964201576" duration="2230000" />
-      <workItem from="1712610306368" duration="3672000" />
+      <workItem from="1712610306368" duration="5788000" />
     </task>
     <servers />
   </component>
@@ -170,16 +172,16 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Assets/Scripts/ChunkManager.cs</url>
-          <line>170</line>
-          <properties documentPath="S:\Users\pkplo\OneDrive\Documents\UnityProjects\MarchingCubes\Assets\Scripts\ChunkManager.cs" initialLine="170" containingFunctionPresentation="Method 'CreateModification'">
+          <line>143</line>
+          <properties documentPath="S:\Users\pkplo\OneDrive\Documents\UnityProjects\MarchingCubes\Assets\Scripts\ChunkManager.cs" initialLine="143" containingFunctionPresentation="Method 'ProcessNeighbors'">
             <startOffsets>
-              <option value="4848" />
+              <option value="3962" />
             </startOffsets>
             <endOffsets>
-              <option value="4927" />
+              <option value="3994" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="102" />
+          <option name="timeStamp" value="116" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -25,6 +25,8 @@ public class ChunkManager : MonoBehaviour
 	[SerializeField]
 	private Noise noiseData;
 
+	private readonly Dictionary<Chunk, List<NoiseMapChange>> modifications = new();
+
 	private int factor;
 
 	private void OnEnable()
@@ -103,7 +105,6 @@ public class ChunkManager : MonoBehaviour
 		int minZ = Mathf.FloorToInt(hitPoint.z - radius * factor);
 		int maxZ = Mathf.CeilToInt(hitPoint.z + radius * factor);
 
-		var modifications = new Dictionary<Chunk, List<NoiseMapChange>>();
 		modifications[chunk] = new List<NoiseMapChange>();
 		for (int x = minX; x < maxX; x++)
 		{
@@ -135,34 +136,38 @@ public class ChunkManager : MonoBehaviour
 			mod.Key.Modify(mod.Value);
 		}
 
+		modifications.Clear();
 		return true;
 	}
 
 	private void ProcessNeighbors(int x, int y, int z, Vector3Int paddedSize, Chunk chunk,
 		Dictionary<Chunk, List<NoiseMapChange>> modifications)
 	{
-		for (int dx = -1; dx <= 1; dx++)
+		if (!IsOnEdgeOrCorner(x, y, z, paddedSize))
+			return;
+
+		int minX = x == 0 ? -1 : 0, maxX = x == paddedSize.x - 1 ? 1 : 0;
+		int minY = y == 0 ? -1 : 0, maxY = y == paddedSize.y - 1 ? 1 : 0;
+		int minZ = z == 0 ? -1 : 0, maxZ = z == paddedSize.z - 1 ? 1 : 0;
+
+		for (int dx = minX; dx <= maxX; dx++)
 		{
-			for (int dy = -1; dy <= 1; dy++)
+			for (int dy = minY; dy <= maxY; dy++)
 			{
-				for (int dz = -1; dz <= 1; dz++)
+				for (int dz = minZ; dz <= maxZ; dz++)
 				{
 					if (dx == 0 && dy == 0 && dz == 0) continue;
-
-					if (IsEdgeOrCorner(x, y, z, dx, dy, dz, paddedSize))
-					{
-						ProcessNeighborChunk(x, y, z, dx, dy, dz, paddedSize, chunk, modifications);
-					}
+					ProcessNeighborChunk(x, y, z, dx, dy, dz, paddedSize, chunk, modifications);
 				}
 			}
 		}
 	}
 
-	private bool IsEdgeOrCorner(int x, int y, int z, int dx, int dy, int dz, Vector3Int paddedSize)
+	private bool IsOnEdgeOrCorner(int x, int y, int z, Vector3Int paddedSize)
 	{
-		return (x == 0 && dx == -1) || (x == paddedSize.x - 1 && dx == 1) ||
-		       (y == 0 && dy == -1) || (y == paddedSize.y - 1 && dy == 1) ||
-		       (z == 0 && dz == -1) || (z == paddedSize.z - 1 && dz == 1);
+		return x == 0 || x == paddedSize.x - 1 ||
+		       y == 0 || y == paddedSize.y - 1 ||
+		       z == 0 || z == paddedSize.z - 1;
 	}
 
 	private void ProcessNeighborChunk(int x, int y, int z, int dx, int dy, int dz, Vector3Int paddedSize, Chunk chunk,
@@ -194,7 +199,7 @@ public class ChunkManager : MonoBehaviour
 	{
 		if (!modifications.ContainsKey(chunk))
 		{
-			modifications.Add(chunk, new List<NoiseMapChange>());
+			modifications.Add(chunk, new List<NoiseMapChange>(20));
 		}
 
 		if (GetIndex(x, y, z, paddedSize) > paddedSize.x * paddedSize.y * paddedSize.z)
