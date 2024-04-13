@@ -57,9 +57,9 @@ public class Chunk : MonoBehaviour
 			}), computeShaderController);
 	}
 
-	private void BuildMesh()
+	private void BuildMesh(MarchingCubes mCubes)
 	{
-		marchingCubes.March(GenerateMesh);
+		mCubes.March(GenerateMesh);
 	}
 
 	private void OnEnable()

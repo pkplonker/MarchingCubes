@@ -154,17 +154,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ChunkSize: {x: 32, y: 32, z: 32}
   MapSize: {x: 320, y: 32, z: 320}
-  chunkPrefab: {fileID: 4306579607726012621, guid: 0468af4d4650927479c6d478df9b90d1,
+  ChunkPrefab: {fileID: 4306579607726012621, guid: 0468af4d4650927479c6d478df9b90d1,
     type: 3}
-  noiseData:
-    IsoLevel: 0.2
+  NoiseData:
+    IsoLevel: 0.35
     VertDistance: 1
     Lacunarity: 0.7
     Seed: 0
     Octaves: 4
     Persistance: 1.7
     Scale: 12
-  noiseShader: {fileID: 7200000, guid: f6337c1513dbc7c4e8539ac9ffddf37f, type: 3}
+  NoiseShader: {fileID: 7200000, guid: f6337c1513dbc7c4e8539ac9ffddf37f, type: 3}
+  MaxConcurrentGPUActions: 10
 --- !u!4 &139282746
 Transform:
   m_ObjectHideFlags: 0
@@ -267,8 +268,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
-  m_LocalRotation: {x: -0.17630208, y: 0.67955524, z: -0.17342559, w: -0.6906851}
-  m_LocalPosition: {x: 62.071163, y: 36.892906, z: 11.258862}
+  m_LocalRotation: {x: -0.27506596, y: -0.32017925, z: 0.09821839, w: -0.90120876}
+  m_LocalPosition: {x: -17.8258, y: 148.95338, z: -51.948128}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

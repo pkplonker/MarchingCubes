@@ -1,6 +1,6 @@
 #pragma kernel CSMain
 
-RWStructuredBuffer<float> Result;
+RWStructuredBuffer<float4> Result;
 RWStructuredBuffer<float3> octaveOffsets;
 int3 size;
 float scale;
@@ -309,13 +309,15 @@ void CSMain(uint3 id : SV_DispatchThreadID)
     // this creates a solid top
     if (id.y >= (uint)size.y - 1)
     {
-        Result[(size.x * size.y * id.z) + (size.y * id.y) + id.x] = 0;
+        float4 outputValue = float4(id.x , id.y, id.z , 0);
+        Result[(size.x * size.y * id.z) + (size.y * id.y) + id.x] = outputValue;
         return;
     }
     // this creates a solid bottom
     if (id.y <=0)
     {
-        Result[(size.x * size.y * id.z) + (size.y * id.y) + id.x] =1;
+        float4 outputValue = float4(id.x , id.y, id.z , 1);
+        Result[(size.x * size.y * id.z) + (size.y * id.y) + id.x] = outputValue;
         return;
     }
     
@@ -338,5 +340,10 @@ void CSMain(uint3 id : SV_DispatchThreadID)
         frequency *= lacunarity;
     }
 
-    Result[(size.x * size.y * id.z) + (size.y * id.y) + id.x] = InverseLerp(-noiseExtents, noiseExtents, noiseHeight);
+    float normalizedHeight = InverseLerp(-noiseExtents, noiseExtents, noiseHeight);
+    float invFactor = 1.0f / scale;
+    //float4 outputValue = float4(id.x * invFactor, id.y * invFactor, id.z * invFactor, normalizedHeight);
+    float4 outputValue = float4(id.x , id.y, id.z , normalizedHeight);
+
+    Result[(size.x * size.y * id.z) + (size.y * id.y) + id.x] = outputValue;
 }

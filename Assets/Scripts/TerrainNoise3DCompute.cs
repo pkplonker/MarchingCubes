@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -38,7 +39,7 @@ public class TerrainNoise3DCompute : ITerrainNoise3D
 		random = new System.Random();
 	}
 
-	public void GenerateNoiseMap(Vector3Int dimensions, Noise noiseData, Vector3 offset, Action<float[]> callback,
+	public void GenerateNoiseMap(Vector3Int dimensions, Noise noiseData, Vector3 offset, Action<float4[]> callback,
 		ComputeShaderController computeShaderController)
 	{
 		random = new System.Random(noiseData.Seed);
@@ -48,7 +49,7 @@ public class TerrainNoise3DCompute : ITerrainNoise3D
 
 		noiseExtents /= ((float) noiseData.Octaves / 2);
 		var size = dimensions.x * dimensions.y * dimensions.z;
-		var data = new float[size];
+		var data = new float4[size];
 
 		EnsureBuffersInitialized(noiseData.Octaves, size);
 
@@ -75,7 +76,7 @@ public class TerrainNoise3DCompute : ITerrainNoise3D
 				resultsBuffer = null;
 				octaveOffsetsBuffer?.Release();
 				octaveOffsetsBuffer = null;
-				request.GetData<float>().CopyData(data, size);
+				request.GetData<float4>().CopyData(data, size);
 				computeShaderController.Release();
 				callback?.Invoke(data);
 			});
@@ -107,7 +108,7 @@ public class TerrainNoise3DCompute : ITerrainNoise3D
 		if (resultsBuffer == null || resultsBuffer.count != size)
 		{
 			resultsBuffer?.Release();
-			resultsBuffer = new ComputeBuffer(size, sizeof(float));
+			resultsBuffer = new ComputeBuffer(size, sizeof(float)*4);
 		}
 	}
 

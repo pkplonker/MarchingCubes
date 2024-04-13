@@ -8,17 +8,13 @@ public class ComputeShaderController
 {
 	private ConcurrentQueue<Action> queue = new();
 	private int activeJobs;
-	private const int MAX_COUNTER = 10;
+	private readonly int MAX_COUNTER = 10;
 
-	public void Register(Action action)
-	{
-		queue.Enqueue(action);
-	}
+	public ComputeShaderController(int maxActions) => MAX_COUNTER = maxActions;
 
-	public void Release()
-	{
-		Interlocked.Decrement(ref activeJobs);
-	}
+	public void Register(Action action) => queue.Enqueue(action);
+
+	public void Release() => Interlocked.Decrement(ref activeJobs);
 
 	public void Tick()
 	{

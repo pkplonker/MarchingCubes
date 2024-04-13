@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using Unity.Mathematics;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
-using Random = Unity.Mathematics.Random;
 
 public class ChunkManager : MonoBehaviour
 {
@@ -14,13 +10,13 @@ public class ChunkManager : MonoBehaviour
 	[SerializeField]
 	private Vector3Int MapSize;
 
-	private Chunk[,,] Chunks;
+	private Chunk[,,] chunks;
 
 	[SerializeField]
-	private GameObject chunkPrefab;
+	private GameObject ChunkPrefab;
 
 	[SerializeField]
-	private Noise noiseData;
+	private Noise NoiseData;
 
 	private readonly Dictionary<Chunk, List<NoiseMapChange>> modifications = new();
 
@@ -28,11 +24,14 @@ public class ChunkManager : MonoBehaviour
 	private ComputeShaderController computeShaderController;
 
 	[SerializeField]
-	private ComputeShader noiseShader;
+	private ComputeShader NoiseShader;
+
+	[SerializeField]
+	private int MaxConcurrentGPUActions = 10;
 
 	private void OnEnable()
 	{
-		computeShaderController = new ComputeShaderController();
+		computeShaderController = new ComputeShaderController(MaxConcurrentGPUActions);
 	}
 
 	public void Start()
@@ -42,14 +41,14 @@ public class ChunkManager : MonoBehaviour
 
 	public void ClearChunks()
 	{
-		for (int x = 0; x < Chunks.GetLength(0); x++)
+		for (int x = 0; x < chunks.GetLength(0); x++)
 		{
-			for (int y = 0; y < Chunks.GetLength(1); y++)
+			for (int y = 0; y < chunks.GetLength(1); y++)
 			{
-				for (int z = 0; z < Chunks.GetLength(2); z++)
+				for (int z = 0; z < chunks.GetLength(2); z++)
 				{
-					if (Chunks[x, y, z] != null)
-						Destroy(Chunks[x, y, z].gameObject);
+					if (chunks[x, y, z] != null)
+						Destroy(chunks[x, y, z].gameObject);
 				}
 			}
 		}
@@ -62,9 +61,9 @@ public class ChunkManager : MonoBehaviour
 
 		using var t = new Timer(time => Debug.Log($"Generate All took {time / (axis.x * axis.y * axis.z)}ms average"));
 
-		factor = Mathf.CeilToInt(1 / noiseData.VertDistance);
+		factor = Mathf.CeilToInt(1 / NoiseData.VertDistance);
 
-		Chunks = new Chunk[axis.x, axis.y, axis.z];
+		chunks = new Chunk[axis.x, axis.y, axis.z];
 		for (int x = 0; x < axis.x; x++)
 		{
 			for (int y = 0; y < axis.y; y++)
@@ -72,13 +71,13 @@ public class ChunkManager : MonoBehaviour
 				for (int z = 0; z < axis.z; z++)
 				{
 					//DrawSolidDebugChunk(x, y, z);
-					var chunkGO = GameObject.Instantiate(chunkPrefab,
+					var chunkGO = GameObject.Instantiate(ChunkPrefab,
 						new Vector3(ChunkSize.x * x, ChunkSize.y * y, ChunkSize.z * z), Quaternion.identity);
 					chunkGO.transform.SetParent(transform);
 					var chunk = chunkGO.GetComponent<Chunk>();
-					Chunks[x, y, z] = chunk;
-					chunk.Init(new Vector3Int(x, y, z), this, new TerrainNoise3DCompute(noiseShader), ChunkSize,
-						noiseData, computeShaderController);
+					chunks[x, y, z] = chunk;
+					chunk.Init(new Vector3Int(x, y, z), this, new TerrainNoise3DCompute(NoiseShader), ChunkSize,
+						NoiseData, computeShaderController);
 					chunk.GetComponent<MeshRenderer>().material.color = new Color(UnityEngine.Random.Range(0f, 1f),
 						UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f));
 				}
@@ -183,9 +182,9 @@ public class ChunkManager : MonoBehaviour
 		var chunkOffset = new Vector3Int(dx, dy, dz);
 		var chunkIndex = chunk.ChunkCoord + chunkOffset;
 
-		if (IsValidChunkIndex(chunkIndex, Chunks))
+		if (IsValidChunkIndex(chunkIndex, chunks))
 		{
-			var neighbourChunk = Chunks[chunkIndex.x, chunkIndex.y, chunkIndex.z];
+			var neighbourChunk = chunks[chunkIndex.x, chunkIndex.y, chunkIndex.z];
 			var newX = (dx != 0) ? (dx == -1 ? paddedSize.x - 1 : 0) : x;
 			var newY = (dy != 0) ? (dy == -1 ? paddedSize.y - 1 : 0) : y;
 			var newZ = (dz != 0) ? (dz == -1 ? paddedSize.z - 1 : 0) : z;

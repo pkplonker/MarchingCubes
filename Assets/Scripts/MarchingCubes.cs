@@ -35,8 +35,8 @@ public class MarchingCubes
 	private const int THREAD_SIZE_Y = 8;
 	private const int THREAD_SIZE_Z = 8;
 
-	public MarchingCubes(ComputeShader shader, float[] noiseMap, float isoLevel, Vector3Int chunkSize, int factor,
-		Action buildMeshCallback)
+	public MarchingCubes(ComputeShader shader, float4[] noiseMap, float isoLevel, Vector3Int chunkSize, int factor,
+		Action<MarchingCubes> buildMeshCallback)
 	{
 		this.factor = factor;
 		this.chunkSize = chunkSize;
@@ -47,7 +47,8 @@ public class MarchingCubes
 		this.isoLevel = isoLevel;
 		shader.SetFloat(ISO_LEVEL, isoLevel);
 		shader.SetInts(SIZE, new int[3] {paddedSize.x, paddedSize.y, paddedSize.z});
-		CreateInputDataFromPointCloud(noiseMap, buildMeshCallback);
+		this.inputData = noiseMap;
+		buildMeshCallback?.Invoke(this);
 	}
 
 	public void March(Action<Triangle[], int> callback)
@@ -115,61 +116,5 @@ public class MarchingCubes
 		{
 			inputData[change.Index].w = change.Value;
 		}
-	}
-
-	[BurstCompile]
-	public struct PointCloudJob : IJobParallelFor
-	{
-		[ReadOnly]
-		public NativeArray<float> noiseMap;
-
-		[WriteOnly]
-		public NativeArray<float4> inputData;
-
-		public float invFactor;
-		public int3 paddedSize;
-
-		public void Execute(int index)
-		{
-			int x = index % paddedSize.x;
-			int y = (index / paddedSize.x) % paddedSize.y;
-			int z = index / (paddedSize.x * paddedSize.y);
-
-			inputData[index] = new float4(x * invFactor, y * invFactor, z * invFactor, noiseMap[index]);
-		}
-	}
-
-	private void CreateInputDataFromPointCloud(float[] noiseMap, Action buildMeshCallback)
-	{
-		NativeArray<float4> nativeInputData;
-		inputData = new float4[length];
-
-		nativeInputData = new NativeArray<float4>(length, Allocator.TempJob);
-
-		var job = new PointCloudJob
-		{
-			noiseMap = new NativeArray<float>(noiseMap, Allocator.TempJob),
-			inputData = nativeInputData,
-			invFactor = 1.0f / factor,
-			paddedSize = new int3(paddedSize.x, paddedSize.y, paddedSize.z)
-		};
-
-		JobHandle handle = job.Schedule(length, 64);
-		MainThreadDispatcher.Instance.StartCoroutineOnMain(
-			WaitForJobCompletion(handle, nativeInputData, buildMeshCallback)
-		);
-	}
-
-	private IEnumerator WaitForJobCompletion(JobHandle handle, NativeArray<float4> nativeInputData,
-		Action callback)
-	{
-		yield return new WaitUntil(() => handle.IsCompleted);
-
-		handle.Complete();
-		nativeInputData.CopyData(inputData, inputData.Length);
-
-		nativeInputData.Dispose();
-
-		callback?.Invoke();
 	}
 }
