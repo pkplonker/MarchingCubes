@@ -50,13 +50,14 @@ public class Chunk : MonoBehaviour
 	{
 		factor = Mathf.CeilToInt(1 / noiseData.VertDistance);
 		var factoredSize = (size * factor) + new Vector3Int(1, 1, 1);
+		;
 		noiseGenerator.GenerateNoiseMap(factoredSize, noiseData,
 			transform.position / (noiseData.Scale * noiseData.VertDistance),
 			(data =>
 			{
 				marchingCubes = new MarchingCubes(MarchingCubeShader, data, noiseData.IsoLevel, size, factor,
 					BuildMesh,computerShaderQueue, readbackQueue);
-			}), computerShaderQueue, readbackQueue);
+			}), computerShaderQueue, readbackQueue,chunkManager.GetClampDirection(ChunkCoord));
 	}
 
 	private void BuildMesh(MarchingCubes mCubes) => mCubes.March(GenerateMesh);

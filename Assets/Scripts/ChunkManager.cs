@@ -37,8 +37,8 @@ public class ChunkManager : MonoBehaviour
 
 	private void OnEnable()
 	{
-		computeShaderQueue = new AsyncQueue("computeShaderQueue",() => MaxConcurrentGPUActions);
-		gpuAsyncReadbackqueue = new AsyncQueue("gpuAsyncReadbackqueue",() => MaxConcurrentGPUReadbackActions);
+		computeShaderQueue = new AsyncQueue("computeShaderQueue", () => MaxConcurrentGPUActions);
+		gpuAsyncReadbackqueue = new AsyncQueue("gpuAsyncReadbackqueue", () => MaxConcurrentGPUReadbackActions);
 	}
 
 	public void Start()
@@ -233,4 +233,11 @@ public class ChunkManager : MonoBehaviour
 		x + y * paddedSize.x + z * paddedSize.x * paddedSize.y;
 
 	private float GetDigValue() => 0;
+
+	public int3 GetClampDirection(Vector3Int chunkCoord) =>
+		new(
+			chunkCoord.x == 0 ? -1 : (chunkCoord.x == chunks.GetLength(0) - 1 ? 1 : 0),
+			chunkCoord.y == 0 ? -1 : (chunkCoord.y == chunks.GetLength(1) - 1 ? 1 : 0),
+			chunkCoord.z == 0 ? -1 : (chunkCoord.z == chunks.GetLength(2) - 1 ? 1 : 0)
+		);
 }

@@ -152,8 +152,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86f3e6da74bb4761b8bc0b7f2a45045d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ChunkSize: {x: 8, y: 8, z: 8}
-  MapSize: {x: 160, y: 8, z: 160}
+  ChunkSize: {x: 4, y: 4, z: 4}
+  MapSize: {x: 80, y: 8, z: 80}
   ChunkPrefab: {fileID: 4306579607726012621, guid: 0468af4d4650927479c6d478df9b90d1,
     type: 3}
   NoiseData:
@@ -164,9 +164,9 @@ MonoBehaviour:
     Octaves: 4
     Persistance: 1.7
     Scale: 12
-  NoiseShader: {fileID: 7200000, guid: f6337c1513dbc7c4e8539ac9ffddf37f, type: 3}
-  MaxConcurrentGPUActions: 6
-  MaxConcurrentGPUReadbackActions: 6
+  NoiseShader: {fileID: 7200000, guid: dfb97ff33458463e8dac2c307f639135, type: 3}
+  MaxConcurrentGPUActions: 12
+  MaxConcurrentGPUReadbackActions: 12
 --- !u!4 &139282746
 Transform:
   m_ObjectHideFlags: 0
@@ -348,7 +348,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fb423e14f9870341a3382273fcbc2fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 1
+  radius: 0.2
   maxDigDistance: 500
   rayCamera: {fileID: 330585545}
 --- !u!1 &410087039

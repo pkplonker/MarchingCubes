@@ -1,0 +1,60 @@
+#pragma kernel CSMain
+
+RWStructuredBuffer<float4> Result;
+RWStructuredBuffer<float3> octaveOffsets;
+int3 size;
+float scale;
+float persistance;
+float lacunarity;
+float noiseExtents;
+float vertDistance;
+float3 worldOffset;
+int octaves;
+int3 clampDirection;
+
+#define THREAD 8
+
+[numthreads(THREAD,THREAD,THREAD)]
+void CSMain(uint3 id : SV_DispatchThreadID)
+{
+    if (id.x >= (uint)size.x || id.y >= (uint)size.y || id.z >= (uint)size.z)
+    {
+        return;
+    }
+    float worldX = id.x * vertDistance;
+    float worldY = id.y * vertDistance;
+    float worldZ = id.z * vertDistance;
+    float result = 0.0f;
+
+
+    if (clampDirection.x == 1 && id.x >= size.x - 1)
+    {
+        result = 1.0f;
+    }
+    else if (clampDirection.x == -1 && id.x == 0)
+    {
+        result = 1.0f;
+    }
+
+    if (clampDirection.y == 1 && id.y >= size.y - 1)
+    {
+        result = 1.0f;
+    }
+    else if (clampDirection.y == -1 && id.y == 0)
+    {
+        result = 1.0f;
+    }
+
+    if (clampDirection.z == 1 && id.z >= size.z - 1)
+    {
+        result = 1.0f;
+    }
+    else if (clampDirection.z == -1 && id.z == 0)
+    {
+        result = 1.0f;
+    }
+
+    float4 outputValue = float4(worldX, worldY, worldZ, result);
+
+    Result[(size.x * size.y * id.z) + (size.y * id.y) + id.x] = outputValue;
+}
