@@ -55,7 +55,7 @@ public class Chunk : MonoBehaviour
 			(data =>
 			{
 				marchingCubes = new MarchingCubes(MarchingCubeShader, data, noiseData.IsoLevel, size, factor,
-					BuildMesh);
+					BuildMesh,computerShaderQueue, readbackQueue);
 			}), computerShaderQueue, readbackQueue);
 	}
 

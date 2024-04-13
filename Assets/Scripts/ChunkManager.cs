@@ -33,13 +33,12 @@ public class ChunkManager : MonoBehaviour
 	[SerializeField]
 	private int MaxConcurrentGPUReadbackActions = 5;
 
-	private AsyncQueue gpuAsynReadbackqueue;
-	private const float maxVerts = 40000.0f;
+	private AsyncQueue gpuAsyncReadbackqueue;
 
 	private void OnEnable()
 	{
-		computeShaderQueue = new AsyncQueue(MaxConcurrentGPUActions);
-		gpuAsynReadbackqueue = new AsyncQueue(MaxConcurrentGPUReadbackActions);
+		computeShaderQueue = new AsyncQueue("computeShaderQueue",() => MaxConcurrentGPUActions);
+		gpuAsyncReadbackqueue = new AsyncQueue("gpuAsyncReadbackqueue",() => MaxConcurrentGPUReadbackActions);
 	}
 
 	public void Start()
@@ -86,7 +85,7 @@ public class ChunkManager : MonoBehaviour
 					var chunk = chunkGO.GetComponent<Chunk>();
 					chunks[x, y, z] = chunk;
 					chunk.Init(new Vector3Int(x, y, z), this, new TerrainNoise3DCompute(NoiseShader), ChunkSize,
-						NoiseData, computeShaderQueue, gpuAsynReadbackqueue);
+						NoiseData, computeShaderQueue, gpuAsyncReadbackqueue);
 					chunk.GetComponent<MeshRenderer>().material.color = new Color(UnityEngine.Random.Range(0f, 1f),
 						UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f));
 				}
@@ -97,7 +96,7 @@ public class ChunkManager : MonoBehaviour
 	private void Update()
 	{
 		computeShaderQueue.Tick();
-		gpuAsynReadbackqueue.Tick();
+		gpuAsyncReadbackqueue.Tick();
 	}
 
 	private void DrawSolidDebugChunk(int x, int y, int z)

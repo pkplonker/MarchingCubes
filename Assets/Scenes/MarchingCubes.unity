@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ChunkSize: {x: 8, y: 8, z: 8}
-  MapSize: {x: 80, y: 16, z: 80}
+  MapSize: {x: 160, y: 8, z: 160}
   ChunkPrefab: {fileID: 4306579607726012621, guid: 0468af4d4650927479c6d478df9b90d1,
     type: 3}
   NoiseData:
@@ -165,8 +165,8 @@ MonoBehaviour:
     Persistance: 1.7
     Scale: 12
   NoiseShader: {fileID: 7200000, guid: f6337c1513dbc7c4e8539ac9ffddf37f, type: 3}
-  MaxConcurrentGPUActions: 10
-  MaxConcurrentGPUReadbackActions: 5
+  MaxConcurrentGPUActions: 6
+  MaxConcurrentGPUReadbackActions: 6
 --- !u!4 &139282746
 Transform:
   m_ObjectHideFlags: 0

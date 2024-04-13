@@ -29,6 +29,8 @@ public class MarchingCubes
 	private int length;
 	private readonly int factor;
 	private readonly Triangle[] triangleArray;
+	private readonly AsyncQueue computeShaderQueue;
+	private readonly AsyncQueue computeShaderReadbackQueue;
 	private int kernel => shader.FindKernel("CSMain");
 
 	private const int THREAD_SIZE_X = 8;
@@ -36,8 +38,10 @@ public class MarchingCubes
 	private const int THREAD_SIZE_Z = 8;
 
 	public MarchingCubes(ComputeShader shader, float4[] noiseMap, float isoLevel, Vector3Int chunkSize, int factor,
-		Action<MarchingCubes> buildMeshCallback)
+		Action<MarchingCubes> buildMeshCallback, AsyncQueue computeShaderQueue, AsyncQueue computeShaderReadbackQueue)
 	{
+		this.computeShaderQueue = computeShaderQueue;
+		this.computeShaderReadbackQueue = computeShaderReadbackQueue;
 		this.factor = factor;
 		this.chunkSize = chunkSize;
 		paddedSize = (this.chunkSize * this.factor) + new Vector3Int(1, 1, 1);
@@ -72,30 +76,37 @@ public class MarchingCubes
 		ComputeBuffer.CopyCount(triangleBuffer, triCountBuffer, 0);
 
 		inputPositionsBuffer.Release();
-
-		AsyncGPUReadback.Request(triCountBuffer, triCountRequest =>
+		computeShaderQueue.Register(() =>
 		{
-			if (triCountRequest.hasError)
+			AsyncGPUReadback.Request(triCountBuffer, triCountRequest =>
 			{
-				Debug.LogError("GPU readback error detected on triCountBuffer.");
-				ReleaseBuffers();
-				return;
-			}
-
-			int numTris = triCountRequest.GetData<int>()[0];
-
-			AsyncGPUReadback.Request(triangleBuffer, triangleRequest =>
-			{
-				if (triangleRequest.hasError)
+				if (triCountRequest.hasError)
 				{
-					Debug.LogError("GPU readback error detected on triangleBuffer.");
+					Debug.LogError("GPU readback error detected on triCountBuffer.");
 					ReleaseBuffers();
 					return;
 				}
 
-				triangleRequest.GetData<Triangle>().CopyData(triangleArray, numTris);
-				ReleaseBuffers();
-				callback(triangleArray, numTris);
+				int numTris = triCountRequest.GetData<int>()[0];
+
+				AsyncGPUReadback.Request(triangleBuffer, triangleRequest =>
+				{
+					if (triangleRequest.hasError)
+					{
+						Debug.LogError("GPU readback error detected on triangleBuffer.");
+						ReleaseBuffers();
+						return;
+					}
+
+					triangleRequest.GetData<Triangle>().CopyData(triangleArray, numTris);
+					ReleaseBuffers();
+					computeShaderQueue.Release();
+					computeShaderReadbackQueue.Register(() =>
+					{
+						callback(triangleArray, numTris);
+						computeShaderReadbackQueue.Release();
+					});
+				});
 			});
 		});
 
