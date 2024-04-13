@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2296583003012007719}
   - component: {fileID: 2740841789491693475}
-  - component: {fileID: 4199221395492005291}
   - component: {fileID: 2622563117631197812}
   - component: {fileID: 1969889887174712624}
   - component: {fileID: 2129112731024025528}
@@ -51,19 +50,6 @@ MonoBehaviour:
   MarchingCubeShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
   meshFilter: {fileID: 2622563117631197812}
   meshCollider: {fileID: 2129112731024025528}
---- !u!114 &4199221395492005291
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4306579607726012621}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 906ac7c8311c79c44af3d401781f0197, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shader: {fileID: 7200000, guid: f6337c1513dbc7c4e8539ac9ffddf37f, type: 3}
 --- !u!33 &2622563117631197812
 MeshFilter:
   m_ObjectHideFlags: 0

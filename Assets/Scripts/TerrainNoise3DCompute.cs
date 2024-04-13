@@ -2,17 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Debug = UnityEngine.Debug;
 using Random = System.Random;
 
-public class TerrainNoise3DCompute : MonoBehaviour, ITerrainNoise3D
+public class TerrainNoise3DCompute : ITerrainNoise3D, IDisposable
 {
-	[SerializeField]
-	private ComputeShader shader;
-
 	private ComputeBuffer resultsBuffer;
 	private ComputeBuffer octaveOffsetsBuffer;
 	private static readonly int OCTAVE_OFFSETS = Shader.PropertyToID("octaveOffsets");
@@ -21,6 +19,7 @@ public class TerrainNoise3DCompute : MonoBehaviour, ITerrainNoise3D
 	private static readonly int LACUNARITY = Shader.PropertyToID("lacunarity");
 	private static readonly int SCALE = Shader.PropertyToID("scale");
 	private static readonly int NOISE_EXTENTS = Shader.PropertyToID("noiseExtents");
+	private static readonly int VERTDISTANCE = Shader.PropertyToID("vertDistance");
 
 	private static readonly int OCTAVES = Shader.PropertyToID("octaves");
 	private static readonly int SIZE = Shader.PropertyToID("size");
@@ -28,18 +27,21 @@ public class TerrainNoise3DCompute : MonoBehaviour, ITerrainNoise3D
 	private int kernelIndex;
 	private Random random;
 	private float noiseExtents;
+	private readonly ComputeShader noiseShader;
 
 	private const int THREAD_SIZE_X = 8;
 	private const int THREAD_SIZE_Y = 8;
 	private const int THREAD_SIZE_Z = 8;
 
-	private void Awake()
+	public TerrainNoise3DCompute(ComputeShader noiseShader)
 	{
-		kernelIndex = shader.FindKernel("CSMain");
+		this.noiseShader = noiseShader;
+		kernelIndex = noiseShader.FindKernel("CSMain");
 		random = new System.Random();
 	}
 
-	public void GenerateNoiseMap(Vector3Int dimensions, Noise noiseData, Vector3 offset, Action<float[]> callback)
+	public void GenerateNoiseMap(Vector3Int dimensions, Noise noiseData, Vector3 offset, Action<float4[]> callback,
+		AsyncQueue computeShaderQueue, AsyncQueue computeShaderReadbackQueue)
 	{
 		random = new System.Random(noiseData.Seed);
 
@@ -48,7 +50,7 @@ public class TerrainNoise3DCompute : MonoBehaviour, ITerrainNoise3D
 
 		noiseExtents /= ((float) noiseData.Octaves / 2);
 		var size = dimensions.x * dimensions.y * dimensions.z;
-		var data = new float[size];
+		var data = new float4[size];
 
 		EnsureBuffersInitialized(noiseData.Octaves, size);
 
@@ -59,22 +61,30 @@ public class TerrainNoise3DCompute : MonoBehaviour, ITerrainNoise3D
 		var sizeY = Mathf.CeilToInt((float) dimensions.y / THREAD_SIZE_Y);
 		var sizeZ = Mathf.CeilToInt((float) dimensions.z / THREAD_SIZE_Z);
 
-		shader.Dispatch(kernelIndex, sizeX, sizeY, sizeZ);
-		AsyncGPUReadback.Request(resultsBuffer, request =>
+		noiseShader.Dispatch(kernelIndex, sizeX, sizeY, sizeZ);
+		computeShaderQueue.Register(() =>
 		{
-			if (request.hasError)
+			AsyncGPUReadback.Request(resultsBuffer, request =>
 			{
-				Debug.LogError("GPU readback error detected on triCountBuffer.");
-				resultsBuffer.Release();
-				return;
-			}
+				if (request.hasError)
+				{
+					Debug.LogError("GPU readback error detected on triCountBuffer.");
+					resultsBuffer.Release();
+					return;
+				}
 
-			resultsBuffer?.Release();
-			resultsBuffer = null;
-			octaveOffsetsBuffer?.Release();
-			octaveOffsetsBuffer = null;
-			request.GetData<float>().CopyData(data, size);
-			callback?.Invoke(data);
+				computeShaderReadbackQueue.Register(() =>
+				{
+					resultsBuffer?.Release();
+					resultsBuffer = null;
+					octaveOffsetsBuffer?.Release();
+					octaveOffsetsBuffer = null;
+					request.GetData<float4>().CopyData(data, size);
+					computeShaderQueue.Release();
+					callback?.Invoke(data);
+					computeShaderReadbackQueue.Release();
+				});
+			});
 		});
 	}
 
@@ -103,22 +113,24 @@ public class TerrainNoise3DCompute : MonoBehaviour, ITerrainNoise3D
 		if (resultsBuffer == null || resultsBuffer.count != size)
 		{
 			resultsBuffer?.Release();
-			resultsBuffer = new ComputeBuffer(size, sizeof(float));
+			resultsBuffer = new ComputeBuffer(size, sizeof(float) * 4);
 		}
 	}
 
 	private void SetShaderParameters(Vector3Int dimensions, Noise noiseData, Vector3 offset)
 	{
-		shader.SetBuffer(kernelIndex, RESULT, resultsBuffer);
-		shader.SetBuffer(kernelIndex, OCTAVE_OFFSETS, octaveOffsetsBuffer);
-		shader.SetFloat(NOISE_EXTENTS, noiseExtents);
+		noiseShader.SetBuffer(kernelIndex, RESULT, resultsBuffer);
+		noiseShader.SetBuffer(kernelIndex, OCTAVE_OFFSETS, octaveOffsetsBuffer);
+		noiseShader.SetFloat(NOISE_EXTENTS, noiseExtents);
 
-		shader.SetFloat(PERSISTANCE, noiseData.Persistance);
-		shader.SetFloat(LACUNARITY, noiseData.Lacunarity);
-		shader.SetFloat(SCALE, noiseData.Scale);
-		shader.SetInt(OCTAVES, noiseData.Octaves);
-		shader.SetInts(SIZE, dimensions.x, dimensions.y, dimensions.z);
-		shader.SetFloats(WORLD_OFFSET, offset.x, offset.y, offset.z);
+		noiseShader.SetFloat(PERSISTANCE, noiseData.Persistance);
+		noiseShader.SetFloat(LACUNARITY, noiseData.Lacunarity);
+		noiseShader.SetFloat(SCALE, noiseData.Scale);
+		noiseShader.SetFloat(VERTDISTANCE, noiseData.VertDistance);
+
+		noiseShader.SetInt(OCTAVES, noiseData.Octaves);
+		noiseShader.SetInts(SIZE, dimensions.x, dimensions.y, dimensions.z);
+		noiseShader.SetFloats(WORLD_OFFSET, offset.x, offset.y, offset.z);
 	}
 
 	private static List<Vector3> CalculateOctaveOffsets(int octaves, Vector3 offset, Random random)
@@ -135,7 +147,7 @@ public class TerrainNoise3DCompute : MonoBehaviour, ITerrainNoise3D
 		return octaveOffsets;
 	}
 
-	public void OnDisable()
+	public void Dispose()
 	{
 		resultsBuffer?.Release();
 		resultsBuffer = null;
