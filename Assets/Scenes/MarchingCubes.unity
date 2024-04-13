@@ -133,7 +133,6 @@ GameObject:
   m_Component:
   - component: {fileID: 139282746}
   - component: {fileID: 139282745}
-  - component: {fileID: 139282747}
   m_Layer: 0
   m_Name: ChunkManager
   m_TagString: Untagged
@@ -165,6 +164,7 @@ MonoBehaviour:
     Octaves: 4
     Persistance: 1.7
     Scale: 12
+  noiseShader: {fileID: 7200000, guid: f6337c1513dbc7c4e8539ac9ffddf37f, type: 3}
 --- !u!4 &139282746
 Transform:
   m_ObjectHideFlags: 0
@@ -180,19 +180,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &139282747
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 139282744}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 906ac7c8311c79c44af3d401781f0197, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shader: {fileID: 7200000, guid: f6337c1513dbc7c4e8539ac9ffddf37f, type: 3}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0

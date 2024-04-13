@@ -20,18 +20,19 @@ public class ChunkManager : MonoBehaviour
 	private GameObject chunkPrefab;
 
 	[SerializeField]
-	private ITerrainNoise3D noiseGenerator;
-
-	[SerializeField]
 	private Noise noiseData;
 
 	private readonly Dictionary<Chunk, List<NoiseMapChange>> modifications = new();
 
 	private int factor;
+	private ComputeShaderController computeShaderController;
+
+	[SerializeField]
+	private ComputeShader noiseShader;
 
 	private void OnEnable()
 	{
-		noiseGenerator = GetComponent<TerrainNoise3DCompute>();
+		computeShaderController = new ComputeShaderController();
 	}
 
 	public void Start()
@@ -76,12 +77,18 @@ public class ChunkManager : MonoBehaviour
 					chunkGO.transform.SetParent(transform);
 					var chunk = chunkGO.GetComponent<Chunk>();
 					Chunks[x, y, z] = chunk;
-					chunk.Init(new Vector3Int(x, y, z), this, noiseGenerator, ChunkSize, noiseData);
+					chunk.Init(new Vector3Int(x, y, z), this, new TerrainNoise3DCompute(noiseShader), ChunkSize,
+						noiseData, computeShaderController);
 					chunk.GetComponent<MeshRenderer>().material.color = new Color(UnityEngine.Random.Range(0f, 1f),
 						UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f));
 				}
 			}
 		}
+	}
+
+	private void Update()
+	{
+		computeShaderController.Tick();
 	}
 
 	private void DrawSolidDebugChunk(int x, int y, int z)

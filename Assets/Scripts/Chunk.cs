@@ -29,16 +29,18 @@ public class Chunk : MonoBehaviour
 	private MarchingCubes marchingCubes;
 	private int factor;
 	private ChunkManager chunkManager;
+	private ComputeShaderController computeShaderController;
 	public Vector3Int ChunkCoord { get; private set; }
 
 	public void Init(Vector3Int chunkCoord, ChunkManager chunkManager, ITerrainNoise3D noiseGenerator, Vector3Int size,
-		Noise noiseData)
+		Noise noiseData, ComputeShaderController computeShaderController)
 	{
 		this.ChunkCoord = chunkCoord;
 		this.noiseData = noiseData;
 		this.noiseGenerator = noiseGenerator;
 		this.size = size;
 		this.chunkManager = chunkManager;
+		this.computeShaderController = computeShaderController;
 		Generate();
 	}
 
@@ -52,7 +54,7 @@ public class Chunk : MonoBehaviour
 			{
 				marchingCubes = new MarchingCubes(MarchingCubeShader, data, noiseData.IsoLevel, size, factor,
 					BuildMesh);
-			}));
+			}), computeShaderController);
 	}
 
 	private void BuildMesh()
