@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
-public class ComputeShaderController
+public class AsyncQueue
 {
 	private ConcurrentQueue<Action> queue = new();
 	private int activeJobs;
 	private readonly int MAX_COUNTER = 10;
 
-	public ComputeShaderController(int maxActions) => MAX_COUNTER = maxActions;
+	public AsyncQueue(int maxActions) => MAX_COUNTER = maxActions;
 
 	public void Register(Action action) => queue.Enqueue(action);
 

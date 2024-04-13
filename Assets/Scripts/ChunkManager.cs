@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
@@ -21,7 +22,7 @@ public class ChunkManager : MonoBehaviour
 	private readonly Dictionary<Chunk, List<NoiseMapChange>> modifications = new();
 
 	private int factor;
-	private ComputeShaderController computeShaderController;
+	private AsyncQueue computeShaderQueue;
 
 	[SerializeField]
 	private ComputeShader NoiseShader;
@@ -29,9 +30,16 @@ public class ChunkManager : MonoBehaviour
 	[SerializeField]
 	private int MaxConcurrentGPUActions = 10;
 
+	[SerializeField]
+	private int MaxConcurrentGPUReadbackActions = 5;
+
+	private AsyncQueue gpuAsynReadbackqueue;
+	private const float maxVerts = 40000.0f;
+
 	private void OnEnable()
 	{
-		computeShaderController = new ComputeShaderController(MaxConcurrentGPUActions);
+		computeShaderQueue = new AsyncQueue(MaxConcurrentGPUActions);
+		gpuAsynReadbackqueue = new AsyncQueue(MaxConcurrentGPUReadbackActions);
 	}
 
 	public void Start()
@@ -41,6 +49,7 @@ public class ChunkManager : MonoBehaviour
 
 	public void ClearChunks()
 	{
+		if (chunks == null) return;
 		for (int x = 0; x < chunks.GetLength(0); x++)
 		{
 			for (int y = 0; y < chunks.GetLength(1); y++)
@@ -77,7 +86,7 @@ public class ChunkManager : MonoBehaviour
 					var chunk = chunkGO.GetComponent<Chunk>();
 					chunks[x, y, z] = chunk;
 					chunk.Init(new Vector3Int(x, y, z), this, new TerrainNoise3DCompute(NoiseShader), ChunkSize,
-						NoiseData, computeShaderController);
+						NoiseData, computeShaderQueue, gpuAsynReadbackqueue);
 					chunk.GetComponent<MeshRenderer>().material.color = new Color(UnityEngine.Random.Range(0f, 1f),
 						UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f));
 				}
@@ -87,7 +96,8 @@ public class ChunkManager : MonoBehaviour
 
 	private void Update()
 	{
-		computeShaderController.Tick();
+		computeShaderQueue.Tick();
+		gpuAsynReadbackqueue.Tick();
 	}
 
 	private void DrawSolidDebugChunk(int x, int y, int z)

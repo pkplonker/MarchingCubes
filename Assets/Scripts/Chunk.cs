@@ -29,18 +29,20 @@ public class Chunk : MonoBehaviour
 	private MarchingCubes marchingCubes;
 	private int factor;
 	private ChunkManager chunkManager;
-	private ComputeShaderController computeShaderController;
+	private AsyncQueue computerShaderQueue;
+	private AsyncQueue readbackQueue;
 	public Vector3Int ChunkCoord { get; private set; }
 
 	public void Init(Vector3Int chunkCoord, ChunkManager chunkManager, ITerrainNoise3D noiseGenerator, Vector3Int size,
-		Noise noiseData, ComputeShaderController computeShaderController)
+		Noise noiseData, AsyncQueue computerShaderQueue, AsyncQueue readbackQueue)
 	{
 		this.ChunkCoord = chunkCoord;
 		this.noiseData = noiseData;
 		this.noiseGenerator = noiseGenerator;
 		this.size = size;
 		this.chunkManager = chunkManager;
-		this.computeShaderController = computeShaderController;
+		this.computerShaderQueue = computerShaderQueue;
+		this.readbackQueue = readbackQueue;
 		Generate();
 	}
 
@@ -54,18 +56,12 @@ public class Chunk : MonoBehaviour
 			{
 				marchingCubes = new MarchingCubes(MarchingCubeShader, data, noiseData.IsoLevel, size, factor,
 					BuildMesh);
-			}), computeShaderController);
+			}), computerShaderQueue, readbackQueue);
 	}
 
-	private void BuildMesh(MarchingCubes mCubes)
-	{
-		mCubes.March(GenerateMesh);
-	}
+	private void BuildMesh(MarchingCubes mCubes) => mCubes.March(GenerateMesh);
 
-	private void OnEnable()
-	{
-		noiseGenerator = GetComponent<ITerrainNoise3D>();
-	}
+	private void OnEnable() => noiseGenerator = GetComponent<ITerrainNoise3D>();
 
 	private void OnDisable()
 	{

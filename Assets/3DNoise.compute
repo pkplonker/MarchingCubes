@@ -7,6 +7,7 @@ float scale;
 float persistance;
 float lacunarity;
 float noiseExtents;
+float vertDistance;
 float3 worldOffset;
 int octaves;
 
@@ -297,6 +298,7 @@ float cnoise(float3 P)
 }
 
 #define THREAD 8
+
 [numthreads(THREAD,THREAD,THREAD)]
 void CSMain(uint3 id : SV_DispatchThreadID)
 {
@@ -304,23 +306,25 @@ void CSMain(uint3 id : SV_DispatchThreadID)
     {
         return;
     }
-
+    float worldX = id.x * vertDistance;
+    float worldY = id.y * vertDistance;
+    float worldZ = id.z * vertDistance;
     // HACK
     // this creates a solid top
     if (id.y >= (uint)size.y - 1)
     {
-        float4 outputValue = float4(id.x , id.y, id.z , 0);
+        float4 outputValue = float4(worldX,worldY,worldZ, 0);
         Result[(size.x * size.y * id.z) + (size.y * id.y) + id.x] = outputValue;
         return;
     }
     // this creates a solid bottom
-    if (id.y <=0)
+    if (id.y <= 0)
     {
-        float4 outputValue = float4(id.x , id.y, id.z , 1);
+        float4 outputValue = float4(worldX,worldY,worldZ, 1);
         Result[(size.x * size.y * id.z) + (size.y * id.y) + id.x] = outputValue;
         return;
     }
-    
+
     float amplitude = 1.0f;
     float frequency = 1.0f;
     float noiseHeight = 0.0f;
@@ -331,7 +335,6 @@ void CSMain(uint3 id : SV_DispatchThreadID)
         float sampleY = (id.y) / scale * frequency + octaveOffsets[i].y * frequency;
         float sampleZ = (id.z) / scale * frequency + octaveOffsets[i].z * frequency;
 
-        //float perlinValue = 17.0f;
         float perlinValue = cnoise(float3(sampleX, sampleY, sampleZ));
 
         noiseHeight += perlinValue * amplitude;
@@ -341,9 +344,7 @@ void CSMain(uint3 id : SV_DispatchThreadID)
     }
 
     float normalizedHeight = InverseLerp(-noiseExtents, noiseExtents, noiseHeight);
-    float invFactor = 1.0f / scale;
-    //float4 outputValue = float4(id.x * invFactor, id.y * invFactor, id.z * invFactor, normalizedHeight);
-    float4 outputValue = float4(id.x , id.y, id.z , normalizedHeight);
+    float4 outputValue = float4(worldX,worldY,worldZ, normalizedHeight);
 
     Result[(size.x * size.y * id.z) + (size.y * id.y) + id.x] = outputValue;
 }

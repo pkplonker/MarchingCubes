@@ -9,7 +9,7 @@ using UnityEngine.Rendering;
 using Debug = UnityEngine.Debug;
 using Random = System.Random;
 
-public class TerrainNoise3DCompute : ITerrainNoise3D
+public class TerrainNoise3DCompute : ITerrainNoise3D, IDisposable
 {
 	private ComputeBuffer resultsBuffer;
 	private ComputeBuffer octaveOffsetsBuffer;
@@ -19,6 +19,7 @@ public class TerrainNoise3DCompute : ITerrainNoise3D
 	private static readonly int LACUNARITY = Shader.PropertyToID("lacunarity");
 	private static readonly int SCALE = Shader.PropertyToID("scale");
 	private static readonly int NOISE_EXTENTS = Shader.PropertyToID("noiseExtents");
+	private static readonly int VERTDISTANCE = Shader.PropertyToID("vertDistance");
 
 	private static readonly int OCTAVES = Shader.PropertyToID("octaves");
 	private static readonly int SIZE = Shader.PropertyToID("size");
@@ -40,7 +41,7 @@ public class TerrainNoise3DCompute : ITerrainNoise3D
 	}
 
 	public void GenerateNoiseMap(Vector3Int dimensions, Noise noiseData, Vector3 offset, Action<float4[]> callback,
-		ComputeShaderController computeShaderController)
+		AsyncQueue computeShaderQueue, AsyncQueue computeShaderReadbackQueue)
 	{
 		random = new System.Random(noiseData.Seed);
 
@@ -61,7 +62,7 @@ public class TerrainNoise3DCompute : ITerrainNoise3D
 		var sizeZ = Mathf.CeilToInt((float) dimensions.z / THREAD_SIZE_Z);
 
 		noiseShader.Dispatch(kernelIndex, sizeX, sizeY, sizeZ);
-		computeShaderController.Register(() =>
+		computeShaderQueue.Register(() =>
 		{
 			AsyncGPUReadback.Request(resultsBuffer, request =>
 			{
@@ -72,13 +73,17 @@ public class TerrainNoise3DCompute : ITerrainNoise3D
 					return;
 				}
 
-				resultsBuffer?.Release();
-				resultsBuffer = null;
-				octaveOffsetsBuffer?.Release();
-				octaveOffsetsBuffer = null;
-				request.GetData<float4>().CopyData(data, size);
-				computeShaderController.Release();
-				callback?.Invoke(data);
+				computeShaderReadbackQueue.Register(() =>
+				{
+					resultsBuffer?.Release();
+					resultsBuffer = null;
+					octaveOffsetsBuffer?.Release();
+					octaveOffsetsBuffer = null;
+					request.GetData<float4>().CopyData(data, size);
+					computeShaderQueue.Release();
+					callback?.Invoke(data);
+					computeShaderReadbackQueue.Release();
+				});
 			});
 		});
 	}
@@ -108,7 +113,7 @@ public class TerrainNoise3DCompute : ITerrainNoise3D
 		if (resultsBuffer == null || resultsBuffer.count != size)
 		{
 			resultsBuffer?.Release();
-			resultsBuffer = new ComputeBuffer(size, sizeof(float)*4);
+			resultsBuffer = new ComputeBuffer(size, sizeof(float) * 4);
 		}
 	}
 
@@ -121,6 +126,8 @@ public class TerrainNoise3DCompute : ITerrainNoise3D
 		noiseShader.SetFloat(PERSISTANCE, noiseData.Persistance);
 		noiseShader.SetFloat(LACUNARITY, noiseData.Lacunarity);
 		noiseShader.SetFloat(SCALE, noiseData.Scale);
+		noiseShader.SetFloat(VERTDISTANCE, noiseData.VertDistance);
+
 		noiseShader.SetInt(OCTAVES, noiseData.Octaves);
 		noiseShader.SetInts(SIZE, dimensions.x, dimensions.y, dimensions.z);
 		noiseShader.SetFloats(WORLD_OFFSET, offset.x, offset.y, offset.z);
@@ -140,7 +147,7 @@ public class TerrainNoise3DCompute : ITerrainNoise3D
 		return octaveOffsets;
 	}
 
-	public void OnDisable()
+	public void Dispose()
 	{
 		resultsBuffer?.Release();
 		resultsBuffer = null;
