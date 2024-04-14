@@ -233,6 +233,6 @@ public class ChunkManager : MonoBehaviour
 	private static int GetIndex(int x, int y, int z, Vector3Int paddedSize) =>
 		x + y * paddedSize.x + z * paddedSize.x * paddedSize.y;
 
-	private float GetDigValue() => 0;
-	
+	private float GetDigValue() => float.MinValue;
+
 }

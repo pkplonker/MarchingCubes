@@ -157,15 +157,15 @@ MonoBehaviour:
   ChunkPrefab: {fileID: 4306579607726012621, guid: 0468af4d4650927479c6d478df9b90d1,
     type: 3}
   NoiseData:
-    IsoLevel: 0.35
+    IsoLevel: 0.5
     VertDistance: 0.2
     Lacunarity: 0.7
     Seed: 0
     Octaves: 4
     Persistance: 1.7
-    Scale: 40
+    Scale: 60
     GroundDistanceFactor: 4
-    GroundHeight: 10
+    GroundHeight: 5
   NoiseShader: {fileID: 7200000, guid: 84846995732c451abfaf759f7605c543, type: 3}
   MaxConcurrentGPUActions: 12
   MaxConcurrentGPUReadbackActions: 12
@@ -271,8 +271,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
-  m_LocalRotation: {x: 0.0013507679, y: -0.9985643, z: 0.030863348, w: 0.043761164}
-  m_LocalPosition: {x: 40, y: 10, z: 40}
+  m_LocalRotation: {x: -0.031538665, y: 0.22794677, z: -0.0073881084, w: -0.9731347}
+  m_LocalPosition: {x: 291.33344, y: 14.275069, z: 53.94607}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
