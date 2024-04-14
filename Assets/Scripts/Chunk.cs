@@ -31,9 +31,11 @@ public class Chunk : MonoBehaviour
 	private ChunkManager chunkManager;
 	private AsyncQueue computerShaderQueue;
 	private AsyncQueue readbackQueue;
+	private Vector3Int maxChunkCoord;
 	public Vector3Int ChunkCoord { get; private set; }
 
-	public void Init(Vector3Int chunkCoord, ChunkManager chunkManager, ITerrainNoise3D noiseGenerator, Vector3Int size,
+	public void Init(Vector3Int chunkCoord, ChunkManager chunkManager,
+		ITerrainNoise3D noiseGenerator, Vector3Int size,
 		Noise noiseData, AsyncQueue computerShaderQueue, AsyncQueue readbackQueue)
 	{
 		this.ChunkCoord = chunkCoord;
@@ -57,7 +59,7 @@ public class Chunk : MonoBehaviour
 			{
 				marchingCubes = new MarchingCubes(MarchingCubeShader, data, noiseData.IsoLevel, size, factor,
 					BuildMesh,computerShaderQueue, readbackQueue);
-			}), computerShaderQueue, readbackQueue,chunkManager.GetClampDirection(ChunkCoord));
+			}), computerShaderQueue, readbackQueue,ChunkCoord,chunkManager.maxChunkCoord);
 	}
 
 	private void BuildMesh(MarchingCubes mCubes) => mCubes.March(GenerateMesh);

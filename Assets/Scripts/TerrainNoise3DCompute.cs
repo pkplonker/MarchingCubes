@@ -24,7 +24,8 @@ public class TerrainNoise3DCompute : ITerrainNoise3D, IDisposable
 	private static readonly int OCTAVES = Shader.PropertyToID("octaves");
 	private static readonly int SIZE = Shader.PropertyToID("size");
 	private static readonly int WORLD_OFFSET = Shader.PropertyToID("worldOffset");
-	private static readonly int CLAMP_DIRECTION = Shader.PropertyToID("clampDirection");
+	private static readonly int WORLD_CHUNK = Shader.PropertyToID("worldChunk");
+	private static readonly int MAX_CHUNK = Shader.PropertyToID("maxChunk");
 
 	private int kernelIndex;
 	private Random random;
@@ -43,7 +44,7 @@ public class TerrainNoise3DCompute : ITerrainNoise3D, IDisposable
 	}
 
 	public void GenerateNoiseMap(Vector3Int dimensions, Noise noiseData, Vector3 offset, Action<float4[]> callback,
-		AsyncQueue computeShaderQueue, AsyncQueue computeShaderReadbackQueue, int3 clampDirection)
+		AsyncQueue computeShaderQueue, AsyncQueue computeShaderReadbackQueue, Vector3Int worldChunk, Vector3Int maxChunk)
 	{
 		random = new System.Random(noiseData.Seed);
 
@@ -58,7 +59,8 @@ public class TerrainNoise3DCompute : ITerrainNoise3D, IDisposable
 
 		octaveOffsetsBuffer.SetData(octaveOffsets.ToArray());
 		SetShaderParameters(dimensions, noiseData, offset);
-		noiseShader.SetFloats(CLAMP_DIRECTION, clampDirection.x, clampDirection.y, clampDirection.z);
+		noiseShader.SetFloats(WORLD_CHUNK, worldChunk.x, worldChunk.y, worldChunk.z);
+		noiseShader.SetFloats(MAX_CHUNK, maxChunk.x, maxChunk.y, maxChunk.z);
 
 		var sizeX = Mathf.CeilToInt((float) dimensions.x / THREAD_SIZE_X);
 		var sizeY = Mathf.CeilToInt((float) dimensions.y / THREAD_SIZE_Y);

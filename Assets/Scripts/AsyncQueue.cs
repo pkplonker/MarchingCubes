@@ -24,7 +24,7 @@ public class AsyncQueue
 
 	public void Tick()
 	{
-		Debug.Log($"Performing {Mathf.Min(queue.Count,maxActionsGetter.Invoke()-activeJobs)} {name} jobs");
+		//Debug.Log($"Performing {Mathf.Min(queue.Count,maxActionsGetter.Invoke()-activeJobs)} {name} jobs");
 		while (activeJobs < maxActionsGetter.Invoke() && queue.Any())
 		{
 			if (queue.TryDequeue(out var action))

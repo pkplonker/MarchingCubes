@@ -34,6 +34,7 @@ public class ChunkManager : MonoBehaviour
 	private int MaxConcurrentGPUReadbackActions = 5;
 
 	private AsyncQueue gpuAsyncReadbackqueue;
+	public Vector3Int maxChunkCoord { get; private set; }
 
 	private void OnEnable()
 	{
@@ -64,19 +65,19 @@ public class ChunkManager : MonoBehaviour
 
 	public void GenerateChunks()
 	{
-		var axis = new Vector3Int(Mathf.CeilToInt(MapSize.x / (float) ChunkSize.x),
+		maxChunkCoord = new Vector3Int(Mathf.CeilToInt(MapSize.x / (float) ChunkSize.x),
 			Mathf.CeilToInt(MapSize.y / (float) ChunkSize.z), Mathf.CeilToInt(MapSize.z / (float) ChunkSize.z));
 
-		using var t = new Timer(time => Debug.Log($"Generate All took {time / (axis.x * axis.y * axis.z)}ms average"));
+		using var t = new Timer(time => Debug.Log($"Generate All took {time / (maxChunkCoord.x * maxChunkCoord.y * maxChunkCoord.z)}ms average"));
 
 		factor = Mathf.CeilToInt(1 / NoiseData.VertDistance);
 
-		chunks = new Chunk[axis.x, axis.y, axis.z];
-		for (int x = 0; x < axis.x; x++)
+		chunks = new Chunk[maxChunkCoord.x, maxChunkCoord.y, maxChunkCoord.z];
+		for (int x = 0; x < maxChunkCoord.x; x++)
 		{
-			for (int y = 0; y < axis.y; y++)
+			for (int y = 0; y < maxChunkCoord.y; y++)
 			{
-				for (int z = 0; z < axis.z; z++)
+				for (int z = 0; z < maxChunkCoord.z; z++)
 				{
 					//DrawSolidDebugChunk(x, y, z);
 					var chunkGO = GameObject.Instantiate(ChunkPrefab,
@@ -84,7 +85,7 @@ public class ChunkManager : MonoBehaviour
 					chunkGO.transform.SetParent(transform);
 					var chunk = chunkGO.GetComponent<Chunk>();
 					chunks[x, y, z] = chunk;
-					chunk.Init(new Vector3Int(x, y, z), this, new TerrainNoise3DCompute(NoiseShader), ChunkSize,
+					chunk.Init(new Vector3Int(x, y, z),this, new TerrainNoise3DCompute(NoiseShader), ChunkSize,
 						NoiseData, computeShaderQueue, gpuAsyncReadbackqueue);
 					chunk.GetComponent<MeshRenderer>().material.color = new Color(UnityEngine.Random.Range(0f, 1f),
 						UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f));
@@ -233,11 +234,5 @@ public class ChunkManager : MonoBehaviour
 		x + y * paddedSize.x + z * paddedSize.x * paddedSize.y;
 
 	private float GetDigValue() => 0;
-
-	public int3 GetClampDirection(Vector3Int chunkCoord) =>
-		new(
-			chunkCoord.x == 0 ? -1 : (chunkCoord.x == chunks.GetLength(0) - 1 ? 1 : 0),
-			chunkCoord.y == 0 ? -1 : (chunkCoord.y == chunks.GetLength(1) - 1 ? 1 : 0),
-			chunkCoord.z == 0 ? -1 : (chunkCoord.z == chunks.GetLength(2) - 1 ? 1 : 0)
-		);
+	
 }
