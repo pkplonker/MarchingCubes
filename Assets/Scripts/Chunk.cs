@@ -52,7 +52,6 @@ public class Chunk : MonoBehaviour
 	{
 		factor = Mathf.CeilToInt(1 / noiseData.VertDistance);
 		var factoredSize = (size * factor) + new Vector3Int(1, 1, 1);
-		;
 		noiseGenerator.GenerateNoiseMap(factoredSize, noiseData,
 			transform.position / (noiseData.Scale * noiseData.VertDistance),
 			(data =>

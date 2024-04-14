@@ -103,11 +103,11 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0
     - _GlossyReflections: 1
-    - _Height: 32
-    - _Height_1: 20.8
-    - _Height_2: 13.08
-    - _Height_3: 10.51
-    - _Height_4: 16.48
+    - _Height: 16
+    - _Height_1: 12
+    - _Height_2: 8
+    - _Height_3: 5
+    - _Height_4: 4
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
@@ -131,7 +131,7 @@ Material:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _BottomColor: {r: 0.01136136, g: 1, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Color1: {r: 0, g: 0.18867922, b: 0.008879022, a: 1}
+    - _Color1: {r: 0.3207547, g: 0.23855717, b: 0.074136704, a: 1}
     - _Color2: {r: 0.4433962, g: 0.33438244, b: 0.20705765, a: 1}
     - _Color3: {r: 0.38679248, g: 0.38679248, b: 0.38679248, a: 1}
     - _Color4: {r: 0.2924528, g: 0.16370001, b: 0.07863118, a: 1}

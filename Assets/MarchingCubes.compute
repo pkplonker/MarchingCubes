@@ -339,11 +339,25 @@ int Index(int x, int y, int z)
     return (size.x * size.y * z) + (size.y * y) + x;
 }
 
+// float3 Interpolate(float4 v1, float4 v2)
+// {
+// 	return (v1.xyz + v2.xyz) / 2;
+// }
 float3 Interpolate(float4 v1, float4 v2)
 {
-	return (v1.xyz + v2.xyz) / 2;
-}
+	const float eps = 0.0001f;
+	if (abs(v1.w - v2.w) < eps) {
+		// Interpolate based on the values even if they are very close
+		float mu = 0.5; // Assume midpoint for extremely close values
+		return float3(v1.x + mu * (v2.x - v1.x), v1.y + mu * (v2.y - v1.y), v1.z + mu * (v2.z - v1.z));
+	}
 
+	if (abs(isoLevel - v1.w) < eps) return v1.xyz;
+	if (abs(isoLevel - v2.w) < eps) return v2.xyz;
+
+	float mu = (isoLevel - v1.w) / (v2.w - v1.w);
+	return float3(v1.x + mu * (v2.x - v1.x), v1.y + mu * (v2.y - v1.y), v1.z + mu * (v2.z - v1.z));
+}
 
 
 
