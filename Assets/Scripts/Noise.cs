@@ -10,6 +10,8 @@ public class Noise
 	public int Octaves;
 	public float Persistance;
 	public float Scale ;
+	public float GroundDistanceFactor;
+	public float GroundHeight;
 
 	public Noise()
 	{
@@ -20,5 +22,8 @@ public class Noise
 		IsoLevel = 0;
 		VertDistance = 0;
 		Scale = 0;
+		GroundDistanceFactor = 10;
+		GroundHeight = 10f;
 	}
+
 }

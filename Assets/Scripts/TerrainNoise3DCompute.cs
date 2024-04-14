@@ -26,7 +26,11 @@ public class TerrainNoise3DCompute : ITerrainNoise3D, IDisposable
 	private static readonly int WORLD_OFFSET = Shader.PropertyToID("worldOffset");
 	private static readonly int WORLD_CHUNK = Shader.PropertyToID("worldChunk");
 	private static readonly int MAX_CHUNK = Shader.PropertyToID("maxChunk");
+	private static readonly int GROUND_DISTANCE_FACTOR = Shader.PropertyToID("distanceFactor");
+	private static readonly int GROUND_HEIGHT = Shader.PropertyToID("groundHeight");
 
+	
+	
 	private int kernelIndex;
 	private Random random;
 	private float noiseExtents;
@@ -136,6 +140,9 @@ public class TerrainNoise3DCompute : ITerrainNoise3D, IDisposable
 		noiseShader.SetInt(OCTAVES, noiseData.Octaves);
 		noiseShader.SetInts(SIZE, dimensions.x, dimensions.y, dimensions.z);
 		noiseShader.SetFloats(WORLD_OFFSET, offset.x, offset.y, offset.z);
+		noiseShader.SetFloat(GROUND_DISTANCE_FACTOR, noiseData.GroundDistanceFactor);
+		noiseShader.SetFloat(GROUND_HEIGHT, noiseData.GroundHeight);
+
 	}
 
 	private static List<Vector3> CalculateOctaveOffsets(int octaves, Vector3 offset, Random random)

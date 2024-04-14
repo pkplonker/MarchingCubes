@@ -1,17 +1,6 @@
 #pragma kernel CSMain
 
-RWStructuredBuffer<float4> Result;
-RWStructuredBuffer<float3> octaveOffsets;
-int3 size;
-float scale;
-float persistance;
-float lacunarity;
-float noiseExtents;
-float vertDistance;
-float3 worldOffset;
-int octaves;
-int3 worldChunk;
-int3 maxChunk;
+
 
 //https://github.com/JimmyCushnie/Noisy-Nodes/tree/master/NoiseShader/HLSL
 
@@ -299,6 +288,20 @@ float cnoise(float3 P)
     return 2.2 * n_xyz;
 }
 
+
+RWStructuredBuffer<float4> Result;
+RWStructuredBuffer<float3> octaveOffsets;
+int3 size;
+float scale;
+float persistance;
+float lacunarity;
+float noiseExtents;
+float vertDistance;
+float3 worldOffset;
+int octaves;
+int3 worldChunk;
+int3 maxChunk;
+
 #define THREAD 8
 
 [numthreads(THREAD,THREAD,THREAD)]
@@ -308,21 +311,21 @@ void CSMain(uint3 id : SV_DispatchThreadID)
     {
         return;
     }
-    float worldX = id.x * vertDistance;
-    float worldY = id.y * vertDistance;
-    float worldZ = id.z * vertDistance;
+    float localX = id.x * vertDistance;
+    float localY = id.y * vertDistance;
+    float localZ = id.z * vertDistance;
     // HACK
     // this creates a solid top
     if (maxChunk.y-1 == worldChunk.y && id.y >= (uint)size.y - 1)
     {
-        float4 outputValue = float4(worldX,worldY,worldZ, 1);
+        float4 outputValue = float4(localX,localY,localZ, 1);
         Result[(size.x * size.y * id.z) + (size.y * id.y) + id.x] = outputValue;
         return;
     }
     // this creates a solid bottom
     if (worldChunk.y ==0 && id.y <= 0)
     {
-        float4 outputValue = float4(worldX,worldY,worldZ, 1);
+        float4 outputValue = float4(localX,localY,localZ, 1);
         Result[(size.x * size.y * id.z) + (size.y * id.y) + id.x] = outputValue;
         return;
     }
@@ -346,7 +349,8 @@ void CSMain(uint3 id : SV_DispatchThreadID)
     }
 
     float normalizedHeight = InverseLerp(-noiseExtents, noiseExtents, noiseHeight);
-    float4 outputValue = float4(worldX,worldY,worldZ, normalizedHeight);
+    
+    float4 outputValue = float4(localX,localY,localZ, normalizedHeight);
 
     Result[(size.x * size.y * id.z) + (size.y * id.y) + id.x] = outputValue;
 }
