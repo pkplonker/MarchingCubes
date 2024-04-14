@@ -341,14 +341,9 @@ int Index(int x, int y, int z)
 
 float3 Interpolate(float4 v1, float4 v2)
 {
-    return (v1.xyz + v2.xyz) / 2;
+	return (v1.xyz + v2.xyz) / 2;
 }
 
-// float3 Interpolate(float4 v1, float4 v2)
-// {
-// 	return (v1.xyz + v2.xyz) / 2;
-// }
-//
 
 
 

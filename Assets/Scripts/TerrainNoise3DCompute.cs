@@ -97,7 +97,7 @@ public class TerrainNoise3DCompute : ITerrainNoise3D, IDisposable
 		});
 	}
 
-	private static float CalculateExtents(int octaves, float persistance)
+	public static float CalculateExtents(int octaves, float persistance)
 	{
 		float noiseExtents = 0f;
 		float amp = 1f;

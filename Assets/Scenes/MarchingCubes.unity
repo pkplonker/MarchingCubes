@@ -132,7 +132,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 139282746}
-  - component: {fileID: 139282745}
+  - component: {fileID: 139282747}
   m_Layer: 0
   m_Name: ChunkManager
   m_TagString: Untagged
@@ -140,35 +140,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &139282745
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 139282744}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86f3e6da74bb4761b8bc0b7f2a45045d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ChunkSize: {x: 4, y: 4, z: 4}
-  MapSize: {x: 40, y: 20, z: 40}
-  ChunkPrefab: {fileID: 4306579607726012621, guid: 0468af4d4650927479c6d478df9b90d1,
-    type: 3}
-  NoiseData:
-    IsoLevel: 0.5
-    VertDistance: 0.2
-    Lacunarity: 0.7
-    Seed: 0
-    Octaves: 4
-    Persistance: 1.7
-    Scale: 60
-    GroundDistanceFactor: 4
-    GroundHeight: 5
-  NoiseShader: {fileID: 7200000, guid: 84846995732c451abfaf759f7605c543, type: 3}
-  MaxConcurrentGPUActions: 12
-  MaxConcurrentGPUReadbackActions: 12
 --- !u!4 &139282746
 Transform:
   m_ObjectHideFlags: 0
@@ -184,6 +155,35 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &139282747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 139282744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86f3e6da74bb4761b8bc0b7f2a45045d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ChunkSize: {x: 32, y: 32, z: 32}
+  MapSize: {x: 640, y: 32, z: 640}
+  ChunkPrefab: {fileID: 4306579607726012621, guid: 0468af4d4650927479c6d478df9b90d1,
+    type: 3}
+  NoiseData:
+    IsoLevel: 0.7
+    VertDistance: 1
+    Lacunarity: 0.7
+    Seed: 9
+    Octaves: 4
+    Persistance: 1.7
+    Scale: 12
+    GroundDistanceFactor: 4
+    GroundHeight: 11.4
+  NoiseShader: {fileID: 7200000, guid: 84846995732c451abfaf759f7605c543, type: 3}
+  MaxConcurrentGPUActions: 12
+  MaxConcurrentGPUReadbackActions: 12
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -271,8 +271,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
-  m_LocalRotation: {x: -0.031538665, y: 0.22794677, z: -0.0073881084, w: -0.9731347}
-  m_LocalPosition: {x: 291.33344, y: 14.275069, z: 53.94607}
+  m_LocalRotation: {x: -0.17007402, y: -0.27190733, z: 0.048888985, w: -0.9459129}
+  m_LocalPosition: {x: 330.42627, y: 16.605057, z: 246.77327}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

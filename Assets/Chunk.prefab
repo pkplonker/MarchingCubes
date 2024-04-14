@@ -50,6 +50,7 @@ MonoBehaviour:
   MarchingCubeShader: {fileID: 7200000, guid: 9397f496b5dd4a47b8e0d954547db1d1, type: 3}
   meshFilter: {fileID: 2622563117631197812}
   meshCollider: {fileID: 2129112731024025528}
+  ChunkCoord: {x: 0, y: 0, z: 0}
 --- !u!33 &2622563117631197812
 MeshFilter:
   m_ObjectHideFlags: 0
