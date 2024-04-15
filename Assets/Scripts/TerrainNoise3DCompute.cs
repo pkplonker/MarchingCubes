@@ -145,6 +145,10 @@ public class TerrainNoise3DCompute : ITerrainNoise3D, IDisposable
 
 	private static List<Vector3> CalculateOctaveOffsets(int octaves, Vector3 offset, Random random)
 	{
+		// Debug.Log(offset.x.ToString("f10"));
+		// Debug.Log(offset.y.ToString("f10"));
+		// Debug.Log(offset.z.ToString("f10"));
+
 		var octaveOffsets = new List<Vector3>(octaves);
 		for (var i = 0; i < octaves; i++)
 		{
@@ -152,6 +156,9 @@ public class TerrainNoise3DCompute : ITerrainNoise3D, IDisposable
 			var offsetY = random.Next(-100000, 100000) + offset.y;
 			var offsetZ = random.Next(-100000, 100000) + offset.z;
 			octaveOffsets.Add(new Vector3(offsetX, offsetY, offsetZ));
+			// Debug.Log(offsetX.ToString("f10"));
+			// Debug.Log(offsetY.ToString("f10"));
+			// Debug.Log(offsetZ.ToString("f10"));
 		}
 
 		return octaveOffsets;

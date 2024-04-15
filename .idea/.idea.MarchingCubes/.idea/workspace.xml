@@ -5,13 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c4ca93ba-5ae1-47e7-b91c-475b15f123cf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/TerrainNoise.compute" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/TerrainNoise.compute.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.MarchingCubes/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MarchingCubes/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Art/Materials/MapMaterial.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Art/Materials/MapMaterial.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/CaveNoise.compute" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/CaveNoise.compute" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Chunk.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Chunk.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/MarchingCubes.compute" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/MarchingCubes.compute" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/NoiseBase.compute" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/NoiseBase.compute" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/MarchingCubes.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/MarchingCubes.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Noise.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Noise.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Chunk.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Chunk.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ChunkManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ChunkManager.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/TerrainNoise3DCompute.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/TerrainNoise3DCompute.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/TerrainNoise.compute" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/TerrainNoise.compute" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,14 +72,14 @@
     "Attach to Unity Editor.Attach to Unity Editor.executor": "Debug",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "XThreadsFramesViewSplitterKey": "0.4985646",
+    "XThreadsFramesViewSplitterKey": "0.32344496",
     "git-widget-placeholder": "main",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "Errors",
+    "settings.editor.selected.configurable": "database.other",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -149,7 +152,7 @@
       <workItem from="1711964201576" duration="2230000" />
       <workItem from="1712610306368" duration="5788000" />
       <workItem from="1713018728104" duration="3514000" />
-      <workItem from="1713026216807" duration="17124000" />
+      <workItem from="1713026216807" duration="37814000" />
     </task>
     <servers />
   </component>
@@ -177,42 +180,16 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Assets/Scripts/ChunkManager.cs</url>
-          <line>159</line>
+          <line>160</line>
           <properties documentPath="S:\Users\pkplo\OneDrive\Documents\UnityProjects\MarchingCubes\Assets\Scripts\ChunkManager.cs" initialLine="143" containingFunctionPresentation="Method 'ProcessNeighbors'">
             <startOffsets>
-              <option value="4565" />
+              <option value="4579" />
             </startOffsets>
             <endOffsets>
-              <option value="4597" />
+              <option value="4611" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="116" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Assets/Scripts/TerrainNoise3DCompute.cs</url>
-          <line>67</line>
-          <properties documentPath="S:\Users\pkplo\OneDrive\Documents\UnityProjects\MarchingCubes\Assets\Scripts\TerrainNoise3DCompute.cs" initialLine="64" containingFunctionPresentation="Method 'GenerateNoiseMap'">
-            <startOffsets>
-              <option value="2814" />
-            </startOffsets>
-            <endOffsets>
-              <option value="2880" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="166" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Assets/Scripts/TerrainNoise3DCompute.cs</url>
-          <line>91</line>
-          <properties documentPath="S:\Users\pkplo\OneDrive\Documents\UnityProjects\MarchingCubes\Assets\Scripts\TerrainNoise3DCompute.cs" initialLine="91" containingFunctionPresentation="Lambda expression inside Method 'GenerateNoiseMap'">
-            <startOffsets>
-              <option value="3568" />
-            </startOffsets>
-            <endOffsets>
-              <option value="3597" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="167" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
