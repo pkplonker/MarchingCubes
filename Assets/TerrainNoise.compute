@@ -40,7 +40,8 @@ void CSMain(uint3 id : SV_DispatchThreadID)
     float frequency = 1.0f;
     float noiseHeight = 0.0f;
 
-    float worldY = ((worldChunk.y * (size.y-1)) * vertDistance) + (id.y * vertDistance);
+    float worldY = ((worldChunk.y * (size.y - 1)) * vertDistance) + (id.y * vertDistance);
+    float maxY = ((maxChunk.y * (size.y - 1)) * vertDistance);
 
     for (int i = 0; i < octaves; i++)
     {
@@ -55,9 +56,11 @@ void CSMain(uint3 id : SV_DispatchThreadID)
         frequency *= lacunarity;
     }
 
-  
-    noiseHeight -= (worldY - groundHeight);
 
+    //noiseHeight -= (worldY - groundHeight);
+    noiseHeight = InverseLerp(-noiseExtents, noiseExtents, noiseHeight);
+    float extent = noiseHeight + maxY;
+    noiseHeight += InverseLerp(0,maxY-groundHeight+1,maxY - worldY);
     float4 outputValue = float4(localX, localY, localZ, noiseHeight);
 
     Result[(size.x * size.y * id.z) + (size.y * id.y) + id.x] = outputValue;

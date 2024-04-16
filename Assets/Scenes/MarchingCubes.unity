@@ -168,7 +168,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ChunkSize: {x: 9, y: 9, z: 9}
-  MapSize: {x: 90, y: 18, z: 90}
+  MapSize: {x: 18, y: 18, z: 18}
   ChunkPrefab: {fileID: 4306579607726012621, guid: 0468af4d4650927479c6d478df9b90d1,
     type: 3}
   NoiseData:
@@ -178,7 +178,7 @@ MonoBehaviour:
     Seed: 9
     Octaves: 4
     Persistance: 1.7
-    Scale: 30
+    Scale: 40
     GroundDistanceFactor: 4
     GroundHeight: 9
   NoiseShader: {fileID: 7200000, guid: 84846995732c451abfaf759f7605c543, type: 3}

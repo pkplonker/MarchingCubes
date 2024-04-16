@@ -86,7 +86,10 @@ public class TerrainNoise3DCompute : ITerrainNoise3D, IDisposable
 				octaveOffsetsBuffer = null;
 				request.GetData<float4>().CopyData(data, size);
 				computeShaderQueue.Release();
-				
+				foreach (var v in data.GroupBy(v=>v.w).Select(x=>x.First()).Distinct())
+				{
+					Debug.Log(v.w);
+				}
 				computeShaderReadbackQueue.Register(() =>
 				{
 					callback?.Invoke(data);
