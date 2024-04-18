@@ -168,19 +168,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ChunkSize: {x: 9, y: 9, z: 9}
-  MapSize: {x: 18, y: 18, z: 18}
+  MapSize: {x: 180, y: 9, z: 180}
   ChunkPrefab: {fileID: 4306579607726012621, guid: 0468af4d4650927479c6d478df9b90d1,
     type: 3}
   NoiseData:
     IsoLevel: 0.7
-    VertDistance: 0.2
+    VertDistance: 1
     Lacunarity: 0.7
-    Seed: 9
-    Octaves: 4
+    Seed: 0
+    Octaves: 8
     Persistance: 1.7
-    Scale: 40
+    Scale: 2
     GroundDistanceFactor: 4
-    GroundHeight: 9
+    GroundHeight: 2
+    Amplitude: 30
   NoiseShader: {fileID: 7200000, guid: 84846995732c451abfaf759f7605c543, type: 3}
   MaxConcurrentGPUActions: 12
   MaxConcurrentGPUReadbackActions: 12

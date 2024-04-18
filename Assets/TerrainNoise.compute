@@ -16,6 +16,8 @@ int3 worldChunk;
 int3 maxChunk;
 float distanceFactor;
 float groundHeight;
+float isoLevel;
+float amplitude;
 
 float RoundToOneDecimalPlace(float value)
 {
@@ -24,7 +26,7 @@ float RoundToOneDecimalPlace(float value)
 
 #define THREAD 8
 
-[numthreads(THREAD,THREAD,THREAD)]
+[numthreads(THREAD, THREAD, THREAD)]
 void CSMain(uint3 id : SV_DispatchThreadID)
 {
     if (id.x >= (uint)size.x || id.y >= (uint)size.y || id.z >= (uint)size.z)
@@ -35,13 +37,11 @@ void CSMain(uint3 id : SV_DispatchThreadID)
     float localY = id.y * vertDistance;
     float localZ = id.z * vertDistance;
 
-
-    float amplitude = 1.0f;
-    float frequency = 1.0f;
-    float noiseHeight = 0.0f;
-
-    float worldY = ((worldChunk.y * (size.y - 1)) * vertDistance) + (id.y * vertDistance);
+    float worldY = ((worldChunk.y * (size.y - 1)) * vertDistance) + localY;
     float maxY = ((maxChunk.y * (size.y - 1)) * vertDistance);
+
+    float frequency = 1.0f;  
+    float noiseHeight = 0.0f;
 
     for (int i = 0; i < octaves; i++)
     {
@@ -56,12 +56,14 @@ void CSMain(uint3 id : SV_DispatchThreadID)
         frequency *= lacunarity;
     }
 
-
-    //noiseHeight -= (worldY - groundHeight);
     noiseHeight = InverseLerp(-noiseExtents, noiseExtents, noiseHeight);
-    float extent = noiseHeight + maxY;
-    noiseHeight += InverseLerp(0,maxY-groundHeight+1,maxY - worldY);
-    float4 outputValue = float4(localX, localY, localZ, noiseHeight);
+    float gh = InverseLerp(0, maxY, noiseHeight) * maxY;
+
+    float verticalFactor = 1.0f - abs(worldY - gh) / maxY; 
+
+    verticalFactor = InverseLerp(0, 1, verticalFactor);
+
+    float4 outputValue = float4(localX, localY, localZ, verticalFactor);
 
     Result[(size.x * size.y * id.z) + (size.y * id.y) + id.x] = outputValue;
 }

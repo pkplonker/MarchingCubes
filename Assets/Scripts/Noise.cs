@@ -12,6 +12,7 @@ public class Noise
 	public float Scale ;
 	public float GroundDistanceFactor;
 	public float GroundHeight;
+	public float Amplitude;
 
 	public Noise()
 	{
@@ -24,6 +25,7 @@ public class Noise
 		Scale = 0;
 		GroundDistanceFactor = 10;
 		GroundHeight = 10f;
+		Amplitude = 30f;
 	}
 
 }
