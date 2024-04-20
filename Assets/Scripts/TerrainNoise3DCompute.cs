@@ -28,6 +28,8 @@ public class TerrainNoise3DCompute : ITerrainNoise3D, IDisposable
 	private static readonly int MAX_CHUNK = Shader.PropertyToID("maxChunk");
 	private static readonly int GROUND_DISTANCE_FACTOR = Shader.PropertyToID("distanceFactor");
 	private static readonly int GROUND_HEIGHT = Shader.PropertyToID("groundHeight");
+	private static readonly int ISOLEVEL = Shader.PropertyToID("isoLevel");
+	private static readonly int AMPLITUDE = Shader.PropertyToID("amplitude");
 
 	private int kernelIndex;
 	private Random random;
@@ -52,7 +54,7 @@ public class TerrainNoise3DCompute : ITerrainNoise3D, IDisposable
 		random = new System.Random(noiseData.Seed);
 
 		var octaveOffsets = CalculateOctaveOffsets(noiseData.Octaves, offset, random);
-		noiseExtents = CalculateExtents(noiseData.Octaves, noiseData.Persistance);
+		noiseExtents = CalculateExtents(noiseData);
 
 		noiseExtents /= ((float) noiseData.Octaves / 2);
 		var size = dimensions.x * dimensions.y * dimensions.z;
@@ -86,7 +88,9 @@ public class TerrainNoise3DCompute : ITerrainNoise3D, IDisposable
 				octaveOffsetsBuffer = null;
 				request.GetData<float4>().CopyData(data, size);
 				computeShaderQueue.Release();
-				
+				//Debug.Log($"Above {data.Count(x=>x.w>1)}");
+				//Debug.Log($"Below {data.Count(x=>x.w<0)}");
+
 				computeShaderReadbackQueue.Register(() =>
 				{
 					callback?.Invoke(data);
@@ -96,18 +100,18 @@ public class TerrainNoise3DCompute : ITerrainNoise3D, IDisposable
 		});
 	}
 
-	public static float CalculateExtents(int octaves, float persistance)
+	public static float CalculateExtents(Noise noise)
 	{
 		float noiseExtents = 0f;
-		float amp = 1f;
+		float amp = noise.Amplitude;
 
-		for (int i = 0; i < octaves; i++)
+		for (int i = 0; i < noise.Octaves; i++)
 		{
 			noiseExtents += amp;
-			amp *= persistance;
+			amp *= noise.Persistance;
 		}
 
-		return noiseExtents;
+		return noiseExtents*2.2f;
 	}
 
 	private void EnsureBuffersInitialized(int octaves, int size)
@@ -141,14 +145,14 @@ public class TerrainNoise3DCompute : ITerrainNoise3D, IDisposable
 		noiseShader.SetFloats(WORLD_OFFSET, offset.x, offset.y, offset.z);
 		noiseShader.SetFloat(GROUND_DISTANCE_FACTOR, noiseData.GroundDistanceFactor);
 		noiseShader.SetFloat(GROUND_HEIGHT, noiseData.GroundHeight);
+		noiseShader.SetFloat(ISOLEVEL, noiseData.IsoLevel);
+		noiseShader.SetFloat(AMPLITUDE, noiseData.Amplitude);
+
 	}
+
 
 	private static List<Vector3> CalculateOctaveOffsets(int octaves, Vector3 offset, Random random)
 	{
-		// Debug.Log(offset.x.ToString("f10"));
-		// Debug.Log(offset.y.ToString("f10"));
-		// Debug.Log(offset.z.ToString("f10"));
-
 		var octaveOffsets = new List<Vector3>(octaves);
 		for (var i = 0; i < octaves; i++)
 		{
