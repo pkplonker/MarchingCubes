@@ -382,14 +382,14 @@ void CSMain(uint3 id : SV_DispatchThreadID)
     };
 
     int cubeIndex = 0;
-    if (corners[0].w < isoLevel) cubeIndex |= 1;
-    if (corners[1].w < isoLevel) cubeIndex |= 2;
-    if (corners[2].w < isoLevel) cubeIndex |= 4;
-    if (corners[3].w < isoLevel) cubeIndex |= 8;
-    if (corners[4].w < isoLevel) cubeIndex |= 16;
-    if (corners[5].w < isoLevel) cubeIndex |= 32;
-    if (corners[6].w < isoLevel) cubeIndex |= 64;
-    if (corners[7].w < isoLevel) cubeIndex |= 128;
+    if (corners[0].w > isoLevel) cubeIndex |= 1;
+    if (corners[1].w > isoLevel) cubeIndex |= 2;
+    if (corners[2].w > isoLevel) cubeIndex |= 4;
+    if (corners[3].w > isoLevel) cubeIndex |= 8;
+    if (corners[4].w > isoLevel) cubeIndex |= 16;
+    if (corners[5].w > isoLevel) cubeIndex |= 32;
+    if (corners[6].w > isoLevel) cubeIndex |= 64;
+    if (corners[7].w > isoLevel) cubeIndex |= 128;
 
 
     for (int i = 0; Triangles[cubeIndex][i] != -1; i += 3)

@@ -40,30 +40,25 @@ void CSMain(uint3 id : SV_DispatchThreadID)
     float worldY = ((worldChunk.y * (size.y - 1)) * vertDistance) + localY;
     float maxY = ((maxChunk.y * (size.y - 1)) * vertDistance);
 
-    float frequency = 1.0f;  
+    float frequency = 1.0f;
     float noiseHeight = 0.0f;
 
     for (int i = 0; i < octaves; i++)
     {
         float sampleX = (id.x) / scale * frequency + octaveOffsets[i].x * frequency;
+        float sampleY = (id.y) / scale * frequency + octaveOffsets[i].y * frequency;
         float sampleZ = (id.z) / scale * frequency + octaveOffsets[i].z * frequency;
 
-        float perlinValue = cnoise(float2(sampleX, sampleZ));
+        float perlinValue = cnoise(float3(sampleX, sampleY, sampleZ));
 
         noiseHeight += perlinValue * amplitude;
 
         amplitude *= persistance;
         frequency *= lacunarity;
     }
-
-    noiseHeight = InverseLerp(-noiseExtents, noiseExtents, noiseHeight);
-    float gh = InverseLerp(0, maxY, noiseHeight) * maxY;
-
-    float verticalFactor = 1.0f - abs(worldY - gh) / maxY; 
-
-    verticalFactor = InverseLerp(0, 1, verticalFactor);
-
-    float4 outputValue = float4(localX, localY, localZ, verticalFactor);
+    float hDelta = InverseLerp(groundHeight,maxY,worldY);
+    noiseHeight = InverseLerp(-noiseExtents,noiseExtents,noiseHeight);
+    float4 outputValue = float4(localX, localY, localZ, (hDelta+noiseHeight)/2);
 
     Result[(size.x * size.y * id.z) + (size.y * id.y) + id.x] = outputValue;
 }

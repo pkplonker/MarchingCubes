@@ -158,7 +158,7 @@ public class ChunkManager : MonoBehaviour
 
 	private void ProcessNeighbors(int x, int y, int z, Vector3Int paddedSize, Chunk chunk,
 		Dictionary<Chunk, List<NoiseMapChange>> modifications)
- 	{
+  	{
 		if (!IsOnEdgeOrCorner(x, y, z, paddedSize))
 			return;
 
@@ -233,6 +233,6 @@ public class ChunkManager : MonoBehaviour
 	private static int GetIndex(int x, int y, int z, Vector3Int paddedSize) =>
 		x + y * paddedSize.x + z * paddedSize.x * paddedSize.y;
 
-	private float GetDigValue() => -TerrainNoise3DCompute.CalculateExtents(NoiseData);
+	private float GetDigValue() =>  1; 
 
 }
